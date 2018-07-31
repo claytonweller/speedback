@@ -1,7 +1,7 @@
-#Speed Back
-##One Line
+# Speed Back
+## One Line
 _Get immediate feedback after live events_
-##User Stories
+## User Stories
 There are two users of the app: 1. People who want feedback on their event. 2. People who attend the event and want to give feedback.
 
 **People who want feedback should be able to:**
