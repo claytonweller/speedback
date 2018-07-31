@@ -4,14 +4,20 @@ _Get immediate feedback after live events_
 ## User Stories
 There are two users of the app: 1. People who want feedback on their event. 2. People who attend the event and want to give feedback.
 
+[Trello work List](https://trello.com/b/wtEEuNM0/speedback)
+
 **People who want feedback should be able to:**
+- Understand the utility of the app very quickly
+- See an example of the app in use
 - Create an account
 - Sign in to their account
 - Log out of their account
 - Reset their password
 - Change the information associated with their account
 - Put up an event for feedback
+- See a list of all their events
 - Remove their event
+- Update their event
 - Create custom fields for feedback
 - Get a unique link for their event
 - Get a unique (preferably short) code for their event
@@ -20,6 +26,8 @@ There are two users of the app: 1. People who want feedback on their event. 2. P
 - Embed feedback interface on their own website
 - Get a printable sign with all the appropriate info to get feedback
 - Be able to easily communicate the idea to people at the event
+- Recieve notifications when feedback comes in
+- Change the frequency of the notifications
 - See the feedback immediately after its submitted
 - See analytics on the feedback data
 - Get information on the people who gave feedback
