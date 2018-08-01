@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>CUSTOM TITLE PER EVENT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+    
+<body>
+  <nav role="navigation">
+    
+  </nav>
+  <main role="main" aria-live="assertive">
+    <header role="heading">
+      <h1>EVENT TITLE</h1>
+      <h3>Brought to you by: HOST</h3>
+    </header>
+  
+  <!-- Feedback Form -->
+    <form id="feedback-form">
+      <label>
+        How was EVENT TITLE?
+        <br><textarea name="feedback-text" id="feedback-text" placeholder="Anything from one word to a couple paragraphs is invaluable..."></textarea>
+      </label>
+      <br>
+      <label>
+        <input id="opt-in-check" name="opt-in" type="checkbox"> I would like to keep the discussion going with HOST
+      </label>
+      <div id="feedback-extra" hidden>
+        <p>Fill out one or both so we can contact you</p>
+        <label>
+          Email
+          <br> <input id="feedback-email" type="email">
+        </label>
+        <br>
+        <label>
+          Phone
+          <br> <input id="feedback-email" type="tel">
+        </label>
+        <br>
+        <fieldset>
+          <legend>I would like to help by...</legend>
+          <label>
+            <input id="update-check" name="update" type="checkbox" > Attending future events  
+          </label>
+          <br>
+          <label>
+            <input id="feedback-check" name="feedback" type="checkbox"> Giving more feedback
+          </label>
+          <br>
+          <label>
+            <input id="volunteer-check" name="volunteer" type="checkbox"> Volunteering at future events
+          </label>
+        </fieldset>
+      </div>
+      <div>
+        <button id="feedback-button" type="submit">Submit</button>
+      </div>
+    </form>
+
+  <!-- Thank you Section shows after Submit -->
+    <div id="thanks" hidden>
+      <p>EVENT THANK YOU</p>
+    </div>
+
+  </main>
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>
