@@ -10,15 +10,15 @@
     
 <body>
   <nav role="navigation" aria-live="assertive">
-    Nav Bar -  
+    SpeedBack  
     <span id="nav-auth-no">
       <a href="URL" id="nav-log-in">Log In</a>
       <a href="URL" id="nav-sign-up">Sign Up</a>
     </span>
     <span id="nav-auth-yes" hidden>
-      <button id="nav-new-event-button">New Event</button>
-      <a href="URL">Events</a>
-      <a href="URL">Log Out</a>
+      <button id="nav-new-event-button" class="js-new-event-button">New Event</button>
+      <a id="nav-events" href="URL">Events</a>
+      <a id="nav-log-out" href="URL">Log Out</a>
     </Span>
   </nav>
   <main role="main" aria-live="assertive">
@@ -95,25 +95,27 @@
     <section id="dash" role="region" hidden>
       <h1>Event Dashboard</h1>
       <!-- The event lists will be chonological Possibly togglable between the two views-->
-      <button id="info-new-event-button">New Event</button>
+      <button class="js-new-event-button">New Event</button>
       <div id="dash-upcoming">
         <h2>Upcoming events</h2>
+        <!-- Populated byt the database -->
         <div class="dash-event upcoming">
-          <h3><a href="URL">Event Title</a></h3>
+          <h3><a class="event-title js-event-info-link" href="15">Event Title</a></h3>
           <span>YYYY-MM-DD</span>
-          <span><a href="URL">Live Form</a></span>
+          <span><a class="live-form-link" href="URL">Live Form</a></span>
           <span>Event Code: CODE</span>
-          <button class="dash-event-edit-button">Edit</button>
-          <button class="dash-event-remove-button">Remove</button>
+          <button class="event-edit-button">Edit</button>
+          <button class="event-remove-button">Remove</button>
         </div>
       </div>
       <div id="dash-complete">
         <h2>Complete Events</h2>
+        <!-- Populated by the database -->
         <div class="dash-event complete">
-          <h3><a href="URL">Event Title</a></h3>
+          <h3><a class="event-title js-event-info-link" href="5">Event Title</a></h3>
           <span>YYYY-MM-DD</span>
-          <span><a href="URL">Feedback Info</a></span>
-          <button class="dash-event-remove-button">Remove</button>
+          <span><a class="js-event-info-link" href="URL">Feedback Info</a></span>
+          <button class="event-remove-button">Remove</button>
         </div>
       </div>
     </section>
@@ -123,8 +125,8 @@
       <div id="info-details">
         <h1>Event Title</h1>
         <!-- Only editable before the date -->
-        <button class="info-edit-button">Edit</button>
-        <button class="info-remove-button">Remove</button>
+        <button class="event-edit-button">Edit</button>
+        <button class="event-remove-button">Remove</button>
         <div>Event Ends: YYYY-MM-DD @ HH:MM PM</div>
         <div>Event host: Name</div>
         <p>Thank you message, limited to something like 150 characters</p>
@@ -135,7 +137,7 @@
         <h2>Instructions</h2>
         <p>Here is your unique code for your event - CODE</p>
         <p>This url link will be live until 2 hours after your event ends
-          <br> Feedback link: <a href="URL">www.url.com/CODE</a>
+          <br> Feedback link: <a class="live-form-link" href="URL">www.url.com/CODE</a>
         </p>
           <!-- On hover directions? -->
         <p>Feedback phone: ###-###-#### - Must enter code: CODE</p>
@@ -178,12 +180,13 @@
         <br>
         <label>
           Whend does the event end?
-          <br><input id="edit-date" type="month"><input id="edit-time" type="time">
+          <br>Date <input id="edit-date" type="date">
+          Time <input id="edit-time" type="time" placeholder="7">
         </label>
         <br>
         <label>
           Short thank you message (150 Characters max)
-          <br><input id="edit-thanks" type="text" maxlength="150" placeholder="Thanks for coming to...">
+          <br><textarea id="edit-thanks" type="text" maxlength="150" placeholder="Thanks for coming to..."></textarea>
         </label>
         <div>
           <button id="edit-submit-button" type="submit">Submit</button>
@@ -191,6 +194,15 @@
         </div>
         
       </form>      
+    </section>
+
+    <!-- Remove Confirmation -->
+      <!-- This will definitely be a modal window -->
+    <section id="remove" role="region" hidden>
+      <h2> Remove: EVENT TITLE?</h2>
+      <p>Are you sure you want to permanently remove this event and all associated feedback?</p>
+      <button id="confirm-delete-button">Delete</button>
+      <button id="cancel-delete-button">Cancel</button>
     </section>
   
   </main>
