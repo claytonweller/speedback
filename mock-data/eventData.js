@@ -1,4 +1,4 @@
-const eventsData = [
+const eventData = [
   {
     title:'This new thing',
     thanks:'Thanks so much for coming to my new thing!',
@@ -34,4 +34,4 @@ const eventsData = [
   }
 ]
 
-module.exports = { eventsData }
+module.exports = { eventData }
