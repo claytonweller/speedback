@@ -44,13 +44,13 @@
         <h2>Login</h2>
         <form id="login-form" action="#">
           <label>
-            username or email
-            <input id="login-form-user" type="text">
+            Email
+            <input id="login-form-email" type="text" required>
           </label>
           <br>
           <label>
-            password
-            <input id="login-form-password" type="password">
+            Password
+            <input id="login-form-password" type="password" required>
           </label>
           <br>
           <button id="login-form-button" type="submit">Submit</button>
@@ -63,11 +63,16 @@
         <form id="signup-form" action="#">
           <label>
             First Name
-            <input id="signup-form-user" type="text" required>
+            <input id="signup-form-first" type="text" required>
           </label>
           <br>
           <label>
             Last Name
+            <input id="signup-form-last" type="text" required>
+          </label>
+          <br>
+          <label>
+            User Name
             <input id="signup-form-user" type="text" required>
           </label>
           <br>
@@ -78,12 +83,12 @@
           <br>
           <label>
             Password
-            <input id="signup-form-pass1" type="email" required>
+            <input id="signup-form-pass1" type="password" required>
           </label>
           <br>
           <label>
             Re-type Password
-            <input id="signup-form-pass1" type="email" required>
+            <input id="signup-form-pass2" type="password" required>
           </label>
           <button id="signup-form-button" type="submit">Submit</button>
         </form>
@@ -123,24 +128,24 @@
     <!-- Event info -->
     <section id="info" role="region" hidden>
       <div id="info-details">
-        <h1>Event Title</h1>
+        <h1 id="details-title">Event Title</h1>
         <!-- Only editable before the date -->
         <button class="event-edit-button">Edit</button>
         <button class="event-remove-button">Remove</button>
-        <div>Event Ends: YYYY-MM-DD @ HH:MM PM</div>
-        <div>Event host: Name</div>
-        <p>Thank you message, limited to something like 150 characters</p>
+        <div><span id="details-end">Event Ends/ended: YYYY-MM-DD @ HH:MM PM</span></div>
+        <div>Event host: <span id="details-host">Name</span> </div>
+        <p id="details-thanks">Thank you message, limited to something like 150 characters</p>
       </div>
 
       <!-- Only visible if the event hasn't yet happend -->
       <div id="info-instructions">
         <h2>Instructions</h2>
-        <p>Here is your unique code for your event - CODE</p>
+        <p>Here is your unique code for your event - <span class="js-instructions-code">CODE</span></p>
         <p>This url link will be live until 2 hours after your event ends
-          <br> Feedback link: <a class="live-form-link" href="URL">www.url.com/CODE</a>
+          <br> Feedback link: <a class="live-form-link" href="URL">www.url.com/<span class="js-instructions-code">CODE</span></a>
         </p>
           <!-- On hover directions? -->
-        <p>Feedback phone: ###-###-#### - Must enter code: CODE</p>
+        <p>Feedback phone: <span id="instructions-phone">###-###-####</span> - Must enter code: <span class="js-instructions-code">CODE</span></p>
         <p>Here are some best practices for how to use SpeedBack</p>
       </div>
 
@@ -148,16 +153,23 @@
       <div id="info-feedback">
         <h2>Feedback</h2>
         <div class="feedback-graph">
-          A SICK GRAPH
+          A SICK GRAPH!!!
         </div>
-        <div class="feedback-text">
+        <div id="feedback-in-depth">
           <div class="feedback-single">
-            <span>YYYY-MM-DD</span>
-            <span>Name</span>
-            <span>email</span>
-            <span>Phone</span>
+            <div>
+              <span>YYYY-MM-DD</span>
+              <span>Name</span>
+              <span>email</span>
+              <span>Phone</span>
+            </div>
+            <div>
+              <span>Info about future shows:</span>
+              <span>More feedback:</span>
+              <span>Volunteer:</span>
+            </div>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel porro nulla, autem maxime illo in deleniti, dicta est beatae sapiente culpa ad amet neque debitis commodi veritatis suscipit error reiciendis.</p>
           </div>
-          <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel porro nulla, autem maxime illo in deleniti, dicta est beatae sapiente culpa ad amet neque debitis commodi veritatis suscipit error reiciendis.</p>
         </div>
       </div>
     </section>
@@ -208,6 +220,7 @@
   </main>
   
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="./js/STATE.js"></script>
   <script src="./js/landing.js"></script>
   <script src="./js/nav.js"></script>
   <script src="./js/dash.js"></script>

@@ -1,10 +1,22 @@
 //SIGN UP AND LOGIN 
 
+const clearLandingInputs = () => $('#auth').find('input').val('')
+
 const signUpSubmit = () =>{
   
   console.log('POST user info, and return their JWS token')
+  let signUpInfo = {
+    firstName: $('#signup-form-first').val(),
+    lastName: $('#signup-form-last').val(),
+    userName: $('#signup-form-user').val(),
+    email: $('#signup-form-email').val(),
+    password1: $('#signup-form-pass1').val(),
+    password2: $('#signup-form-pass2').val(),
+  }
+  console.log(signUpInfo)
 
   if('checksPass'){
+    clearLandingInputs()
     openDashboard()
     switchToAuthNav()
   } else {
@@ -30,7 +42,15 @@ const signUpSubmitListener = () =>{
 const logInSubmit = () =>{
   console.log('GET user info, confirm that info is correct, return JWS token')
   
+  let logInInfo = {
+    email: $('#login-form-email').val(),
+    password: $('#login-form-password').val(),
+  }
+
+  console.log(logInInfo)
+
   if('checksPass'){
+    clearLandingInputs()
     openDashboard()
     switchToAuthNav()
   } else {

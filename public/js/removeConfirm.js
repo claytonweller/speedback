@@ -1,5 +1,5 @@
 const eventRemoveButtonListener = () =>{
-  $('main').find('.event-remove-button').on('click', function(event){
+  $('main').on('click', '.event-remove-button', function(event){
     event.preventDefault()
     //Place Holder for actual id in state
     let id = 15

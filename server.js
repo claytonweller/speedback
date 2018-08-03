@@ -4,8 +4,14 @@ const morgan = require('morgan')
 const PORT = process.env.PORT || 8080
 const app = express()
 
+const eventsRouter = require('./eventsRouter')
+const hostsRouter = require('./hostsRouter')
+
 app.use(express.static('public'))
 app.use(morgan('common'))
+app.use('/events', eventsRouter)
+app.use('/hosts', hostsRouter)
+
 
 let server;
 

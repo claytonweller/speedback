@@ -1,5 +1,16 @@
 //Useful Functions
 
+const convertTimeStampToDate = (timeStamp) => {
+  let m = new Date(timeStamp)
+  let dateString = 
+    m.getUTCFullYear() +" - "+ 
+    (m.getUTCMonth()+1) +" - "+ 
+    m.getUTCDate() + " @ " + 
+    m.getUTCHours() + ":" + 
+    m.getUTCMinutes()
+  return dateString
+}
+
 const hideAll = () =>{
   $('section').attr('hidden', true)
 }
