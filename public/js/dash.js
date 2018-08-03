@@ -24,12 +24,29 @@ const populateCompleteEvents = (events) =>{
   $('#dash-complete').find('.event-edit-button, .live-form-link').attr('hidden', true)
 }
 
+const completeEventTemplate = (event) =>{
+  return `
+    <div class="dash-event complete">
+      ${everyEventTemplate(event)}
+    </div>
+  `
+}
+
 const populateUpcomingEvents = (events) =>{
   console.log('UPCOMING', events)
   let allUpcoming = events.map(event => upcomingEventTemplate(event))
   allUpcoming.unshift('<h2>Upcoming Events</h2>')
   $('#dash-upcoming').html(allUpcoming)
   $('#dash-upcoming').find('.event-feedback-link').attr('hidden', true)
+}
+
+
+const upcomingEventTemplate = (event) =>{
+  return `
+    <div class="dash-event upcoming">
+      ${everyEventTemplate(event)}
+    </div>
+  `
 }
 
 const everyEventTemplate = (event) => {
@@ -44,21 +61,9 @@ const everyEventTemplate = (event) => {
   `
 }
 
-const completeEventTemplate = (event) =>{
-  return `
-    <div class="dash-event complete">
-      ${everyEventTemplate(event)}
-    </div>
-  `
-}
 
-const upcomingEventTemplate = (event) =>{
-  return `
-    <div class="dash-event upcoming">
-      ${everyEventTemplate(event)}
-    </div>
-  `
-}
+
+
 
 //Listeners
 
