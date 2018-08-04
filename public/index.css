@@ -1,3 +1,28 @@
+@font-face {
+  font-family: 'Hemi';
+  src: url('./assets/fonts/hemi_head_bd_it-webfont.woff2') format('woff2'),
+       url('./assets/fonts/hemi_head_bd_it-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+body {
+  
+  font-family: 'PT Sans', sans-serif;
+
+}
+
 div, main, section {
   border: black solid 1px;
 }
+
+h1 { 
+  font-family: Hemi, sans-serif;
+}
+
+h2, h3, h4 {
+  font-family: 'Oswald', sans-serif;
+}
+
