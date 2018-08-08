@@ -6,20 +6,20 @@ const { hostData } = require('./mock-data/hostData')
 const { feedbackData } = require('./mock-data/feedbackData')
 router.use(express.json())
 
-router.get('/:host', (req, res) => {
-  let selectedHost = hostData.filter(host => host.userName === req.params.host)[0]
+router.get('/', (req, res) => {
+  let selectedHost = hostData.filter(host => host.userName === req.body.hostId)[0]
   let hostEvents = eventData.filter(event => event.hostId === selectedHost.hostId)
   res.status(200).json(hostEvents)
 })
 
-router.get('/:host/:id', (req, res) =>{
-  let selectedEvent = eventData.filter(event => event.eventId === req.params.id)[0]
-  selectedEvent['feedback'] = feedbackData.filter(feedback => feedback.eventId === req.params.id)
+router.get('/:eventId', (req, res) =>{
+  let selectedEvent = eventData.filter(event => event.eventId === req.params.eventId)[0]
+  selectedEvent['feedback'] = feedbackData.filter(feedback => feedback.eventId === req.params.eventId)
   res.status(200).json(selectedEvent)
 })
 
-router.post('/:host', (req, res) =>{
-  let host = hostData.filter(host => host.userName === req.params.host)[0]
+router.post('/', (req, res) =>{
+  let host = hostData.filter(host => host.userName === req.body.hostId)[0]
   let defaultEvent = {
     
     title:'Title',
@@ -36,8 +36,8 @@ router.post('/:host', (req, res) =>{
   res.status(201).json(defaultEvent)
 })
 
-router.put('/:host/:id', (req, res) => {
-  let toUpdate = eventData.filter(event => event.eventId === req.params.id)[0]
+router.put('/:eventId', (req, res) => {
+  let toUpdate = eventData.filter(event => event.eventId === req.params.eventId)[0]
   const okToUpdate = ['title', 'thanks', 'endTimeStamp', 'host']
   okToUpdate.forEach(field =>{
     if(field in req.body){
@@ -47,10 +47,10 @@ router.put('/:host/:id', (req, res) => {
   res.status(200).json(toUpdate)
 })
 
-router.delete('/:host/:id', (req, res) =>{
+router.delete('/:eventId', (req, res) =>{
   let indexToDelete;
   for(var i = 0; i < eventData.length; i++) {
-    if(eventData[i].eventId === req.params.id) {
+    if(eventData[i].eventId === req.params.eventId) {
       indexToDelete = i
     }
   } 
