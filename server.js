@@ -6,12 +6,19 @@ const app = express()
 
 const eventsRouter = require('./eventsRouter')
 const hostsRouter = require('./hostsRouter')
+const feedbackRouter = require('./feedbackRouter')
 
 app.use(express.static('public'))
 app.use(morgan('common'))
 app.use('/events', eventsRouter)
 app.use('/hosts', hostsRouter)
+app.use('/feedback', feedbackRouter)
 
+app.engine('html', require('ejs').renderFile);
+
+app.get('/:eventCode', (req, res)=>{
+  res.status(200).render('../public/feedback.html')
+})
 
 let server;
 

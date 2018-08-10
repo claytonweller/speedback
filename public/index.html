@@ -74,11 +74,6 @@
           </label>
           <br>
           <label>
-            User Name
-            <input id="signup-form-user" type="text" required>
-          </label>
-          <br>
-          <label>
             Email
             <input id="signup-form-email" type="email" required>
           </label>
@@ -213,7 +208,7 @@
     <!-- Remove Confirmation -->
       <!-- This will definitely be a modal window -->
     <section id="remove" role="region" hidden>
-      <h2> Remove: EVENT TITLE?</h2>
+      <h2> Remove: <span id="remove-title">EVENT TITLE</span>?</h2>
       <p>Are you sure you want to permanently remove this event and all associated feedback?</p>
       <button id="confirm-delete-button">Delete</button>
       <button id="cancel-delete-button">Cancel</button>
@@ -222,12 +217,6 @@
   </main>
   
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script src="./js/landing.js"></script>
-  <script src="./js/nav.js"></script>
-  <script src="./js/dash.js"></script>
-  <script src="./js/eventInfo.js"></script>
-  <script src="./js/eventEditor.js"></script>
-  <script src="./js/removeConfirm.js"></script>
   <script src="./js/index.js"></script>
 
 </body>

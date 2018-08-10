@@ -1,10 +1,11 @@
-
+STATE = {
+  feedbackId:'',
+}
 
 const optInListener = () =>{
   $('#opt-in-check').click(function(event){
     if(document.getElementById('opt-in-check').checked){
       $('#feedback-extra').removeAttr('hidden')
-      // This will PUT an update to the server
       updateFeedback()
     } else {
       $('#feedback-extra').attr('hidden', true)
@@ -32,19 +33,40 @@ const updateFeedback = () =>{
     phone: $('#feedback-phone').val(),
     updates: document.getElementById('update-check').checked,
     feedback: document.getElementById('feedback-check').checked,
-    volunteer: document.getElementById('volunteer-check').checked
+    volunteer: document.getElementById('volunteer-check').checked,
+    didAnything: true,
   }
-  console.log(feedbackObj)
-  // PUT request to the Server
+  $.ajax({
+    url: `../feedback/${STATE.feedbackId}`,
+    type: "PUT",
+    data: JSON.stringify(feedbackObj),
+    contentType: 'application/json'
+  })
 }
 
 const populateFeedback = () => {
-  console.log('GET the information for the specific event')
-  createFeedback()
+  let url = window.location.href
+   let query = {
+    eventCode : url.substr(url.lastIndexOf('/') + 1)
+  }
+  $.getJSON(`../events/`, query, function(res){
+    $('.js-event-title').html(res.title)
+    $('.js-event-host').html(res.host)
+    $('#thanks').html(res.thanks)
+  })
+  createFeedback(query.eventCode)
 }
 
-const createFeedback = () =>{
-  console.log('POST feedback')
+const createFeedback = (eventCode) =>{
+  $.ajax({
+    url: "../feedback",
+    type: "POST",
+    data: JSON.stringify({eventCode}),
+    contentType: 'application/json'
+  })
+    .then(res => {
+      STATE.feedbackId = res.feedbackId
+    })
 }
 
 const manageApp = () =>{

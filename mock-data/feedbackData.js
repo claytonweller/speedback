@@ -11,6 +11,7 @@ const feedbackData = [
     timeStamp: 1543243785191,
     eventId: '444',
     feedbackId:'70', 
+    didAnything:true,
   },
   {
     content: 'Fine',
@@ -24,6 +25,7 @@ const feedbackData = [
     timeStamp: 1543243785191,
     eventId: '444',
     feedbackId:'71', 
+    didAnything:true,
   },
   {
     content: 'Quite liked what you were doing. There was all kinds of wonderful stuff going on!',
@@ -37,6 +39,7 @@ const feedbackData = [
     timeStamp: 1543243785191,
     eventId: '444',
     feedbackId:'72', 
+    didAnything:true,
   }
 ]
 
