@@ -14,6 +14,6 @@ const feedbackSchema = mongoose.Schema({
   didAnything: {type: Boolean, default: false},
 })
 
-const Feedback = mongoose.model('Event', feedbackSchema, 'events')
+const Feedback = mongoose.model('Feedback', feedbackSchema, 'feedback')
 
-module.exports = { Feedback }
+module.exports = Feedback

@@ -1,6 +1,6 @@
 const STATE = {
   //I'll probably replace this with the token?
-  hostId:72,
+  hostId:'5b70addf8e4cf51e0c7936d1',
   //This is used whenever PUT/DELETE happen to a current event
   focusEventId:0
 }
@@ -329,6 +329,7 @@ const openEventInfo = (id) =>{
 }
 
 const populateEventInfo = (res) =>{
+  console.log(res)
   populateEventDetails(res)
 
   if(res.endTimeStamp > Date.now()){
@@ -359,17 +360,20 @@ const populateEventFeedback = (res) => {
   $('#info-instructions').attr('hidden', true)
   $('#info-feedback').removeAttr('hidden')
   populateFeedbackGraph(res)
-  populateFeedbackInDepth(res.feedback)
+  populateFeedbackInDepth(res)
 }
 
 const populateFeedbackGraph = (res) => {
   console.log('THE GRAPH HAPPENS')
 }
 
-const populateFeedbackInDepth = (feedbackArray) =>{
-  let inDepthFeedback = feedbackArray.map(feedback => feedbackTemplate(feedback))
-  inDepthFeedback.unshift(`<h3>Individual responses</h3>`)
-  $('#feedback-in-depth').html(inDepthFeedback)
+const populateFeedbackInDepth = (res) =>{
+  $.getJSON(`./feedback/${res.eventId}`)
+    .then(feedbackarray => {
+      let feedbackOfValue = feedbackarray.filter(feedback => feedback.didAnything)
+      $('#feedback-in-depth').html(feedbackOfValue.map(feedback => feedbackTemplate(feedback)))
+    })
+  
 }
 
 // Will need to list all Feedback info
@@ -427,13 +431,15 @@ const createEvent = () =>{
     data: JSON.stringify(body),
     contentType: 'application/json'
   })
-    .then(event => openEventEditor(event.eventId))
+    .then(event => {
+      console.log(event)
+      openEventEditor(event.eventId)
+    })
 }
 
 const openEventEditor = eventId =>{
   STATE.focusEventId = eventId
-
-  $.getJSON(`../events/${eventId}`, {hostId:STATE.hostId}, populateEventEditor)
+  $.getJSON(`../events/${eventId}`, populateEventEditor)
   hideAll()
   $('#edit').removeAttr('hidden')
 }
@@ -515,6 +521,7 @@ const eventEditorSubmitButtonListener = () =>{
 
 const newEventButtonListener = () => {
   $('.js-new-event-button').click(function(event){
+    console.log('listener')
     event.preventDefault()
     createEvent()
   })

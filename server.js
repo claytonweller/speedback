@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
@@ -36,7 +37,6 @@ let server;
   
 function runServer (databaseUrl, port) {
   return new Promise((resolve, reject)=>{
-    console.log(port)
     mongoose.connect(databaseUrl, {useNewUrlParser: true}, err => {
       if(err) {
         return reject(err)
@@ -50,7 +50,6 @@ function runServer (databaseUrl, port) {
         reject(err)
       })
     })
-      
   })
 }
 

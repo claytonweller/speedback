@@ -12,7 +12,7 @@ const hostSchema = mongoose.Schema({
 
 hostSchema.methods.serialize = function(){
   return {
-    firstName: this.username,
+    firstName: this.firstName,
     lastName: this.lastName
   }
 }
@@ -25,6 +25,6 @@ hostSchema.statics.hashPassword = function(password){
   return bcrypt.hash(password, 10)
 }
 
-const Host = mongoose.model('Event', hostSchema, 'events')
+const Host = mongoose.model('Host', hostSchema, 'hosts')
 
-module.exports = { Host }
+module.exports = Host

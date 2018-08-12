@@ -1,12 +1,19 @@
 const express = require('express')
 const router = express.Router()
 
-const { eventData } = require('../mock-data/eventData')
-const { feedbackData } = require('../mock-data/feedbackData')
+const Feedback = require('./models')
+const EventModel = require('../events/models')
+
 router.use(express.json())
 
-router.get('/', (req, res) => {
-  //May not need this
+
+router.get('/:eventId', (req, res) => {
+  
+  Feedback
+    .find({eventId:req.params.eventId})
+    .then(feedback => res.status(200).json(feedback))
+    .catch(err => res.status(500).json({message: 'Something went wrong on the server'}))
+    
 })
 
 router.get('/:feedBackId', (req, res) =>{
@@ -14,8 +21,7 @@ router.get('/:feedBackId', (req, res) =>{
 })
 
 router.post('/', (req, res) =>{
-  let event = eventData.filter(event => event.code == req.body.eventCode)[0]
-  let defaultComment = {   
+  let defaultFeedback = {   
     content: '',
     optIn: false,
     name: '',
@@ -25,38 +31,46 @@ router.post('/', (req, res) =>{
     feedback: false,
     volunteer: false,
     timeStamp: Date.now(),
-    eventId: event.eventId,
-    feedbackId: Math.floor(Math.random()*10000).toString(),
     didAnything: false,
   }
-  feedbackData.push(defaultComment)
-  res.status(201).json(defaultComment)
+
+  EventModel.findOne({code:req.body.eventCode})
+    .then( event =>{
+      if(!event._id){
+       return res.status(400).json({message:'this event doesn\'t exist'})
+      }
+      defaultFeedback['eventId'] = event._id
+      return Feedback.create(defaultFeedback)
+    })
+    .then(feedback => {
+      res.status(201).json(feedback)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message:'something Went wrong on the server'})
+    })
+
 })
 
 router.put('/:feedbackId', (req, res) => {
   
-  let toUpdate = feedbackData.filter(feedback => feedback.feedbackId === req.params.feedbackId)[0]
+  let toUpdate = {}
   const okToUpdate = ['content', 'optIn', 'name', 'email', 'phone', 'updates', 'feedback', 'volunteer', 'didAnything']
   okToUpdate.forEach(field =>{
     if(field in req.body){
       toUpdate[field] = req.body[field]
     }
   })
-  res.status(200).json(toUpdate)
+  Feedback
+    .findByIdAndUpdate(req.params.feedbackId, {$set:toUpdate})
+    .then(feedback => Feedback.findById(feedback._id))
+    .then(updatedFeedback => res.status(200).json(updatedFeedback))
+    .catch(err => res.status(500).json({message: 'Something went wrong on the server'}))
+    
 })
 
 router.delete('/:feedbackId', (req, res) =>{
-
-  let indexToDelete;
-  for(var i = 0; i < eventData.length; i++) {
-    if(eventData[i].eventId === req.params.eventId) {
-      indexToDelete = i
-    }
-  } 
-  if (indexToDelete || indexToDelete === 0) {
-    eventData.splice(indexToDelete, 1);
-  }
-  res.status(204).end()
+  //Might not need this
 })
 
 

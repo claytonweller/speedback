@@ -58,6 +58,7 @@ const populateFeedback = () => {
 }
 
 const createFeedback = (eventCode) =>{
+
   $.ajax({
     url: "../feedback",
     type: "POST",
@@ -65,7 +66,7 @@ const createFeedback = (eventCode) =>{
     contentType: 'application/json'
   })
     .then(res => {
-      STATE.feedbackId = res.feedbackId
+      STATE.feedbackId = res._id
     })
 }
 

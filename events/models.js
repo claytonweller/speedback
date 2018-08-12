@@ -1,3 +1,5 @@
+// EVENT models
+
 const mongoose = require('mongoose')
 
 const eventSchema = mongoose.Schema({
@@ -5,12 +7,26 @@ const eventSchema = mongoose.Schema({
   thanks: {type: String, default: 'Thanks for coming to our event'},
   endTimeStamp: {type:Number, required:true},
   host: {type: String, default: ''},
-  code: {type:String, required:true},
+  code: {type:String, required:true, unique:true},
   phone: {type:Number, required:true},
   hostId: {type:String, required:true},
   timeStamp: Number
 })
 
-const Event = mongoose.model('Event', eventSchema, 'events')
+eventSchema.methods.serialize = function(){
+  return {
+    title: this.title,
+    thanks: this.thanks,
+    endTimeStamp: this.endTimeStamp,
+    host: this.host,
+    code: this.code,
+    phone: this.phone,
+    hostId: this.hostId,
+    timeStamp: this.timeStamp,
+    eventId:this._id
+  }
+}
 
-module.exports = { Event }
+const EventModel = mongoose.model('Event', eventSchema, 'events')
+
+module.exports = EventModel 
