@@ -156,8 +156,8 @@ const logInSubmit = () =>{
     password: $('#login-form-password').val(),
   }
 
-  console.log(logInInfo)
-
+  $.getJSON(`../hosts/`, logInInfo)
+    .then(res => console.log('Host', res))
   if('checksPass'){
     clearLandingInputs()
     openDashboard()
