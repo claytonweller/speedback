@@ -11,9 +11,7 @@ const app = express()
 const eventsRouter = require('./events/router')
 const hostsRouter = require('./hosts/router')
 const feedbackRouter = require('./feedback/router')
-const authRouter = require('./auth/router')
-const { localStrategy, jwtStrategy } = require('./auth')
-
+const {router:authRouter, localStrategy, jwtStrategy } = require('./auth')
 
 app.use(express.static('public'))
 app.use(morgan('common'))
@@ -22,14 +20,12 @@ app.use('/hosts', hostsRouter)
 app.use('/feedback', feedbackRouter)
 app.use('/auth', authRouter)
 
-app.engine('html', require('ejs').renderFile);
-
 // Need to import these two.
 passport.use(localStrategy)
 passport.use(jwtStrategy)
 
 app.get('/:eventCode', (req, res)=>{
-  res.status(200).render('../public/feedback.html')
+  res.sendFile('public/feedback.html' , { root : __dirname});
 })
 
 app.use('*', (req, res) => {
@@ -38,22 +34,23 @@ app.use('*', (req, res) => {
 
 let server;
   
-function runServer (databaseUrl, port) {
-  return new Promise((resolve, reject)=>{
-    mongoose.connect(databaseUrl, {useNewUrlParser: true}, err => {
-      if(err) {
+function runServer(databaseUrl, port=PORT) {
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, {useNewUrlParser: true}, err =>{
+      if (err) {
         return reject(err)
       }
-      server = app.listen(port, () =>{
-        console.log(`listening at port ${port}`)
+
+      server = app.listen(port, () => {
+        console.log('App is LIstening on Port ' + port)
         resolve()
       })
-      .on('error', err => {
+      .on('error', err =>{
         mongoose.disconnect()
         reject(err)
       })
     })
-  })
+  })    
 }
 
 const closeServer = () => {

@@ -8,7 +8,7 @@ const eventSchema = mongoose.Schema({
   endTimeStamp: {type:Number, required:true},
   host: {type: String, default: ''},
   code: {type:String, required:true, unique:true},
-  phone: {type:Number, required:true},
+  phone: {type:String, required:true},
   hostId: {type:String, required:true},
   timeStamp: Number
 })

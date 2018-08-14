@@ -5,28 +5,32 @@
   <title>CUSTOM TITLE PER EVENT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
   <link rel="stylesheet" href="index.css">
 </head>
     
 <body>
   <nav role="navigation">
-    
+    <img src="./assets/LogoSmall.png" alt="Speedback Logo">
   </nav>
   <main role="main" aria-live="assertive">
     <header role="heading">
-      <h1 class="js-event-title">EVENT TITLE</h1>
-      <h3>Brought to you by: <span class="js-event-host">HOST</span></h3>
+      <h1 class="js-event-title">Event title</h1>
+      <h3>Hosted By - <span class="js-event-host feedback-host">HOST</span></h3>
     </header>
   
   <!-- Feedback Form -->
     <form id="feedback-form">
       <label>
-        How was <span class="js-event-title">EVENT TITLE</span>?
-        <br><textarea name="feedback-text" id="feedback-text" placeholder="Anything from one word to a couple paragraphs is invaluable..."></textarea>
+        <div class="label-text">Your feedback:</div>
+        <textarea name="feedback-text" id="feedback-text" placeholder="Anything from one word to a couple paragraphs is invaluable..."></textarea>
       </label>
       <br>
-      <label>
-        <input id="opt-in-check" name="opt-in" type="checkbox"> I would like to keep the discussion going with HOST
+      <label class="check-label">
+        <span class="check-mark"></span>
+        <input id="opt-in-check" class="check-box" name="opt-in" type="checkbox"> 
+        <div class="check-text">I would like to keep the discussion going with HOST</div>
       </label>
       <div id="feedback-extra" hidden>
         <p>You don't need to fill out all of the fields, and we promise to not share your information with any outside parties.</p>
