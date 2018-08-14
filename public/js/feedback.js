@@ -46,15 +46,14 @@ const updateFeedback = () =>{
 
 const populateFeedback = () => {
   let url = window.location.href
-   let query = {
-    eventCode : url.substr(url.lastIndexOf('/') + 1)
-  }
-  $.getJSON(`../events/`, query, function(res){
+  let eventCode = url.substr(url.lastIndexOf('/') + 1).toLocaleUpperCase()
+  console.log(eventCode)
+  $.getJSON(`../events/`, { eventCode }, function(res){
     $('.js-event-title').html(res.title)
     $('.js-event-host').html(res.host)
     $('#thanks').html(res.thanks)
   })
-  createFeedback(query.eventCode)
+  createFeedback(eventCode)
 }
 
 const createFeedback = (eventCode) =>{

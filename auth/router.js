@@ -19,6 +19,7 @@ const localAuth = passport.authenticate('local', {session:false})
 router.use(bodyParser.json())
 
 router.post('/login', localAuth, (req, res) => {
+  console.log(req.body)
   const authToken = createAuthToken(req.host.serialize())
   res.json({authToken})
 })
@@ -30,4 +31,4 @@ router.post('/refresh', jwtAuth, (req, res) => {
   res.json({authToken})
 })
 
-module.exports = {router}
+module.exports = router 

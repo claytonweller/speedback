@@ -35,21 +35,39 @@ router.get('/:eventId', (req, res) =>{
     .catch(err => res.status(500).json({message: 'Something went wrong on the server'}))
 })
 
+
+
+const generateEventCode = (length) =>{
+  let alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+  let code = ''
+  for (let index = 0; index < length; index++) {
+    code = code + alphabet[Math.floor(Math.random() * alphabet.length)]
+  }
+  return code
+}
+
+
 router.post('/', (req, res) =>{
-  
   let defaultEvent = {
     title:'Title',
     thanks:'Thank you for coming to our event!',
     endTimeStamp: Date.now(),
-    code: Math.floor(Math.random() * 100).toString(),
+    // With 3 digits there are 17,576 possible codes
+    code: generateEventCode(3),
     phone:1112223333,
     timeStamp: Date.now(),
   }
-  console.log(req.body)
   Host.findById(req.body.hostId)
     .then(host => {
       defaultEvent['host'] = host.firstName + ' ' + host.lastName
       defaultEvent['hostId'] = host._id
+      return EventModel.find({code:defaultEvent.code}).countDocuments()
+    })
+    .then(count => {
+      if(count){  
+        // with 4 digits there are nearly half a million combinations
+        defaultEvent['code'] = generateEventCode(4)     
+      }
       return defaultEvent
     })
     .then(event => EventModel.create(event))

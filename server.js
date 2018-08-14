@@ -11,19 +11,22 @@ const app = express()
 const eventsRouter = require('./events/router')
 const hostsRouter = require('./hosts/router')
 const feedbackRouter = require('./feedback/router')
-// const { router: authRouter, localStrategy, /*jwtStrategy*/ } = require('./auth')
+const authRouter = require('./auth/router')
+const { localStrategy, jwtStrategy } = require('./auth')
+
 
 app.use(express.static('public'))
 app.use(morgan('common'))
 app.use('/events', eventsRouter)
 app.use('/hosts', hostsRouter)
 app.use('/feedback', feedbackRouter)
-// app.use('/auth', authRouter)
+app.use('/auth', authRouter)
 
 app.engine('html', require('ejs').renderFile);
 
-// passport.use(localStrategy)
-// passport.use(jwtStrategy)
+// Need to import these two.
+passport.use(localStrategy)
+passport.use(jwtStrategy)
 
 app.get('/:eventCode', (req, res)=>{
   res.status(200).render('../public/feedback.html')

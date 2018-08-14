@@ -13,7 +13,8 @@ const hostSchema = mongoose.Schema({
 hostSchema.methods.serialize = function(){
   return {
     firstName: this.firstName,
-    lastName: this.lastName
+    lastName: this.lastName,
+    hostId: this._id
   }
 }
 

@@ -119,26 +119,32 @@ const signUpSubmit = () =>{
     firstName: $('#signup-form-first').val(),
     lastName: $('#signup-form-last').val(),
     email: $('#signup-form-email').val(),
-    password1: $('#signup-form-pass1').val(),
-    password2: $('#signup-form-pass2').val(),
+    password: $('#signup-form-pass1').val(),
+    passwordCheck: $('#signup-form-pass2').val(),
   }
-  console.log(signUpInfo)
+  if(signUpInfo.password !== signUpInfo.passwordCheck){
+    $('#signup-form-pass1, #signup-form-pass2').val('')
+    $('#sign-up-error').html('Passwords must Match')
+  } else if(signUpInfo.password.length < 10) {
+    $('#signup-form-pass1, #signup-form-pass2').val('')
+    $('#sign-up-error').html('Password must be at least 10 characters')
+  }  else {
 
-  if('checksPass'){
-    clearLandingInputs()
-    openDashboard()
-    switchToAuthNav()
-  } else {
-    // Point out errors
-  }
-  /* 
-    Checks I'll have to make:
-      All Fields Filled out
-      All Fields are appropriately formatted
-      Passwords match
-      Password is a meets certain requirements
-      That the email isn't already used for an account
-  */
+    $.ajax({
+      url: "../hosts",
+      type: "POST",
+      data: JSON.stringify(signUpInfo),
+      contentType: 'application/json'
+    })
+      .then(host => {
+        STATE.hostId = host.hostId
+        clearLandingInputs()
+        openDashboard()
+        switchToAuthNav()
+      })
+      .catch(err => $('#sign-up-error').html(err.responseJSON.message))
+  } 
+
 }
 
 const signUpSubmitListener = () =>{
@@ -156,22 +162,36 @@ const logInSubmit = () =>{
     password: $('#login-form-password').val(),
   }
 
-  $.getJSON(`../hosts/`, logInInfo)
-    .then(res => console.log('Host', res))
-  if('checksPass'){
-    clearLandingInputs()
-    openDashboard()
-    switchToAuthNav()
-  } else {
-    // Point out errors
-  }
-  /* 
-    Checks I'll have to make:
-      All Fields Filled out
-      All Fields are appropriately formatted
-      Confirm that the user exists
-      Confirm that the users credentials match
-  */
+  // This will change after JWT is put in place
+  $.getJSON('./hosts/', logInInfo)
+    .then(res => {
+      STATE.hostId = res.hostId
+      clearLandingInputs()
+      openDashboard()
+      switchToAuthNav()
+    })
+    .catch(err => {
+      console.log(err)
+      $('#login-error').html(err.responseJSON.message)
+    })
+
+
+  // $.ajax({
+  //   url: "../auth/login",
+  //   type: "POST",
+  //   data: JSON.stringify(logInInfo),
+  //   contentType: 'application/json'
+  // })
+  //   .then(thing => console.log(thing))
+  //   .catch(err => console.log(err))
+
+
+  // if('checksPass'){
+
+  // } else {
+  //   // Point out errors
+  // }
+
 }
 
 const logInSubmitLIstener = () =>{
