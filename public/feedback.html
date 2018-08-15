@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>CUSTOM TITLE PER EVENT</title>
+  <title>Speedback</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
   <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"> 
@@ -28,43 +28,48 @@
       </label>
       <br>
       <label class="check-label">
-        <span class="check-mark"></span>
         <input id="opt-in-check" class="check-box" name="opt-in" type="checkbox"> 
-        <div class="check-text">I would like to keep the discussion going with HOST</div>
+        <span class="check-mark"></span>
+        <div class="check-text">I would like to help <span class="js-event-host feedback-host">HOST</span> in the future</div>
       </label>
       <div id="feedback-extra" hidden>
         <p>You don't need to fill out all of the fields, and we promise to not share your information with any outside parties.</p>
-        <label>
-          Name
-          <br> <input id="feedback-name" type="text">
-        </label>
-        <br>
-        <label>
-          Email
-          <br> <input id="feedback-email" type="email">
-        </label>
-        <br>
-        <label>
-          Phone
-          <br> <input id="feedback-phone" type="tel">
-        </label>
-        <br>
+        <div id="feedback-text-inputs">
+          <label class="text-label"> 
+            <div>Name</div>
+            <input id="feedback-name" type="text" placeholder="Name">
+          </label>
+          <br>
+          <label class="text-label">
+            <div>Email</div>
+            <input id="feedback-email" type="email" placeholder="Email@email.com">
+          </label>
+          <br>
+          <label class="text-label">
+            <div>Phone</div>
+            <input id="feedback-phone" type="tel" placeholder="1234567890">
+          </label>
+        </div>
         <fieldset>
           <legend>I would like to help by...</legend>
-          <label>
-            <input id="update-check" name="update" type="checkbox" > Attending future events  
+          <label class="check-label">
+            <input id="update-check" class="check-box" name="update" type="checkbox" > 
+            <span class="check-mark"></span>
+            <div class="check-text">Attending future events</div>  
           </label>
-          <br>
-          <label>
-            <input id="feedback-check" name="feedback" type="checkbox"> Giving more feedback
-          </label>
-          <br>
-          <label>
-            <input id="volunteer-check" name="volunteer" type="checkbox"> Volunteering at future events
+          <label class="check-label">
+            <input id="feedback-check" class="check-box" name="feedback" type="checkbox"> 
+            <span class="check-mark"></span>
+            <div class="check-text">Giving in-person feedback</div>
+          </label class="check-label">
+          <label class="check-label">
+            <input id="volunteer-check" class="check-box" name="volunteer" type="checkbox"> 
+            <span class="check-mark"></span>
+            <div class="check-text">Volunteering at future events</div>
           </label>
         </fieldset>
       </div>
-      <div>
+      <div id="feedback-button-holder">
         <button id="feedback-button" type="submit">Submit</button>
       </div>
     </form>

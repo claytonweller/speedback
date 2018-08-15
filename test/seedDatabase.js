@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const faker = require("faker");
 
-const EventModel = require("../events/models");
-const Host = require("../hosts/models");
-const Feedback = require("../feedback/models");
+const {EventModel} = require("../events/models");
+const {Host} = require("../hosts/models");
+const {Feedback} = require("../feedback/models");
 
 function returnRandomIndex(array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -118,7 +118,7 @@ function seedFeedbackData(eventIdArray) {
 
 function generateFeedbackData(eventIdArray) {
   return {
-    content: faker.lorem.paragraph(Math.floor(Math.random() * 4)),
+    content: faker.lorem.paragraph(1),
     optIn: faker.random.boolean(),
     name: faker.name.firstName(),
     email: faker.internet.email(),

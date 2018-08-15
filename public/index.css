@@ -6,9 +6,7 @@
   font-style: normal;
 }
 
-
-
-body { 
+body * { 
   font-family: 'PT Sans', sans-serif;
   font-size: 20px;
   box-sizing: border-box;
@@ -34,7 +32,8 @@ nav {
   background-color: black;
   position: fixed;
   width:100%;
-  height: 40px;
+  height: 45px;
+  z-index: 100;
 }
 
 nav img{
@@ -42,10 +41,11 @@ nav img{
 }
 
 main{
-  padding: 10px;
-  padding-top:40px;
+  padding: 15px;
+  padding-top:50px;
   background-color: #202020;
   color: white;
+  min-height: 100vh;
 }
 
 h1{
@@ -55,6 +55,31 @@ h1{
 a{
   color:#FE0D00;
   text-decoration: none;
+}
+
+button {
+  background-color:#FE0D00;
+  width: 100%;
+  color:white;
+  font-family: 'Oswald', sans-serif;
+  font-size: 34px;
+  padding: 10px;
+  border:none;
+}
+
+.text-label {
+  width: 100%;
+}
+
+.text-label div {
+  padding-bottom: 5px;
+  padding-top:10px;
+}
+
+.text-label input {
+  width:100%;
+  height: 45px;
+  padding: 10px;
 }
 
 .label-text{
@@ -122,11 +147,58 @@ a{
 }
 
 #feedback-text{
-  box-sizing: border-box;
   width: 100%;
   height: 150px;
   padding:10px;
 }
 
+#feedback-extra{
+  flex-flow: wrap;
+}
 
+#feedback-extra p {
+  width: 100%;
+}
+
+#feedback-text-inputs {
+  width:100%;
+  margin-bottom: 30px;
+}
+
+fieldset {
+  width:100%;
+  margin-bottom: 30px;
+}
+
+#thanks {
+  margin-top: 45px;
+  font-size: 26px;
+}
+
+@media only screen and (min-width: 500px){
+
+  #feedback-extra{
+    display: flex;
+    justify-content: space-between;
+  }
+  #feedback-text-inputs, fieldset{
+    width:48%
+  }
+
+  fieldset{
+    display:flex;
+    flex-flow: column;
+    justify-content: space-around;
+  }
+
+  #feedback-text-inputs {
+    margintop:30px;
+  }
+
+  button {
+    max-width: 250px;
+    position: relative;
+  }
+
+}
 
