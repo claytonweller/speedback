@@ -1,7 +1,7 @@
 const STATE = {
   //I'll probably replace this with the token?
   hostId:'5b70addf8e4cf51e0c7936d1',
-  //This is used whenever PUT/DELETE happen to a current event
+  //This is used whenever PUT/DELETE happens to a current event
   focusEventId:0
 }
 
@@ -30,9 +30,10 @@ const manageApp = () =>{
 
 //Useful Functions
 
+// We have to convert time stamps a bunch.
 const convertTimeStampToDate = (timeStamp, mode) => {
   let m = new Date(timeStamp)
-
+  // to work with jquery formatting we have to make numbers less than 10 two digits by adding a zero
   const addZero = number =>{
     if(number < 10) {
       return `0${number}`
@@ -56,26 +57,27 @@ const convertTimeStampToDate = (timeStamp, mode) => {
     dateObject.hour + ":" + 
     dateObject.minutes;
 
+  // Sometimes we need a string, sometimes an object.
   if (mode === 'object'){
     return dateObject 
   } else {
     return dateString
-  
   }
-  
 }
-
+  // When we're switching from screen to screen we often need to hide all the other screens.
 const hideAll = () =>{
   $('section').attr('hidden', true)
 }
 
 //NAV BAR
 
+  // After they're authorized they get a different nav bar
 const switchToAuthNav = () =>{
   $('#nav-auth-no').attr('hidden', true)
   $('#nav-auth-yes').removeAttr('hidden')
 }
 
+  //On logout we switch back to the default nav bar
 const removeAuthNav = () =>{
   $('#nav-auth-yes').attr('hidden', true)
   $('#nav-auth-no').removeAttr('hidden')
@@ -91,6 +93,7 @@ const logOutListener = () =>{
   })
 }
 
+  // On the Auth nav this opens the event dashboard
 const navEventLinkListenter = () =>{
   $('#nav-events').click(function(event){
     event.preventDefault()
@@ -110,11 +113,46 @@ const manageNav = () =>{
 
 //LANDING (signup-Login) 
 
+const manageLandingPage = () =>{
+  // Submits the Sign Up Form
+  signUpSubmitListener()
+  // Navigates to login interface
+  signUpButtonListener()
+  // Submits the login form
+  logInSubmitLIstener()
+  // Navigates to login interface
+  logInButtonListener()
+}
+
+  // Once a form is submitted we clear all the values
 const clearLandingInputs = () => $('#auth').find('input').val('')
 
+  //Sign Up Start
+  // These two functions are used by other sections of the app to navigate to SignUp
+const signUpButtonListener = () =>{
+  $('#nav-sign-up, #sign-up-button, #sign-up-instead').click(function(event){
+    event.preventDefault()
+    openSignUpInterface()
+  })
+}
+
+const openSignUpInterface = () =>{
+  $('#auth, #auth-signup').removeAttr('hidden')
+  // If the auth interface becomes a modal window I won't need to hide the landing
+  $('#landing, #auth-login').attr('hidden', true)
+}
+
+// Startup Specific Functions
+const signUpSubmitListener = () =>{
+  $('#signup-form-button').click(function(event){
+    event.preventDefault()
+    signUpSubmit()
+  })
+}
+
 const signUpSubmit = () =>{
-  
-  console.log('POST user info, and return their JWS token')
+  console.log('POST user info, and return their JWT')
+  // Need to set up JWT stuff still
   let signUpInfo = {
     firstName: $('#signup-form-first').val(),
     lastName: $('#signup-form-last').val(),
@@ -146,17 +184,34 @@ const signUpSubmit = () =>{
   } 
 
 }
+  // Sign up End
 
-const signUpSubmitListener = () =>{
-  $('#signup-form-button').click(function(event){
+  //Log In Start
+  // These functions are used by other parts of the app to navigate to the login interface
+const logInButtonListener = () =>{
+  $('#log-in-button, #nav-log-in, #log-in-instead').click(function(event){
     event.preventDefault()
-    signUpSubmit()
+    openLogInInterface()
+  })
+}
+
+const openLogInInterface = () => {
+  $('#auth, #auth-login').removeAttr('hidden')
+  // If the auth interface becomes a modal window I won't need to hide the landing
+  $('#landing, #auth-signup').attr('hidden', true)
+}
+
+  // Login specific functions
+const logInSubmitLIstener = () =>{
+  $('#login-form-button').click(function(event){
+    event.preventDefault()
+    logInSubmit()
   })
 }
 
 const logInSubmit = () =>{
-  console.log('GET user info, confirm that info is correct, return JWS token')
-  
+  console.log('GET user info, confirm that info is correct, return JWT')
+  // Need to set up JWT Stuff still
   let logInInfo = {
     email: $('#login-form-email').val(),
     password: $('#login-form-password').val(),
@@ -175,7 +230,7 @@ const logInSubmit = () =>{
       $('#login-error').html(err.responseJSON.message)
     })
 
-
+  // JWT Code
   // $.ajax({
   //   url: "../auth/login",
   //   type: "POST",
@@ -185,53 +240,6 @@ const logInSubmit = () =>{
   //   .then(thing => console.log(thing))
   //   .catch(err => console.log(err))
 
-
-  // if('checksPass'){
-
-  // } else {
-  //   // Point out errors
-  // }
-
-}
-
-const logInSubmitLIstener = () =>{
-  $('#login-form-button').click(function(event){
-    event.preventDefault()
-    logInSubmit()
-  })
-}
-
-const openSignUpInterface = () =>{
-  $('#auth, #auth-signup').removeAttr('hidden')
-  // If the auth interface becomes a modal window I won't need to hide the landing
-  $('#landing, #auth-login').attr('hidden', true)
-}
-
-const openLogInInterface = () => {
-  $('#auth, #auth-login').removeAttr('hidden')
-  // If the auth interface becomes a modal window I won't need to hide the landing
-  $('#landing, #auth-signup').attr('hidden', true)
-}
-
-const signUpButtonListener = () =>{
-  $('#nav-sign-up, #sign-up-button, #sign-up-instead').click(function(event){
-    event.preventDefault()
-    openSignUpInterface()
-  })
-}
-
-const logInButtonListener = () =>{
-  $('#log-in-button, #nav-log-in, #log-in-instead').click(function(event){
-    event.preventDefault()
-    openLogInInterface()
-  })
-}
-
-const manageLandingPage = () =>{
-  signUpSubmitListener()
-  signUpButtonListener()
-  logInSubmitLIstener()
-  logInButtonListener()
 }
 
   //end LANDING PAGE
@@ -240,42 +248,58 @@ const manageLandingPage = () =>{
 
 // DASHBOARD
 
+const manageDashboard = () => {
+  // This will open Event info for a specific event
+  eventInfoLinkListener();
+  // This will open the URL/HTML form associated with a specific event
+  eventLiveFormLinkListener();
+};
+
+  //Listeners
+  // These are used on the dashboard as well as on specific event info pages.
+
+const eventInfoLinkListener = () => {
+  $("#dash").on("click", ".js-event-info-link", function(event) {
+    event.preventDefault();
+    // Need some what to store the data so we can make the correct API request based upon the link for now we'll leave a place holder
+    let eventId = this.id.replace("info", "").replace("feedback", "");
+
+    openEventInfo(eventId);
+  });
+};
+
+const eventLiveFormLinkListener = () => {
+  $("main").on("click", ".live-form-link", function(event) {
+    event.preventDefault();
+    window.open(`./${this.id}`, "_blank")
+  });
+};
+
+  // Dashboard specific functions
 const openDashboard = () => {
   hideAll()
+  // This makes sure to remove any specific event that was being looked at
+  // so that if a new event is created you don't edit your old event instead.
   STATE.focusEventId = 0
+  // This takes the hostId (Which will also be stored in the JWT)
+  // and grabs all associated events from that host
   $.getJSON(`../events/`, {hostId:STATE.hostId}, populateDashboard);
   $("#dash").removeAttr("hidden");
 };
 
 const populateDashboard = res => {
   let now = Date.now();
-  populateUpcomingEvents(res.filter(event => event.endTimeStamp > now));
-  populateCompleteEvents(res.filter(event => event.endTimeStamp < now));
-};
-
-const populateCompleteEvents = events => {
-  console.log("COMPLETE", events);
-  let allComplete = events.map(event => eventTemplate(event, "complete"));
-  $("#dash-complete").html("<h2>Complete Events</h2>" + allComplete);
-  $("#dash-complete")
-    .find(".event-edit-button, .live-form-link")
-    .attr("hidden", true);
-};
-const populateUpcomingEvents = events => {
-  console.log("UPCOMING", events);
-  let allUpcoming = events.map(event => eventTemplate(event));
-  allUpcoming.unshift("<h2>Upcoming Events</h2>");
-  $("#dash-upcoming").html(allUpcoming);
-  $("#dash-upcoming")
-    .find(".event-feedback-link")
-    .attr("hidden", true);
-};
+  // Events are sorted by whether or not they're complete or not
+  populateEvents(res.filter(event => event.endTimeStamp > now), 'upcoming')
+  populateEvents(res.filter(event => event.endTimeStamp < now), 'complete')
+}
 
 populateEvents = (events, type) => {
-  let renderedEvents = events.map(event => eventTemplate(event, type));
-  $(`#dash-${type}`).html(`<h2>${type} Events</h2>` + allComplete); // todo capitalize type
+  let allEvents = events.map(event => eventTemplate(event, type));
+  allEvents.unshift(`<h2>${type} Events</h2>`)
+  $(`#dash-${type}`).html(allEvents); // todo capitalize type
 
-  var elements =
+  let elements =
     type === "upcoming"
       ? ".event-feedback-link"
       : ".event-edit-button, .live-form-link";
@@ -307,100 +331,74 @@ const eventTemplate = (event, type) => {
   `;
 };
 
-  //Listeners
-
-const eventInfoLinkListener = () => {
-  $("#dash").on("click", ".js-event-info-link", function(event) {
-    event.preventDefault();
-    // Need some what to store the data so we can make the correct API request based upon the link for now we'll leave a place holder
-    let eventId = this.id.replace("info", "").replace("feedback", "");
-
-    openEventInfo(eventId);
-  });
-};
-
-const eventLiveFormLinkListener = () => {
-  $("main").on("click", ".live-form-link", function(event) {
-    event.preventDefault();
-    openLiveForm(this.id);
-  });
-};
-
-const openLiveForm = eventCode => window.open(`./${eventCode}`, "_blank")
-
-
-const manageDashboard = () => {
-  eventInfoLinkListener();
-  eventLiveFormLinkListener();
-};
-
   //end DASHBOARD
 //
 
 
 //EVENT INFO STUFF
 
-const openEventInfo = (id) =>{
+const openEventInfo = (eventId) =>{
   hideAll()
-  STATE.focusEventId = id
+  // This takes the Event id and makes that event the focused event.
+  STATE.focusEventId = eventId
   //Make a request for the info on this particular event using the id
-  $.getJSON(`./events/${id}`, {hostId:STATE.hostId}, populateEventInfo)
+  $.getJSON(`./events/${eventId}`, {hostId:STATE.hostId}, populateEventInfo)
   $('#info').removeAttr('hidden')
 }
 
 const populateEventInfo = (res) =>{
-  console.log(res)
   populateEventDetails(res)
-
+  // If the event endTimeStamp is in the past will remove the instructions
   if(res.endTimeStamp > Date.now()){
     populateEventInstructions(res)
     $('#details-end').html('Event ends: ' + convertTimeStampToDate(res.endTimeStamp))
   } else {
-    populateEventFeedback(res)    
+    $('#info-instructions').attr('hidden', true)
+    $('#info-details').find('.event-edit-button').attr('hidden', true)
     $('#details-end').html('Event ended: ' + convertTimeStampToDate(res.endTimeStamp))
   }
+  
 }
 
-const populateEventDetails = (res) =>{
-  $('#details-title').html(res.title)
-  $('#details-host').html(res.host)
-  $('#details-thanks').html(res.thanks)
-}
-
+// This is only displayed if the event hasn't happened 
 const populateEventInstructions = (res) => {
   $('#info-details').find('.event-edit-button').removeAttr('hidden')
-  $('#info-feedback').attr('hidden', true)
   $('#info-instructions').removeAttr('hidden')
   $('.js-instructions-code').html(res.code)
   $('#instructions-phone').html(res.phone)
 }
 
-const populateEventFeedback = (res) => {
-  $('#info-details').find('.event-edit-button').attr('hidden', true)
-  $('#info-instructions').attr('hidden', true)
-  $('#info-feedback').removeAttr('hidden')
-  populateFeedbackGraph(res)
+// These things are always displayed
+const populateEventDetails = (res) =>{
+  $('#details-title').html(res.title)
+  $('#details-host').html(res.host)
+  $('#details-thanks').html(res.thanks)
+  populateFeedbackGraphs(res)
   populateFeedbackInDepth(res)
 }
 
-const populateFeedbackGraph = (res) => {
-  console.log('THE GRAPH HAPPENS')
+const populateFeedbackGraphs = (res) => {
+  console.log('THE GRAPHS HAPPEN')
 }
 
 const populateFeedbackInDepth = (res) =>{
+  // GET all the feedback associated with the event.
   $.getJSON(`./feedback/${res.eventId}`)
     .then(feedbackarray => {
+      // This filters out the feedback where nothing happened
       let feedbackOfValue = feedbackarray.filter(feedback => feedback.didAnything)
-      $('#feedback-in-depth').html(feedbackOfValue.map(feedback => feedbackTemplate(feedback)))
+      if(feedbackOfValue.length > 0){
+        // This displays all the feedback on the website
+        $('#feedback-in-depth').html(feedbackOfValue.map(feedback => feedbackTemplate(feedback)))
+      } else {
+        $('#feedback-in-depth').html('No Feedback')
+      }
     })
-  
 }
 
-// Will need to list all Feedback info
-// Will need to synthesize the info into some useful graphs/displays
-
 const feedbackTemplate = (feedback) => {
-  
+  // If the person providing feedback opts in to more communication
+  // then we display a more in depth display box
   if(feedback.optIn){
     return `
       <div class="feedback-single">
@@ -438,10 +436,45 @@ const feedbackTemplate = (feedback) => {
 
 /// EVENT EDITOR
 
-const clearEventEditorFields = () => $('#edit').find('input, textarea').val('')
+const manageEventEditor = () =>{
+  // This is used in other screens and opens the event editor with a brand new event.
+  newEventButtonListener()
+  // This is used in other screens and opens the event editor with a pre-existing event
+  eventEditButtonListener()
+  // This is in the editor and sends out a PUT request to the server
+  eventEditorSubmitButtonListener()
+  // This is in the editor.
+  // If the event is new, it sends a DELETE request to the server
+  // If the event is pre-existing it simply returns to the event info page and makes no changes.
+  eventEditorCancelButtonListener()  
+}
+
+
+  //eventEditButtonListener & new EventButtonListenter both open the editor
+const eventEditButtonListener = () =>{
+  $('main').on('click', '.event-edit-button', function(event){
+    event.preventDefault()
+    let eventId = this.id.replace("edit", "")
+    
+    if (eventId){
+      openEventEditor(eventId)  
+    } else {
+      openEventEditor(STATE.focusEventId)
+    }    
+  })
+}
+
+const newEventButtonListener = () => {
+  $('.js-new-event-button').click(function(event){
+    console.log('listener')
+    event.preventDefault()
+    createEvent()
+  })
+}
 
 const createEvent = () =>{
-  //Will create a POST a new, blank event in the database and upon a successful return, it will open the event editor with the default values.
+  //Will create a POST a new, blank event in the database,
+  // and upon a successful return it will open the event editor with the default values.
   let body = {
     hostId: STATE.hostId
   }
@@ -457,7 +490,11 @@ const createEvent = () =>{
     })
 }
 
+  // Editor specifc Functions
+
 const openEventEditor = eventId =>{
+  // The focus event has to updated inorder for Updates to edit the correct file.
+  // This will also be doubled up with the JWT
   STATE.focusEventId = eventId
   $.getJSON(`../events/${eventId}`, populateEventEditor)
   hideAll()
@@ -469,13 +506,20 @@ const populateEventEditor = (res) =>{
   $('#edit-host').val(res.host)
   //DATE
   let date = convertTimeStampToDate(res.endTimeStamp, 'object')
-
-
-
   $('#edit-date').val(`${date.year}-${date.month}-${date.day}`)
   $('#edit-time').val(`${date.hour}:${date.minutes}`)
   $('#edit-thanks').val(res.thanks)
 
+}
+
+const eventEditorSubmitButtonListener = () =>{
+  $('#edit-submit-button').click(function(event){
+    event.preventDefault()
+    submitEventEdits()
+    openEventInfo(STATE.focusEventId)
+    clearEventEditorFields()
+    //Maybe put in a thing that opens the live form in another tab?
+  })
 }
 
 const submitEventEdits = () =>{
@@ -498,22 +542,6 @@ const submitEventEdits = () =>{
   })
 }
 
-  //Listeners
-
-const eventEditButtonListener = () =>{
-  $('main').on('click', '.event-edit-button', function(event){
-    event.preventDefault()
-    let eventId = this.id.replace("edit", "")
-    
-    if (eventId){
-      openEventEditor(eventId)  
-    } else {
-      openEventEditor(STATE.focusEventId)
-    }
-    
-  })
-}
-
 const eventEditorCancelButtonListener = () =>{
   $('#edit-cancel-button').click(function(event){
     event.preventDefault()
@@ -528,39 +556,22 @@ const eventEditorCancelButtonListener = () =>{
     
   })
 }
-
-const eventEditorSubmitButtonListener = () =>{
-  $('#edit-submit-button').click(function(event){
-    event.preventDefault()
-    submitEventEdits()
-    openEventInfo(STATE.focusEventId)
-    clearEventEditorFields()
-    //Maybe put in a thing that opens the live form in another tab?
-  })
-}
-
-const newEventButtonListener = () => {
-  $('.js-new-event-button').click(function(event){
-    console.log('listener')
-    event.preventDefault()
-    createEvent()
-  })
-}
-
-const manageEventEditor = () =>{
-  newEventButtonListener()
-  eventEditButtonListener()
-  eventEditorSubmitButtonListener()
-  eventEditorCancelButtonListener()  
-}
+const clearEventEditorFields = () => $('#edit').find('input, textarea').val('')
 
   //End EVENT EDITOR
 //
 
 
-
-
 //REMOVE CONFIRM
+
+const manageRemoveConfirm = () => {
+  // This exists on other screens and opens up the remove confirm interface
+  eventRemoveButtonListener()
+  // This is on RemoveConfirm and simply closes remove confirm
+  removeCancleButtonListener()
+  // This sends a DELETE request to the server to remove the Event
+  removeConfirmButtonListener()
+}
 
 const eventRemoveButtonListener = () =>{
   $('main').on('click', '.event-remove-button', function(event){
@@ -612,15 +623,7 @@ const removeCancleButtonListener = () =>{
   })
 }
 
-const manageRemoveConfirm = () => {
-  eventRemoveButtonListener()
-  removeCancleButtonListener()
-  removeConfirmButtonListener()
-}
-
   //end REMOVE CONFIRM
 //
-
-
 
 $(manageApp())

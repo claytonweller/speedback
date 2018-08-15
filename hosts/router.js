@@ -4,7 +4,7 @@ const router = express.Router()
 
 router.use(express.json())
 
-const Host = require('./models')
+const {Host} = require('./models')
 
 router.get('/', (req, res) =>{
   // Might not keep this as is after we get JWT put in.
@@ -213,4 +213,4 @@ router.post('/', (req, res) =>{
   
 })
 
-module.exports = router
+module.exports = {router}

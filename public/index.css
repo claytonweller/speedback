@@ -52,6 +52,11 @@ h1{
   font-size: 60px;
 }
 
+a{
+  color:#FE0D00;
+  text-decoration: none;
+}
+
 .label-text{
   margin-bottom: 5px;
 }

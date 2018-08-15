@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const Feedback = require('./models')
-const EventModel = require('../events/models')
+const {Feedback} = require('./models')
+const {EventModel} = require('../events/models')
 
 router.use(express.json())
 
@@ -74,4 +74,4 @@ router.delete('/:feedbackId', (req, res) =>{
 })
 
 
-module.exports = router
+module.exports = {router}

@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const EventModel = require('./models')
-const Host = require('../hosts/models')
+const {EventModel} = require('./models')
+const {Host} = require('../hosts/models')
 router.use(express.json())
 
 router.get('/', (req, res) => {
@@ -101,4 +101,4 @@ router.delete('/:eventId', (req, res) =>{
 })
 
 
-module.exports = router
+module.exports = {router}

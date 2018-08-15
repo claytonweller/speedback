@@ -28,4 +28,4 @@ hostSchema.statics.hashPassword = function(password){
 
 const Host = mongoose.model('Host', hostSchema, 'hosts')
 
-module.exports = Host
+module.exports = {Host}

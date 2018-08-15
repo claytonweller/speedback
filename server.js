@@ -8,9 +8,9 @@ mongoose.Promise = global.Promise;
 const { PORT, DATABASE_URL } = require("./config");
 const app = express();
 
-const eventsRouter = require("./events/router");
-const hostsRouter = require("./hosts/router");
-const feedbackRouter = require("./feedback/router");
+const {router:eventsRouter} = require("./events");
+const {router:hostsRouter} = require("./hosts");
+const {router:feedbackRouter} = require("./feedback");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 
 app.use(express.static("public"));
@@ -20,9 +20,13 @@ app.use("/hosts", hostsRouter);
 app.use("/feedback", feedbackRouter);
 app.use("/auth", authRouter);
 
-// Need to import these two.
+
+//AUTH isn't working yet!
 passport.use(localStrategy);
 passport.use(jwtStrategy);
+
+// This Request is for the URL feedback page. It takes a unique event code, 
+// and populates the feedback form from a GET Event call
 
 app.get("/:eventCode", (req, res) => {
   res.sendFile("public/feedback.html", { root: __dirname });

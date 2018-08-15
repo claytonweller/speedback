@@ -1,5 +1,5 @@
 'use strict';
-const {Event} = require('./models');
+const {EventModel} = require('./models');
 const {router} = require('./router');
 
-module.exports = {Event, router};
+module.exports = {EventModel, router};
