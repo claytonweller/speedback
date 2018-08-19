@@ -35,7 +35,7 @@ describe("Hosts", function() {
     return closeServer();
   });
 
-  // Begin Post tests
+
   describe("POST endpoint", function() {
     it("should add a new Host", function() {
       const newHost = generateHostData();

@@ -18,7 +18,6 @@ function seedDatabase() {
       })
       .then(events => {
         let eventIdArray = events.map(event => event._id);
-
         return seedFeedbackData(eventIdArray);
       })
       .then(feedback => {
@@ -68,7 +67,7 @@ function generateHostData() {
 function seedEventData(hostIdArray) {
   return new Promise((resolve, reject) => {
     const seedData = [];
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 2; i++) {
       seedData.push(generateEventData(hostIdArray));
     }
     EventModel.insertMany(seedData)
@@ -100,7 +99,7 @@ function generateEventData(hostIdArray) {
 function seedFeedbackData(eventIdArray) {
   return new Promise((resolve, reject) => {
     const seedData = [];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 10; i++) {
       seedData.push(generateFeedbackData(eventIdArray));
     }
     Feedback.insertMany(seedData)
