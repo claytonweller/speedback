@@ -8,7 +8,7 @@ const {Feedback} = require("../feedback/models");
 function returnRandomIndex(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
-
+ 
 function seedDatabase() {
   return new Promise((resolve, reject) => {
     seedHostData()
