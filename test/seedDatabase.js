@@ -13,18 +13,15 @@ function seedDatabase() {
   return new Promise((resolve, reject) => {
     seedHostData()
       .then(hosts => {
-        console.log(hosts.length);
         let hostIdArray = hosts.map(host => host._id);
         return seedEventData(hostIdArray);
       })
       .then(events => {
-        console.log(events.length);
         let eventIdArray = events.map(event => event._id);
 
         return seedFeedbackData(eventIdArray);
       })
       .then(feedback => {
-        console.log(feedback.length);
         resolve(feedback);
       })
       .catch(err => reject(err));
@@ -33,7 +30,6 @@ function seedDatabase() {
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {
-    console.warn("Deleteing test database");
     mongoose.connection
       .dropDatabase()
       .then(result => resolve(result))
