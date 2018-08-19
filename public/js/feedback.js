@@ -48,6 +48,7 @@ const optInListener = () =>{
   $('#opt-in-check').click(function(event){
     if(document.getElementById('opt-in-check').checked){
       $('#feedback-extra').removeAttr('hidden')
+      $('#feedback-extra').attr('display', 'flex')
       $('#opt-in-check').attr('checked', true)
       updateFeedback()
     } else {

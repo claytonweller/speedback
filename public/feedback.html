@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
   <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="feedback.css">
 </head>
     
 <body>
@@ -34,40 +34,42 @@
       </label>
       <div id="feedback-extra" hidden>
         <p>You don't need to fill out all of the fields, and we promise to not share your information with any outside parties.</p>
-        <div id="feedback-text-inputs">
-          <label class="text-label"> 
-            <div>Name</div>
-            <input id="feedback-name" type="text" placeholder="Name">
-          </label>
-          <br>
-          <label class="text-label">
-            <div>Email</div>
-            <input id="feedback-email" type="email" placeholder="Email@email.com">
-          </label>
-          <br>
-          <label class="text-label">
-            <div>Phone</div>
-            <input id="feedback-phone" type="tel" placeholder="1234567890">
-          </label>
+        <div class="extra-input-container">
+          <div id="feedback-text-inputs">
+            <label class="text-label"> 
+              <div>Name</div>
+              <input id="feedback-name" type="text" placeholder="Name">
+            </label>
+            <br>
+            <label class="text-label">
+              <div>Email</div>
+              <input id="feedback-email" type="email" placeholder="Email@email.com">
+            </label>
+            <br>
+            <label class="text-label">
+              <div>Phone</div>
+              <input id="feedback-phone" type="tel" placeholder="1234567890">
+            </label>
+          </div>
+          <fieldset>
+            <legend>I would like to help by...</legend>
+            <label class="check-label">
+              <input id="update-check" class="check-box" name="update" type="checkbox" > 
+              <span class="check-mark"></span>
+              <div class="check-text">Attending future events</div>  
+            </label>
+            <label class="check-label">
+              <input id="feedback-check" class="check-box" name="feedback" type="checkbox"> 
+              <span class="check-mark"></span>
+              <div class="check-text">Giving in-person feedback</div>
+            </label class="check-label">
+            <label class="check-label">
+              <input id="volunteer-check" class="check-box" name="volunteer" type="checkbox"> 
+              <span class="check-mark"></span>
+              <div class="check-text">Volunteering at future events</div>
+            </label>
+          </fieldset>
         </div>
-        <fieldset>
-          <legend>I would like to help by...</legend>
-          <label class="check-label">
-            <input id="update-check" class="check-box" name="update" type="checkbox" > 
-            <span class="check-mark"></span>
-            <div class="check-text">Attending future events</div>  
-          </label>
-          <label class="check-label">
-            <input id="feedback-check" class="check-box" name="feedback" type="checkbox"> 
-            <span class="check-mark"></span>
-            <div class="check-text">Giving in-person feedback</div>
-          </label class="check-label">
-          <label class="check-label">
-            <input id="volunteer-check" class="check-box" name="volunteer" type="checkbox"> 
-            <span class="check-mark"></span>
-            <div class="check-text">Volunteering at future events</div>
-          </label>
-        </fieldset>
       </div>
       <div id="feedback-button-holder">
         <button id="feedback-button" type="submit">Submit</button>
