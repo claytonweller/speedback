@@ -189,16 +189,17 @@ const signUpSubmit = () =>{
   }  else {
 
     $.ajax({
-      url: "../hosts",
+      url: "/api/hosts",
       type: "POST",
       data: JSON.stringify(signUpInfo),
       contentType: 'application/json'
     })
       .then(host => {
-        STATE.hostId = host.hostId
-        clearLandingInputs()
-        openDashboard()
-        switchToAuthNav()
+        // TODO - LOGIN
+        // STATE.hostId = host.hostId
+        // clearLandingInputs()
+        // openDashboard()
+        // switchToAuthNav()
       })
       .catch(err => $('#sign-up-error').html(err.responseJSON.message))
   } 
@@ -238,9 +239,24 @@ const logInSubmit = () =>{
   }
 
   // This will change after JWT is put in place
-  $.getJSON('./hosts/', logInInfo)
+  // $.getJSON('./hosts/', logInInfo)
+  //   .then(res => {
+      
+  //   })
+
+  console.log(logInInfo)
+  // JWT Code
+  $.ajax({
+    url: "/api/auth/login",
+    type: "POST",
+    data: JSON.stringify(logInInfo),
+    contentType: 'application/json'
+  })
     .then(res => {
+      console.log(res)
       STATE.hostId = res.hostId
+      STATE.token = res.authToken
+      localStorage.setItem(`token`, STATE.token)
       clearLandingInputs()
       openDashboard()
       switchToAuthNav()
@@ -249,16 +265,6 @@ const logInSubmit = () =>{
       console.log(err)
       $('#login-error').html(err.responseJSON.message)
     })
-
-  // JWT Code
-  // $.ajax({
-  //   url: "../auth/login",
-  //   type: "POST",
-  //   data: JSON.stringify(logInInfo),
-  //   contentType: 'application/json'
-  // })
-  //   .then(thing => console.log(thing))
-  //   .catch(err => console.log(err))
 
 }
 

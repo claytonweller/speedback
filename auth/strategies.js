@@ -3,12 +3,17 @@ const { Strategy: LocalStrategy} = require('passport-local')
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt')
 
 //GOING TO NEED TO MAKE MY MODELS BEFORE I CAN ACUTALLY TEST THIS
-const Host = require('../hosts/models')
+const { Host } = require('../hosts/models')
 const { JWT_SECRET } = require('../config')
 
-const localStrategy = new LocalStrategy((email, password, callback) =>{
-  let host
-  Host.findOne({email:email})
+const localStrategy = new LocalStrategy(
+  {
+    usernameField: "email",
+    passwordField: "password"
+  },
+  (email, password, callback) => {
+    let host;
+    Host.findOne({ email: email })
     .then(_host => {
       host = _host
       if(!host){

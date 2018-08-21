@@ -15,10 +15,10 @@ const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 
 app.use(express.static("public"));
 app.use(morgan("common"));
-app.use("/events", eventsRouter);
-app.use("/hosts", hostsRouter);
-app.use("/feedback", feedbackRouter);
-app.use("/auth", authRouter);
+app.use("/api/events", eventsRouter);
+app.use("/api/hosts", hostsRouter);
+app.use("/api/feedback", feedbackRouter);
+app.use("/api/auth", authRouter);
 
 
 //AUTH isn't working yet!
