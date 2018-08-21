@@ -161,7 +161,7 @@ fieldset {
 
 @media only screen and (min-width: 500px){
 
-  form, .thanks, header{
+  form, #thanks, header{
     max-width: 650px;
     margin:auto;
   }

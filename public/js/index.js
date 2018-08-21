@@ -71,6 +71,28 @@ const hideAll = () =>{
 
 //NAV BAR
 
+const manageNav = () =>{
+  //This will remove the JWT and clear the state
+  // and return the user to the landing page
+  logOutListener()
+  // this returns the user to the events dashboard
+  navEventLinkListener()
+  // This toggles the mobile sub-menu
+  subMenuToggleListener()
+}
+
+const subMenuToggleListener = () =>{
+  $('#nav-sub-menu-toggle').click(function(event){
+    event.preventDefault()
+    if($('#nav-sub-menu').attr('hidden')){
+      $('#nav-sub-menu').removeAttr('hidden')
+    } else {
+      $('#nav-sub-menu').attr ('hidden', true)
+    }
+  })
+}
+
+
   // After they're authorized they get a different nav bar
 const switchToAuthNav = () =>{
   $('#nav-auth-no').attr('hidden', true)
@@ -94,17 +116,14 @@ const logOutListener = () =>{
 }
 
   // On the Auth nav this opens the event dashboard
-const navEventLinkListenter = () =>{
+const navEventLinkListener = () =>{
   $('#nav-events').click(function(event){
     event.preventDefault()
     openDashboard()
   })
 }
 
-const manageNav = () =>{
-  logOutListener()
-  navEventLinkListenter()
-}
+
 
   //end NAV BAR
 //
@@ -116,7 +135,7 @@ const manageNav = () =>{
 const manageLandingPage = () =>{
   // Submits the Sign Up Form
   signUpSubmitListener()
-  // Navigates to login interface
+  // Navigates to singup interface
   signUpButtonListener()
   // Submits the login form
   logInSubmitLIstener()
@@ -140,6 +159,7 @@ const openSignUpInterface = () =>{
   $('#auth, #auth-signup').removeAttr('hidden')
   // If the auth interface becomes a modal window I won't need to hide the landing
   $('#landing, #auth-login').attr('hidden', true)
+  
 }
 
 // Startup Specific Functions

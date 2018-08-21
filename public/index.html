@@ -12,86 +12,147 @@
     
 <body>
   <nav role="navigation" aria-live="assertive">
-    SpeedBack  
-    <span id="nav-auth-no">
-      <a href="URL" id="nav-log-in">Log In</a>
-      <a href="URL" id="nav-sign-up">Sign Up</a>
-    </span>
-    <span id="nav-auth-yes" hidden>
-      <button id="nav-new-event-button" class="js-new-event-button">New Event</button>
-      <a id="nav-events" href="URL">Events</a>
-      <a id="nav-log-out" href="URL">Log Out</a>
-    </Span>
+    <img class="nav-logo" src="./assets/LogoSmall.png" alt="Speedback Logo"> 
+    <div class="nav-right">
+      <a href="none" id="nav-sub-menu-toggle"><img src="./assets/menubars.png" alt="menu"></a> 
+      <div id="nav-sub-menu" hidden>
+        <div id="nav-auth-no">
+          <ul>
+            <li><a href="URL" id="nav-log-in">Log In</a></li>
+            <li><a href="URL" id="nav-sign-up">Sign Up</a></li>
+          </ul>
+        </div>
+        <div id="nav-auth-yes" hidden>
+          <ul>
+
+          </ul>
+          <button id="nav-new-event-button" class="js-new-event-button">New Event</button>
+          <a id="nav-events" href="URL">Events</a>
+          <a id="nav-log-out" href="URL">Log Out</a>
+        </div>
+      </div>
+    </div>
+    
   </nav>
   <main role="main" aria-live="assertive">
    
     <!-- Landing Page -->
     <section id="landing" role="region">
-      <h1>SpeedBack</h1>
-      <button id="sign-up-button">Sign Up</button>
-      <button id="log-in-button">Log In</button>
+      <div id="landing-above-the-fold">
+        <img class="logo-tall" src="./assets/TallLogo.png" alt="Speedback">
+        <img class="logo-wide" src="./assets/LogoLarge.png" alt="Speedback">
+        <h1>Get feedback fast after live events</h1>
+        <button id="sign-up-button">Sign Up</button>
+        <a id="log-in-button">Log In</a>  
+      </div>
+      
+      
       <div class="landing-description">
-        <h2>Description</h2>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab pariatur amet expedita consequuntur? Ducimus molestiae minus aspernatur labore laboriosam asperiores esse veritatis sit accusantium neque incidunt sed, expedita assumenda iusto.
-        </p> 
+        <div id="landing-steps">
+          <h2>Speedback is easy!</h2>
+          <div id="number-blocks">
+            <div class="number-block">
+              <img src="./assets/1.png" alt="Step 1">
+              <h1>List your event</h1>
+            </div>
+            <div class="number-block">
+              <img src="./assets/2.png" alt="Step 1">
+              <h1>Tell your audience</h1>
+            </div>
+            <div class="number-block">
+              <img src="./assets/3.png" alt="Step 1">
+              <h1>Instant Feedback</h1>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div id="landing-in-action">
+          <div id="landing-phone-container">
+            <h1>They Text</h1>
+            <img src="./assets/Phone.png" alt="An image of an iphone with this text 'CODE Wow! What a great event. Next time please bring back the trombone person, they were amazing!''Thanks for your feedback! if you'd like to keep the conversation going simply reply with your EMAIL''plastic@princess.me''Thank you! We'll be in contact soon!'">
+          </div>
+          <div id="landing-feedback-container">
+            <h1>You get feedback...</h1>
+            <img src="./assets/Indv-Feedback.png" alt="An example of the feedback you'll get in the app. It reads: Email: plastic@princess.me. Wants info about future events. Wants to give more feedback. Feedback - Wow! What a great event. Next time please bring back the trombone person, they were amazing!">
+            <h1>... and data!</h1>
+            <img src="./assets/Graphs.png" alt="An example of the graphs you can expect in the app. It has 4 columns: Total, Text, Email, More">
+          </div>
+        </div>
+
+        <hr>
+        <div id="landing-users">
+          <div id="landing-users-text">
+            <h1>Who Uses Speedback?</h1>
+            <ul>
+              <li>Festival organizers</li>
+              <li>Comedy groups</li>
+              <li>Venue managers</li>
+              <li>Public speakers</li>
+              <li>Anyone running a live event</li>
+            </ul>
+          </div>
+          <div id="landing-users-images">
+            THIS WILL BE A ROTATING BLOCK OF IMAGES
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Login/Signup Page -->
       <!-- I'm thinking about making this a modal window -->
-    <section id="auth" role="region" hidden>
+    <section id="auth" role="region">
       <!-- Log in -->
-      <div id="auth-login" hidden>
+      <div id="auth-login" class="auth-screen">
         <h2>Login</h2>
         <form id="login-form" action="#">
-          <label>
-            Email
+          <label class="text-label">
+            <div>Email</div>
             <input id="login-form-email" type="text" required>
           </label>
-          <br>
-          <label>
-            Password
+          <label class="text-label">
+            <div>Password</div>
             <input id="login-form-password" type="password" required>
           </label>
-          <br>
           <button id="login-form-button" type="submit">Submit</button>
         </form>
-        <span id="login-error"></span>
-        <p>Don't have an account? - <a id="sign-up-instead" href="URL">Sign Up</a></p>
+        <div id="login-error" class="form-error"></div>
+        <p>Don't have an account?</p>
+        <p><a id="sign-up-instead" href="URL">Sign Up</a></p>   
       </div>
       <!-- Sign up -->
-      <div id="auth-signup" hidden>
+      <div id="auth-signup" class="auth-screen" hidden>
         <h2>Sign Up</h2>
         <form id="signup-form" action="#">
-          <label>
-            First Name
-            <input id="signup-form-first" type="text" required>
-          </label>
-          <br>
-          <label>
-            Last Name
-            <input id="signup-form-last" type="text" required>
-          </label>
-          <br>
-          <label>
-            Email
-            <input id="signup-form-email" type="email" required>
-          </label>
-          <br>
-          <label>
-            Password 
-            <input id="signup-form-pass1" type="password" required>
-          </label>
-          <br>
-          <label>
-            Re-type Password
-            <input id="signup-form-pass2" type="password" required>
-          </label>
-          <button id="signup-form-button" type="submit">Submit</button>
+          <div id="sign-up-left">
+            <label class="text-label">
+              <div>First Name</div>
+              <input id="signup-form-first" type="text" required>
+            </label>
+            <label class="text-label">
+              <div>Last Name</div> 
+              <input id="signup-form-last" type="text" required>
+            </label>
+            <label class="text-label">
+              <div>Email</div>
+              <input id="signup-form-email" type="email" required>
+            </label>
+          </div>
+          <div id="sign-up-right">
+            <label class="text-label">
+              <div>Password</div> 
+              <input id="signup-form-pass1" type="password" required>
+            </label>
+            <label class="text-label">
+              <div>Re-type Password</div>
+              <input id="signup-form-pass2" type="password" required>
+            </label>
+            <button id="signup-form-button" type="submit">Submit</button>
+          </div>
         </form>
-        <span id="sign-up-error"></span>
-        <p>Already have an account? - <a id="log-in-instead" href="URL">Log In</a></p>
+        <div id="sign-up-error" class="form-error"></div>
+        <p>Already have an account?</p>
+        <p><a id="log-in-instead" href="URL">Log In</a></p>
       </div>
     </section>
     
@@ -179,24 +240,24 @@
     <section id="edit" role="region" hidden>
       <h1>Edit Event</h1>
       <form id="edit-form">
-        <label>
+        <label class="text-label">
           Event Title
           <br><input id="edit-title" type="text" placeholder="Event Title" maxlength="40">
         </label>
         <br>
-        <label>
+        <label class="text-label">
           <!-- by default this will be The Name of the user -->
           Who is putting on the event?
           <br><input id="edit-host" type="text" value="NAME OF USER" placeholder="Event Host">
         </label>
         <br>
-        <label>
+        <label class="text-label">
           Whend does the event end?
           <br>Date <input id="edit-date" type="date">
           Time <input id="edit-time" type="time" placeholder="7">
         </label>
         <br>
-        <label>
+        <label class="text-label">
           Short thank you message (150 Characters max)
           <br><textarea id="edit-thanks" type="text" maxlength="150" placeholder="Thanks for coming to..."></textarea>
         </label>
@@ -218,6 +279,9 @@
     </section>
   
   </main>
+  <footer>
+    <p>created by - <span class="footer-sig">Clayton Weller</span></p>
+  </footer>
   
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script src="./js/index.js"></script>
