@@ -1,26 +1,22 @@
 const STATE = {
   token: "",
-  // host: "",
   //This is used whenever PUT/DELETE happens to a current event
   focusEventId: 0
 };
 
 let token = localStorage.getItem("token");
 if (token) {
-   try to refresh token. ()
-   success(){
-     STATE.token = newtoken;
-     localStorage.setItem("token", newtoken);
-     clearLandingInputs();
-     openDashboard();
-     switchToAuthNav();
-   },
-   fails(){
-     localStorage.setItem("token", ""); // clear expired token
-   }
-
-
-
+  //  try to refresh token. ()
+  //  success(){
+  //    STATE.token = newtoken;
+  //    localStorage.setItem("token", newtoken);
+  //    clearLandingInputs();
+  //    openDashboard();
+  //    switchToAuthNav();
+  //  },
+  //  fails(){
+  //    localStorage.setItem("token", ""); // clear expired token
+  //  }
 }
 
 const manageApp = () => {
@@ -177,7 +173,7 @@ const signUpButtonListener = () => {
 const openSignUpInterface = () => {
   $("#auth, #auth-signup").removeAttr("hidden");
   // If the auth interface becomes a modal window I won't need to hide the landing
-  $("#landing, #auth-login").attr("hidden", true);
+  $("#auth-login").attr("hidden", true);
 };
 
 // Startup Specific Functions
@@ -189,8 +185,6 @@ const signUpSubmitListener = () => {
 };
 
 const signUpSubmit = () => {
-  console.log("POST user info, and return their JWT");
-  // Need to set up JWT stuff still
   let signUpInfo = {
     firstName: $("#signup-form-first").val(),
     lastName: $("#signup-form-last").val(),
@@ -231,7 +225,7 @@ const logInButtonListener = () => {
 const openLogInInterface = () => {
   $("#auth, #auth-login").removeAttr("hidden");
   // If the auth interface becomes a modal window I won't need to hide the landing
-  $("#landing, #auth-signup").attr("hidden", true);
+  $("#auth-signup").attr("hidden", true);
 };
 
 // Login specific functions
@@ -243,13 +237,10 @@ const logInSubmitLIstener = () => {
 };
 
 const logInSubmit = () => {
-  console.log("GET user info, confirm that info is correct, return JWT");
-  // Need to set up JWT Stuff still
   let email = $("#login-form-email").val();
   let password = $("#login-form-password").val();
 
   loginRequest(email, password);
-  console.log(logInInfo);
 };
 
 function loginRequest(email, password) {
@@ -264,7 +255,6 @@ function loginRequest(email, password) {
     contentType: "application/json"
   })
     .then(res => {
-      //STATE.hostId = res.hostId;
       STATE.token = res.authToken;
       localStorage.setItem(`token`, STATE.token);
       clearLandingInputs();
@@ -317,7 +307,18 @@ const openDashboard = () => {
   STATE.focusEventId = 0;
   // This takes the hostId (Which will also be stored in the JWT)
   // and grabs all associated events from that host
-  $.getJSON(`../events/`, { hostId: STATE.hostId }, populateDashboard);
+  // $.getJSON(`/api/events/`, populateDashboard);
+  $.ajax({
+    beforeSend: function(req){
+      req.setRequestHeader('Authorization', `Bearer ${STATE.token}`)
+    },
+    url: "/api/events/",
+    type: "GET",
+    contentType: 'application/json'
+  })
+  .then(res => populateDashboard(res))
+  .catch(err => console.log(err))
+
   $("#dash").removeAttr("hidden");
 };
 
@@ -375,7 +376,7 @@ const openEventInfo = eventId => {
   // This takes the Event id and makes that event the focused event.
   STATE.focusEventId = eventId;
   //Make a request for the info on this particular event using the id
-  $.getJSON(`./events/${eventId}`, { hostId: STATE.hostId }, populateEventInfo);
+  $.getJSON(`/api/events/${eventId}`, { hostId: STATE.hostId }, populateEventInfo);
   $("#info").removeAttr("hidden");
 };
 
@@ -423,7 +424,7 @@ const populateFeedbackGraphs = res => {
 
 const populateFeedbackInDepth = res => {
   // GET all the feedback associated with the event.
-  $.getJSON(`./feedback/${res.eventId}`).then(feedbackarray => {
+  $.getJSON(`/api/feedback/${res.eventId}`).then(feedbackarray => {
     // This filters out the feedback where nothing happened
     let feedbackOfValue = feedbackarray.filter(
       feedback => feedback.didAnything
@@ -519,7 +520,7 @@ const createEvent = () => {
     hostId: STATE.hostId
   };
   $.ajax({
-    url: "../events",
+    url: "/api/events",
     type: "POST",
     data: JSON.stringify(body),
     contentType: "application/json"
@@ -535,7 +536,7 @@ const openEventEditor = eventId => {
   // The focus event has to updated inorder for Updates to edit the correct file.
   // This will also be doubled up with the JWT
   STATE.focusEventId = eventId;
-  $.getJSON(`../events/${eventId}`, populateEventEditor);
+  $.getJSON(`/api/events/${eventId}`, populateEventEditor);
   hideAll();
   $("#edit").removeAttr("hidden");
 };
@@ -572,7 +573,7 @@ const submitEventEdits = () => {
   };
 
   $.ajax({
-    url: `../events/${STATE.focusEventId}`,
+    url: `/api/events/${STATE.focusEventId}`,
     type: "PUT",
     data: JSON.stringify(eventInfo),
     contentType: "application/json"
@@ -626,7 +627,7 @@ const eventRemoveButtonListener = () => {
 };
 
 const openRemoveConfirm = id => {
-  $.getJSON(`../events/${id}`, function(res) {
+  $.getJSON(`/api/events/${id}`, function(res) {
     $("#remove-title").html(res.title);
   });
   hideAll();
@@ -645,7 +646,7 @@ const deleteEvent = () => {
   // Make a DELETE request to the server
 
   $.ajax({
-    url: `../events/${STATE.focusEventId}`,
+    url: `/api/events/${STATE.focusEventId}`,
     type: "DELETE",
     // data: JSON.stringify(query),
     contentType: "application/json"

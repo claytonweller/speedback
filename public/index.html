@@ -45,8 +45,7 @@
         <button id="sign-up-button">Sign Up</button>
         <a id="log-in-button">Log In</a>  
       </div>
-      
-      
+         
       <div class="landing-description">
         <div id="landing-steps">
           <h2>Speedback is easy!</h2>
@@ -101,9 +100,10 @@
 
     <!-- Login/Signup Page -->
       <!-- I'm thinking about making this a modal window -->
-    <section id="auth" role="region">
+    <section id="auth" role="region" hidden>
+
       <!-- Log in -->
-      <div id="auth-login" class="auth-screen">
+      <div id="auth-login" class="auth-screen" hidden>
         <h2>Login</h2>
         <form id="login-form" action="#">
           <label class="text-label">
@@ -120,6 +120,7 @@
         <p>Don't have an account?</p>
         <p><a id="sign-up-instead" href="URL">Sign Up</a></p>   
       </div>
+      
       <!-- Sign up -->
       <div id="auth-signup" class="auth-screen" hidden>
         <h2>Sign Up</h2>

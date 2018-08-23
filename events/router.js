@@ -1,21 +1,55 @@
 const express = require('express')
 const router = express.Router()
+const passport = require('passport')
 
 const {EventModel} = require('./models')
 const {Host} = require('../hosts/models')
-router.use(express.json())
+const { jwtStrategy } = require('../auth')
 
-router.get('/', jwtAuth, (req, res) => {
+// router.use(express.json())
+passport.use(jwtStrategy)
+const jwtAuth = passport.authenticate('jwt', {session: false})
 
-    return EventModel.find({host: req.user.id})
-      .then(events => {
-        let serializedEvents = events.map(event => event.serialize())
-        res.status(200).json(serializedEvents)
-      })
-      .catch(err =>{
-        res.status(500).json({message:'Something went wrong on the server'})
-      })
-})
+
+// router.get('/', 
+//   (req, res, next) => {
+//     console.log(req.headers)
+//     passport.authenticate('jwt', (err, info, user) =>{
+//       console.log('err', err)
+//       console.log('info', info)
+//       console.log('user', user)
+//       if(err){
+//         console.log('err')
+//         return res.status(401).send(err)
+//       } else if(!user){
+//         console.log('!user')
+//         return res.status(401).send(info)
+//       }else {
+//         console.log('next')
+//         next()
+//       }
+//       console.log('after')
+//       return res.status(401).send(info)
+//     })(req, res);
+//   },
+//   (req, res) =>{
+//     console.log(req.user)
+
+//   }
+// )
+
+// router.get('/', jwtAuth, (req, res) => {
+//   console.log(req.user)
+
+//     return EventModel.find({host: req.user.id})
+//       .then(events => {
+//         let serializedEvents = events.map(event => event.serialize())
+//         res.status(200).json(serializedEvents)
+//       })
+//       .catch(err =>{
+//         res.status(500).json({message:'Something went wrong on the server'})
+//       })
+// })
 
 router.get('/code/:eventCode', (req, res) =>{
   EventModel.findOne({code: req.params.eventCode})
@@ -27,15 +61,11 @@ router.get('/code/:eventCode', (req, res) =>{
   })
 })
 
-
 router.get('/:eventId', (req, res) =>{
   EventModel.findById(req.params.eventId)
     .then(event => res.status(200).json(event.serialize()))
     .catch(err => res.status(500).json({message: 'Something went wrong on the server'}))
 })
-
-
-
 
 const generateEventCode = (length) =>{
   let alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
@@ -46,16 +76,19 @@ const generateEventCode = (length) =>{
   return code
 }
 
-
-router.post('/',jwtAuth, (req, res) =>{
-  let defaultEvent = {
-      stuff coming from body.
-      host: req.user.id
+router.post('/', /*jwtAuth,*/ (req, res) =>{
+  let eventInfo = {
+    title:req.body.title,
+    thanks:req.body.thanks,
+    endTimeStamp:req.body.endTimeStamp,
+    endTimeStamp:Date.now(),
+    phone:'1234567890',
+    webFormVisits:[],
+    displayName:req.body.displayName,
   }
   Host.findById(req.body.hostId)
     .then(host => {
-      defaultEvent['host'] = host.firstName + ' ' + host.lastName
-      defaultEvent['hostId'] = host._id
+      eventInfo['host'] = host._id
       return EventModel.find({code:defaultEvent.code}).countDocuments()
     })
     .then(count => {
@@ -72,7 +105,7 @@ router.post('/',jwtAuth, (req, res) =>{
 
 })
 
-router.put('/:eventId',jwtAuth, (req, res) => {
+router.put('/:eventId', /*jwtAuth,*/ (req, res) => {
 
   // check if req.user.id == matches the post's host
   // if matches, let them update

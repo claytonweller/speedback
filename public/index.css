@@ -342,15 +342,24 @@ footer p {
 
 /* LOGIN/SIGNUP */
 #auth{ 
-  padding:25px;
   position: fixed;
   width: 100%;
   z-index: 50;
+  top: 60px;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.7); 
 }
 
 #auth * {
   position: relative;
   z-index: inherit;
+
+}
+
+#auth-login, #auth-signup{
+  padding:25px;
+  background-color: #202020;
+  height: 100vh;
 }
 
 .auth-screen{
@@ -379,6 +388,7 @@ footer p {
 .form-error{
   margin: 15px 0;
   color: #FE0D00;
+  text-align: center;
 }
 
 
@@ -510,9 +520,14 @@ footer p {
 
   /* LOGIN-SIGNUP */
 
-
-
-  
+  #auth-signup, #auth-login {
+    top:100px;
+    margin:auto;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 5px;
+  }
+ 
   
 }
 

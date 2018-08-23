@@ -6,11 +6,11 @@ const eventSchema = mongoose.Schema({
   title: { type: String, default: "Event Title" },
   thanks: { type: String, default: "Thanks for coming to our event" },
   endTimeStamp: { type: Number, required: true },
-  organizerDisplayName: { type: String, default: "" }, // RENAME THIS! to organizerDisplayName
+  displayName: { type: String, default: "" },
   host: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Host" },
   code: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
-  visits: { type: Array, default: [] },
+  webFormVisits: { type: Array, default: [] },
   timeStamp: Number
 });
 
@@ -19,10 +19,10 @@ eventSchema.methods.serialize = function() {
     title: this.title,
     thanks: this.thanks,
     endTimeStamp: this.endTimeStamp,
-    host: this.host,
+    displayName: this.displayName,
     code: this.code,
     phone: this.phone,
-    hostId: this.hostId,
+    host: this.host._id,
     timeStamp: this.timeStamp,
     eventId: this._id
   };
