@@ -24,6 +24,7 @@ router.get("/:feedBackId", (req, res) => {
 // as soon as page loads
 router.post("/visited/:eventId", (req, res) => {
   EventModel.findByIdAndUpdate(req.params.eventId,
+    // TODO UTC Fix
     { $push: {webFormVisits:Date.now()}}
   )
 });
@@ -38,6 +39,7 @@ router.post("/:eventCode", (req, res) => {
     updates: req.body.updates,
     feedback: req.body.feedback,
     volunteer: req.body.volunteer,
+    // TODO UTC fix
     timeStamp: Date.now()
   };
 
@@ -46,7 +48,7 @@ router.post("/:eventCode", (req, res) => {
       if (!event._id) {
         return res.status(400).json({ message: "this event doesn't exist" });
       }
-      feedbackInfo["eventId"] = event._id;
+      feedbackInfo.eventId = event._id;
       return Feedback.create(feedbackInfo);
     })
     .then(feedback => {

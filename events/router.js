@@ -39,25 +39,25 @@ const jwtAuth = passport.authenticate('jwt', {session: false})
 //   }
 // )
 
-// router.get('/', jwtAuth, (req, res) => {
-//   console.log(req.user)
+router.get('/', jwtAuth, (req, res) => {
+  console.log(req.user)
 
-//     return EventModel.find({host: req.user.id})
-//       .then(events => {
-//         let serializedEvents = events.map(event => event.serialize())
-//         res.status(200).json(serializedEvents)
-//       })
-//       .catch(err =>{
-//         res.status(500).json({message:'Something went wrong on the server'})
-//       })
-// })
-
-router.get('/', (req, res) =>{
-  console.log(req.query)
-  EventModel.find({host:req.query.hostId})
-  .then(events => res.status(200).json(events.map(event => event.serialize())))
-  .catch(err => res.status(500).json({message:'Something went wrong on the server'}))
+    return EventModel.find({host: req.user.id})
+      .then(events => {
+        let serializedEvents = events.map(event => event.serialize())
+        res.status(200).json(serializedEvents)
+      })
+      .catch(err =>{
+        res.status(500).json({message:'Something went wrong on the server'})
+      })
 })
+
+// router.get('/', (req, res) =>{
+//   console.log(req.query)
+//   EventModel.find({host:req.query.hostId})
+//   .then(events => res.status(200).json(events.map(event => event.serialize())))
+//   .catch(err => res.status(500).json({message:'Something went wrong on the server'}))
+// })
 
 router.get('/code/:eventCode', (req, res) =>{
   EventModel.findOne({code: req.params.eventCode})
@@ -90,21 +90,22 @@ router.post('/', (req, res) =>{
     title:req.body.title,
     thanks:req.body.thanks,
     endTimeStamp:req.body.endTimeStamp,
+    // TODO UTC ? FIX
     timeStamp:Date.now(),
     phone:'1234567890',
     webFormVisits:[],
     code:generateEventCode(3),
     displayName:req.body.displayName,
+    // TODO Auth token
+    // host: req.user.id
   }
-  Host.findById(req.body.hostId)
-    .then(host => {
-      eventInfo['host'] = host._id
-      return EventModel.find({code:eventInfo.code}).countDocuments()
-    })
+  // TODO LOOP generate eventcode promise loop
+  EventModel.find({code:eventInfo.code})
+    .countDocuments()
     .then(count => {
       if(count){
         // with 4 digits there are nearly half a million combinations
-        eventInfo['code'] = generateEventCode(4)
+        eventInfo.code = generateEventCode(3)
       }
       return eventInfo
     })
@@ -112,6 +113,23 @@ router.post('/', (req, res) =>{
     .then(event => {
       res.status(201).json(event.serialize())
     })
+
+  // Host.findById(req.body.hostId)
+  //   .then(host => {
+  //     eventInfo.host = host._id
+  //     return EventModel.find({code:eventInfo.code}).countDocuments()
+  //   })
+  //   .then(count => {
+  //     if(count){
+  //       // with 4 digits there are nearly half a million combinations
+  //       eventInfo['code'] = generateEventCode(4)
+  //     }
+  //     return eventInfo
+  //   })
+  //   .then(event => EventModel.create(event))
+  //   .then(event => {
+  //     res.status(201).json(event.serialize())
+  //   })
 
 })
 

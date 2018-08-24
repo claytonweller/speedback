@@ -9,18 +9,18 @@ let token = localStorage.getItem("token");
 if (token) {
   //  try to refresh token. ()
   //  success(){
-  //    STATE.token = newtoken;
-  //    localStorage.setItem("token", newtoken);
-  //    clearLandingInputs();
-  //    openDashboard();
-  //    switchToAuthNav();
+    STATE.token = token;
+    localStorage.setItem("token", token);
+    // clearLandingInputs();
+    openDashboard();
+    switchToAuthNav();
   //  },
   //  fails(){
   //    localStorage.setItem("token", ""); // clear expired token
   //  }
 }
 
-const manageApp = () => {
+function manageApp () {
   //It's a nav bar ya'll.
   manageNav();
 
@@ -82,7 +82,7 @@ const convertTimeStampToDate = (timeStamp, mode) => {
   }
 };
 // When we're switching from screen to screen we often need to hide all the other screens.
-const hideAll = () => {
+function hideAll () {
   $("section").attr("hidden", true);
 };
 
@@ -126,7 +126,7 @@ const subMenuToggleListener = () => {
 };
 
 // After they're authorized they get a different nav bar
-const switchToAuthNav = () => {
+function switchToAuthNav () {
   $("#nav-auth-no").attr("hidden", true);
   $("#nav-auth-yes").removeAttr("hidden");
 };
@@ -320,7 +320,7 @@ const eventLiveFormLinkListener = () => {
 };
 
 // Dashboard specific functions
-const openDashboard = () => {
+function openDashboard () {
   hideAll();
   // This makes sure to remove any specific event that was being looked at
   // so that if a new event is created you don't edit your old event instead.
@@ -329,10 +329,13 @@ const openDashboard = () => {
   // and grabs all associated events from that host
   // $.getJSON(`/api/events/`, populateDashboard);
   $.ajax({
-    beforeSend: function(req){
-      req.setRequestHeader('Authorization', `Bearer ${STATE.token}`)
-    },
-    url: `/api/events/?hostId=${STATE.hostId}`,
+    // beforeSend: function(req){
+    //   req.setRequestHeader('Authorization', `Bearer ${STATE.token}`)
+    // },
+    headers: {'Authorization': `Bearer ${STATE.token}`},
+    url:`/api/events/`,
+    // TODO Delete
+    // url: `/api/events/?hostId=${STATE.hostId}`,
     type: "GET",
     contentType: 'application/json'
   })
