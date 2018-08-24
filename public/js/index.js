@@ -1,7 +1,8 @@
 const STATE = {
   token: "",
   //This is used whenever PUT/DELETE happens to a current event
-  focusEventId: 0
+  focusEventId: 0,
+  hostId:'',
 };
 
 let token = localStorage.getItem("token");
@@ -88,6 +89,9 @@ const hideAll = () => {
 //NAV BAR
 
 const manageNav = () => {
+  // If you're on the Landing page, this will remove the Login/Signup Interface
+  // if you're logged in it will bring you to the dashboard
+  logoClickListener()
   //This will remove the JWT and clear the state
   // and return the user to the landing page
   logOutListener();
@@ -96,6 +100,19 @@ const manageNav = () => {
   // This toggles the mobile sub-menu
   subMenuToggleListener();
 };
+
+const logoClickListener = () =>{
+  $('#nav-logo').click(function(event){
+    event.preventDefault()
+    if(STATE.token){
+      openDashboard()
+    }else{
+      hideAll()
+      clearLandingInputs()
+      $("#landing").removeAttr("hidden");
+    }
+  })
+}
 
 const subMenuToggleListener = () => {
   $("#nav-sub-menu-toggle").click(function(event) {
@@ -257,6 +274,8 @@ function loginRequest(email, password) {
     .then(res => {
       STATE.token = res.authToken;
       localStorage.setItem(`token`, STATE.token);
+      // TODO - remove this wend JWT is working again
+      STATE.hostId = res.hostId;
       clearLandingInputs();
       openDashboard();
       switchToAuthNav();
@@ -287,6 +306,7 @@ const eventInfoLinkListener = () => {
     event.preventDefault();
     // Need some what to store the data so we can make the correct API request based upon the link for now we'll leave a place holder
     let eventId = this.id.replace("info", "").replace("feedback", "");
+    console.log(eventId)
 
     openEventInfo(eventId);
   });
@@ -312,7 +332,7 @@ const openDashboard = () => {
     beforeSend: function(req){
       req.setRequestHeader('Authorization', `Bearer ${STATE.token}`)
     },
-    url: "/api/events/",
+    url: `/api/events/?hostId=${STATE.hostId}`,
     type: "GET",
     contentType: 'application/json'
   })
@@ -325,44 +345,45 @@ const openDashboard = () => {
 const populateDashboard = res => {
   let now = Date.now();
   // Events are sorted by whether or not they're complete or not
-  populateEvents(res.filter(event => event.endTimeStamp > now), "upcoming");
-  populateEvents(res.filter(event => event.endTimeStamp < now), "complete");
+  populateEvents(res.filter(event => event.endTimeStamp > now), "Upcoming");
+  populateEvents(res.filter(event => event.endTimeStamp < now), "Complete");
 };
 
 populateEvents = (events, type) => {
-  let allEvents = events.map(event => eventTemplate(event, type));
+  let allEvents = events.map(event => eventTemplate(event, type.toLowerCase()));
   allEvents.unshift(`<h2>${type} Events</h2>`);
-  $(`#dash-${type}`).html(allEvents); // todo capitalize type
+  $(`#dash-${type.toLowerCase()}`).html(allEvents); // todo capitalize type
 
-  let elements =
-    type === "upcoming"
+  let elementsToHide =
+    type.toLowerCase() === "upcoming"
       ? ".event-feedback-link"
-      : ".event-edit-button, .live-form-link";
+      : ".event-edit-button, .upcoming-info";
 
-  $(`#dash-${type}`)
-    .find(elements)
+  $(`#dash-${type.toLowerCase()}`)
+    .find(elementsToHide)
     .attr("hidden", true);
 };
 
 const eventTemplate = (event, type) => {
   return `
-  <div class="dash-event ${type}">
-  <h3><a id="info${
-    event.eventId
-  }" class="event-title js-event-info-link" href="15">${event.title}</a></h3>
-  <span>${convertTimeStampToDate(event.endTimeStamp)}</span>
-  <span><a id="${
-    event.code
-  }" class="live-form-link" href="URL">Live Form</a></span>
-  <span>Event Code: ${event.code}</span>
-  <span><a id="feedback${
-    event.eventId
-  }" class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></span>
-  <button id="edit${event.eventId}" class="event-edit-button">Edit</button>
-  <button id="remove${
-    event.eventId
-  }" class="event-remove-button">Remove</button>
-  </div>
+    <div class="dash-event ${type}">
+      <h3><a id="info${event.eventId}" class="event-title js-event-info-link" href="15">${event.title}</a></h3>
+      <div>${convertTimeStampToDate(event.endTimeStamp)}</div>
+      <div class="upcoming-info">
+        <div><span class="preface">Event Code: </span>${event.code}</div>
+        <div><span class="preface">Event Phone: </span>${event.phone}</div>
+        <div class="live-form-link-holder">
+          <div class="preface">Link to live form - </div>
+          <div class="live-form-link-url"><a id="${event.code}" class="live-form-link" href="URL">www.url.com/${event.code}</a></div>
+        </div>
+      </div>
+      <div><a id="feedback${event.eventId}" class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></div>
+      <div class="dash-icon-holder">
+        <a id="remove${event.eventId}" class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${event.title}"></a>
+        <a id="edit${event.eventId}" class="event-edit-button"><img src="./assets/EditIcon.png" alt="edit ${event.title}"></a>
+        <a id="feedback${event.eventId}" class="event-feedback-link js-event-info-link"><img src="./assets/LookIcon.png" alt="feedback for ${event.title}"></a>
+      </div>
+    </div>
   `;
 };
 
@@ -385,6 +406,9 @@ const populateEventInfo = res => {
   // If the event endTimeStamp is in the past will remove the instructions
   if (res.endTimeStamp > Date.now()) {
     populateEventInstructions(res);
+    $("#info-details")
+      .find(".event-edit-button")
+      .removeAttr("hidden");
     $("#details-end").html(
       "Event ends: " + convertTimeStampToDate(res.endTimeStamp)
     );
@@ -401,9 +425,6 @@ const populateEventInfo = res => {
 
 // This is only displayed if the event hasn't happened
 const populateEventInstructions = res => {
-  $("#info-details")
-    .find(".event-edit-button")
-    .removeAttr("hidden");
   $("#info-instructions").removeAttr("hidden");
   $(".js-instructions-code").html(res.code);
   $("#instructions-phone").html(res.phone);
@@ -412,7 +433,7 @@ const populateEventInstructions = res => {
 // These things are always displayed
 const populateEventDetails = res => {
   $("#details-title").html(res.title);
-  $("#details-host").html(res.host);
+  $("#details-host").html(res.displayName);
   $("#details-thanks").html(res.thanks);
   populateFeedbackGraphs(res);
   populateFeedbackInDepth(res);
@@ -424,15 +445,12 @@ const populateFeedbackGraphs = res => {
 
 const populateFeedbackInDepth = res => {
   // GET all the feedback associated with the event.
+  console.log(res)
   $.getJSON(`/api/feedback/${res.eventId}`).then(feedbackarray => {
-    // This filters out the feedback where nothing happened
-    let feedbackOfValue = feedbackarray.filter(
-      feedback => feedback.didAnything
-    );
-    if (feedbackOfValue.length > 0) {
+    if (feedbackarray.length > 0) {
       // This displays all the feedback on the website
       $("#feedback-in-depth").html(
-        feedbackOfValue.map(feedback => feedbackTemplate(feedback))
+        feedbackarray.map(feedback => feedbackTemplate(feedback))
       );
     } else {
       $("#feedback-in-depth").html("No Feedback");
@@ -443,35 +461,47 @@ const populateFeedbackInDepth = res => {
 const feedbackTemplate = feedback => {
   // If the person providing feedback opts in to more communication
   // then we display a more in depth display box
+  console.log(feedback)
   if (feedback.optIn) {
     return `
-    <div class="feedback-single">
-    <div>
-    <span>${convertTimeStampToDate(feedback.timeStamp)}</span>
-    <span>${feedback.name}</span>
-    <span>${feedback.email}</span>
-    <span>${feedback.phone}</span>
-    </div>
-    <div>
-    <span>Info about future shows: ${feedback.updates}</span>
-    <span>More feedback: ${feedback.feedback}</span>
-    <span>Volunteer: ${feedback.volunteer}</span>
-    </div>
-    <p>${feedback.content}</p>
-    </div>
+      <div class="feedback-single">
+        <div class="single-date">${convertTimeStampToDate(feedback.timeStamp)}</div>
+        <div class="single-container">
+          <div class="attendee-info">
+            <div><span class="preface">Name: </span>${feedback.name}</div>
+            <div><span class="preface">Email: </span><a href="mailto:${feedback.email}">${feedback.email}</a></div>
+            <div><span class="preface">Phone: </span>${feedback.phone}</div>
+          </div>
+          <div class="attendee-preferences">
+            ${prefeneceTemplate(feedback.preferences)}
+          </div>
+          <h3>Feedback - </h3>
+          <p>${feedback.content}</p>
+        </div>
+      </div>
     `;
-  } else {
-    return `
-    <div class="feedback-single">
-    <div>
-    <span>${convertTimeStampToDate(feedback.timeStamp)}</span>
-    <span>Anonymous</span>
-    </div>
-    <p>${feedback.content}</p>
-    </div>
-    `;
+    } else {
+      return `
+        <div class="feedback-single">
+          <div class="single-date">${convertTimeStampToDate(feedback.timeStamp)}</div>
+          <div class="single-container">
+            <h3>Feedback - </h3>
+            <p>${feedback.content}</p>
+          </div>
+        </div>
+      `;
   }
 };
+
+const prefeneceTemplate = (preferences) => {
+  console.log(preferences)
+  if(preferences){
+    return preferences.map(preference => `<div class="attendee-preference">${preference}</div>`)
+  } else {
+    return 'NOTHING'
+  }
+  
+}
 
 //end EVENT INFO
 //
@@ -509,75 +539,98 @@ const newEventButtonListener = () => {
   $(".js-new-event-button").click(function(event) {
     console.log("listener");
     event.preventDefault();
-    createEvent();
+    openEventEditor()
   });
 };
-
-const createEvent = () => {
-  //Will create a POST a new, blank event in the database,
-  // and upon a successful return it will open the event editor with the default values.
-  let body = {
-    hostId: STATE.hostId
-  };
-  $.ajax({
-    url: "/api/events",
-    type: "POST",
-    data: JSON.stringify(body),
-    contentType: "application/json"
-  }).then(event => {
-    console.log(event);
-    openEventEditor(event.eventId);
-  });
-};
-
-// Editor specifc Functions
 
 const openEventEditor = eventId => {
   // The focus event has to updated inorder for Updates to edit the correct file.
   // This will also be doubled up with the JWT
   STATE.focusEventId = eventId;
-  $.getJSON(`/api/events/${eventId}`, populateEventEditor);
+  
+  const defaultEventInfo = {
+    title:'My New Event',
+    thanks:'Thanks so much for coming to my event!',
+    endTimeStamp:Date.now(),
+    displayName:'Name',
+  }
+
+  if(eventId){
+    $.getJSON(`/api/events/${eventId}`, populateEventEditor);
+  } else {
+    populateEventEditor(defaultEventInfo)
+  }
   hideAll();
   $("#edit").removeAttr("hidden");
 };
 
-const populateEventEditor = res => {
-  $("#edit-title").val(res.title);
-  $("#edit-host").val(res.host);
+
+
+// Editor specifc Functions
+
+const populateEventEditor = eventInfo => {
+  $("#edit-title").val(eventInfo.title);
+  $("#edit-host").val(eventInfo.displayName);
   //DATE
-  let date = convertTimeStampToDate(res.endTimeStamp, "object");
+  let date = convertTimeStampToDate(eventInfo.endTimeStamp, "object");
   $("#edit-date").val(`${date.year}-${date.month}-${date.day}`);
   $("#edit-time").val(`${date.hour}:${date.minutes}`);
-  $("#edit-thanks").val(res.thanks);
+  $("#edit-thanks").val(eventInfo.thanks);
 };
 
 const eventEditorSubmitButtonListener = () => {
   $("#edit-submit-button").click(function(event) {
     event.preventDefault();
-    submitEventEdits();
-    openEventInfo(STATE.focusEventId);
-    clearEventEditorFields();
+
+    let endDate = $("#edit-date").val();
+    let endTime = $("#edit-time").val();
+  
+    let eventInfo = {
+      title: $("#edit-title").val(),
+      displayName: $("#edit-host").val(),
+      endTimeStamp: new Date(endDate + "T" + endTime).getTime(),
+      thanks: $("#edit-thanks").val(),
+      // TODO - remove this once I have JWT working
+      hostId:STATE.hostId
+    };
+
+    if(STATE.focusEventId){
+      submitEventEdits(eventInfo);
+    } else {
+      createEvent(eventInfo)
+    }
+    
     //Maybe put in a thing that opens the live form in another tab?
   });
 };
 
-const submitEventEdits = () => {
-  let endDate = $("#edit-date").val();
-  let endTime = $("#edit-time").val();
+const createEvent = (eventInfo) => {
+  $.ajax({
+    url: "/api/events/",
+    type: "POST",
+    data: JSON.stringify(eventInfo),
+    contentType: "application/json"
+  })
+    .then(res => {
+      STATE.focusEventId = res.eventId
+      openEventInfo(STATE.focusEventId)
+      clearEventEditorFields();
+    })
+    .catch(err => console.log(err));
+};
 
-  let eventInfo = {
-    title: $("#edit-title").val(),
-    host: $("#edit-host").val(),
-    endTimeStamp: new Date(endDate + "T" + endTime).getTime(),
-    thanks: $("#edit-thanks").val()
-  };
-
+const submitEventEdits = (eventInfo) => {
   $.ajax({
     url: `/api/events/${STATE.focusEventId}`,
     type: "PUT",
     data: JSON.stringify(eventInfo),
     contentType: "application/json"
-  });
+  })
+    .then(() => {
+      openEventInfo(STATE.focusEventId);
+      clearEventEditorFields();
+    })
+    .catch(err => console.log(err));
 };
 
 const eventEditorCancelButtonListener = () => {
@@ -585,7 +638,6 @@ const eventEditorCancelButtonListener = () => {
     event.preventDefault();
     // If it's a brand new event it should delete the event as well
     if ("new") {
-      deleteEvent();
       openDashboard();
     } else {
       openEventInfo(STATE.focusEventId);

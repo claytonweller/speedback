@@ -42,7 +42,7 @@ describe("Events", function() {
       return Host.findOne()
         .then(function(host){
           return chai.request(app)
-            .get(`/events/?hostId=${host._id}`)
+            .get(`/api/events/?hostId=${host._id}`)
         })
         .then(function(_res){
           res = _res

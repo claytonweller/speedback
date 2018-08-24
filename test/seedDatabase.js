@@ -86,10 +86,10 @@ function generateEventData(hostIdArray) {
     title: faker.lorem.word(),
     thanks: faker.lorem.sentence(),
     endTimeStamp: Date.now() - 10000 + Math.floor(Math.random() * 20000),
-    host: faker.name.firstName(),
+    dipslayName: faker.name.firstName(),
     code: Math.floor(Math.random() * 10000).toString(),
     phone: "303-803-4589",
-    hostId: returnRandomIndex(hostIdArray),
+    host: returnRandomIndex(hostIdArray),
     timeStamp: Date.now()
   };
 }
@@ -123,7 +123,6 @@ function generateFeedbackData(eventIdArray) {
     volunteer: faker.random.boolean(),
     timeStamp: Date.now(),
     eventId: returnRandomIndex(eventIdArray),
-    didAnything: faker.random.boolean()
   };
 }
 

@@ -11,8 +11,33 @@ const feedbackSchema = mongoose.Schema({
   volunteer: {type: Boolean, default: false},
   timeStamp: {type:Number, required:true},
   eventId: {type:String, required:true},
-  didAnything: {type: Boolean, default: false},
 })
+
+feedbackSchema.methods.serialize = function() {
+  let preferences = []
+  if(this.updates){
+    preferences.push('Wants to know about future events')
+  }
+  if(this.feedback){
+    preferences.push('Wants to talk directly to you')
+  }
+  if(this.volunteer){
+    preferences.push('Wants to volunteer at future events')
+  }
+
+  console.log(preferences)
+  
+  return {
+    content: this.content,
+    optIn: this.optIn,
+    name: this.name,
+    email: this.email,
+    phone: this.phone,
+    preferences: preferences,
+    timeStamp: this.feedback,
+    eventId: this.eventId,
+  };
+};
 
 const Feedback = mongoose.model('Feedback', feedbackSchema, 'feedback')
 

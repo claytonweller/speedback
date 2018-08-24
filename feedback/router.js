@@ -8,7 +8,12 @@ router.use(express.json());
 
 router.get("/:eventId", (req, res) => {
   Feedback.find({ eventId: req.params.eventId })
-    .then(feedback => res.status(200).json(feedback))
+    .then(feedbackArray => {
+      console.log('array', feedbackArray)
+      let serializedFeedback = feedbackArray.map(feedback => feedback.serialize())
+      console.log('serialized', serializedFeedback)
+      res.status(200).json(serializedFeedback)
+    })
     .catch(err =>
       res.status(500).json({ message: "Something went wrong on the server" })
     );
@@ -19,31 +24,32 @@ router.get("/:feedBackId", (req, res) => {
 });
 
 // as soon as page loads
-router.post("/visited", (req, res) => {
-  //  push a timestamp into the event's visits
+router.post("/visited/:eventId", (req, res) => {
+  EventModel.findByIdAndUpdate(req.params.eventId,
+    { $push: {webFormVisits:Date.now()}}
+  )
 });
 
-router.post("/", (req, res) => {
-  let defaultFeedback = {
-    content: "",
-    optIn: false,
-    name: "",
-    email: "",
-    phone: "",
-    updates: false,
-    feedback: false,
-    volunteer: false,
-    timeStamp: Date.now(),
-    didAnything: false
+router.post("/:eventCode", (req, res) => {
+  let feedbackInfo = {
+    content: req.body.content,
+    optIn: req.body.optIn,
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    updates: req.body.updates,
+    feedback: req.body.feedback,
+    volunteer: req.body.volunteer,
+    timeStamp: Date.now()
   };
 
-  EventModel.findOne({ code: req.body.eventCode })
+  EventModel.findOne({ code: req.params.eventCode })
     .then(event => {
       if (!event._id) {
         return res.status(400).json({ message: "this event doesn't exist" });
       }
-      defaultFeedback["eventId"] = event._id;
-      return Feedback.create(defaultFeedback);
+      feedbackInfo["eventId"] = event._id;
+      return Feedback.create(feedbackInfo);
     })
     .then(feedback => {
       res.status(201).json(feedback);
@@ -64,8 +70,7 @@ router.put("/:feedbackId", (req, res) => {
     "phone",
     "updates",
     "feedback",
-    "volunteer",
-    "didAnything"
+    "volunteer"
   ];
   okToUpdate.forEach(field => {
     if (field in req.body) {

@@ -1,5 +1,7 @@
 STATE = {
   feedbackId:'',
+  didAnything:false,
+  code:''
 }
 
 const manageApp = () =>{
@@ -11,35 +13,25 @@ const manageApp = () =>{
   optInListener()
 }
 
-
-
 const populateFeedback = () => {
   // We grab the event code from the URL and then get the corresponding event info
   let url = window.location.href
   let eventCode = url.substr(url.lastIndexOf('/') + 1).toLocaleUpperCase()
-  $.getJSON(`../events/`, { eventCode }, function(res){
+  STATE.code = eventCode
+  $.getJSON(`api/events/code/${eventCode}`, function(res){
     $('.js-event-title').html(res.title)
-    $('.js-event-host').html(res.host)
+    $('.js-event-host').html(res.displayName)
     $('#thanks').html(res.thanks)
-  })
-
-  // Then we POST a new feedback request. It's a default feedback, 
-  // and it is flagged as non-updated with the feedback.didAnything = false
-  // Seeing how many people bounce on the website will be useful information for the producer (and developers)
-  createFeedback(eventCode)
+    countVisit(res.eventId)
+  }) 
 }
 
-const createFeedback = (eventCode) =>{
-
+const countVisit= (eventId) =>{
   $.ajax({
-    url: "../feedback",
-    type: "POST",
-    data: JSON.stringify({eventCode}),
-    contentType: 'application/json'
+    url: `/api/feedback/visited/${eventId}`,
+    type: 'POST',
+    contentType:'application/json'
   })
-    .then(res => {
-      STATE.feedbackId = res._id
-    })
 }
 
 const optInListener = () =>{
@@ -50,7 +42,7 @@ const optInListener = () =>{
       $('#feedback-extra').removeAttr('hidden')
       $('#feedback-extra').attr('display', 'flex')
       $('#opt-in-check').attr('checked', true)
-      updateFeedback()
+      sortSubmitClicks()
     } else {
       $('#feedback-extra').attr('hidden', true)
     }
@@ -61,15 +53,13 @@ const submitListener = () =>{
   // The feedback is updated and then the form switches over to a custom thank you message 
   $('#feedback-button').click(function(event){
     event.preventDefault()
-    updateFeedback()
+    sortSubmitClicks()
     $('#feedback-form').attr('hidden', true)
     $('#thanks').removeAttr('hidden')
   })
 }
 
-const updateFeedback = () =>{
-  // Takes the info from the form and then flags the feedback as a non-trivial response.
-
+const sortSubmitClicks = () =>{
   let feedbackObj = {
     content: $('#feedback-text').val(),
     optIn: document.getElementById('opt-in-check').checked,
@@ -79,10 +69,32 @@ const updateFeedback = () =>{
     updates: document.getElementById('update-check').checked,
     feedback: document.getElementById('feedback-check').checked,
     volunteer: document.getElementById('volunteer-check').checked,
-    didAnything: true,
   }
+
+  if(STATE.didAnything){
+    updateFeedback(feedbackObj)
+  } else {
+    STATE.didAnything = true
+    createFeedback(feedbackObj)
+  }
+}
+
+const createFeedback = (feedbackObj) =>{
   $.ajax({
-    url: `../feedback/${STATE.feedbackId}`,
+    url: `/api/feedback/${STATE.code}`,
+    type: "POST",
+    data: JSON.stringify(feedbackObj),
+    contentType: 'application/json'
+  })
+    .then(res => {
+      STATE.feedbackId = res._id
+    })
+}
+
+const updateFeedback = (feedbackObj) =>{
+  
+  $.ajax({
+    url: `/api/feedback/${STATE.feedbackId}`,
     type: "PUT",
     data: JSON.stringify(feedbackObj),
     contentType: 'application/json'

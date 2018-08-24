@@ -12,7 +12,7 @@
     
 <body>
   <nav role="navigation" aria-live="assertive">
-    <img class="nav-logo" src="./assets/LogoSmall.png" alt="Speedback Logo"> 
+    <a id="nav-logo" href="NA"><img class="nav-logo" src="./assets/LogoSmall.png" alt="Speedback Logo"></a> 
     <div class="nav-right">
       <a href="none" id="nav-sub-menu-toggle"><img src="./assets/menubars.png" alt="menu"></a> 
       <div id="nav-sub-menu" hidden>
@@ -24,11 +24,11 @@
         </div>
         <div id="nav-auth-yes" hidden>
           <ul>
-
+            <li><a id="nav-events" href="URL">Events</a></li>
+            <li><a id="nav-log-out" href="URL">Log Out</a></li>
           </ul>
           <button id="nav-new-event-button" class="js-new-event-button">New Event</button>
-          <a id="nav-events" href="URL">Events</a>
-          <a id="nav-log-out" href="URL">Log Out</a>
+          
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
   <main role="main" aria-live="assertive">
    
     <!-- Landing Page -->
-    <section id="landing" role="region">
+    <section id="landing" role="region" hidden>
       <div id="landing-above-the-fold">
         <img class="logo-tall" src="./assets/TallLogo.png" alt="Speedback">
         <img class="logo-wide" src="./assets/LogoLarge.png" alt="Speedback">
@@ -159,58 +159,100 @@
     
     <!-- Event DashBoard -->
     <section id="dash" role="region" hidden>
-      <h1>Event Dashboard</h1>
-      <!-- The event lists will be chonological Possibly togglable between the two views-->
-      <button class="js-new-event-button">New Event</button>
-      <div id="dash-upcoming">
-        <h2>Upcoming events</h2>
-        <!-- Populated byt the database -->
-        <div class="dash-event upcoming">
-          <h3><a class="event-title js-event-info-link" href="15">Event Title</a></h3>
-          <span>YYYY-MM-DD</span>
-          <span><a class="live-form-link" href="URL">Live Form</a></span>
-          <span>Event Code: CODE</span>
-          <button class="event-edit-button">Edit</button>
-          <button class="event-remove-button">Remove</button>
+      <div id="dash-header">
+        <h1>Events</h1>
+        <button id="dash-new-button" class="js-new-event-button">New Event</button>
+      </div>
+      <div id="dash-events">
+        <div id="dash-upcoming">
+          <h2>Upcoming events</h2>
+          <!-- Populated byt the database -->
+          <div class="dash-event upcoming">
+            <!-- <div class="dash-event-text-holder"> -->
+              <h3><a id="info${event.eventId}" class="event-title js-event-info-link" href="15">This title is way too long and keeps going forever</a></h3>
+              <div>YYYY - MM - DD @ ##:##</div>
+              <div class="upcoming-info">
+                <div><span class="preface">Event Code: </span>${event.code}</div>
+                <div><span class="preface">EventPhone: </span>${event.phone}</div>
+                <div class="live-form-link-holder">
+                  <div class="preface">Link to live form - </div>
+                  <div class="live-form-link-url"><a id="${event.code}" class="live-form-link" href="URL">www.url.com/${event.code}</a></div>
+                </div>
+              </div>
+            <!-- </div> -->
+            <div class="dash-icon-holder">
+              <a id="remove${event.eventId}" class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${event.title}"></a>
+              <a id="edit${event.eventId}" class="event-edit-button"><img src="./assets/EditIcon.png" alt="edit ${event.title}"></a>
+            </div> 
+          </div>
+        </div>
+        <div id="dash-complete">
+          <h2>Complete Events</h2> 
+          <!-- Populated by the database -->
+          <div class="dash-event complete">
+              <h3><a id="info${event.eventId}" class="event-title js-event-info-link" href="15">Complete event</a></h3>
+              <div>YYYY - MM - DD @ ##:##</div>
+              <div><a id="feedback${event.eventId}" class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></div>
+              <div class="dash-icon-holder">
+                <a id="remove${event.eventId}" class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${event.title}"></a>
+                <a id="feedback${event.eventId}" class="event-feedback-link js-event-info-link"><img src="./assets/LookIcon.png" alt="feedback for ${event.title}"></a>
+              </div> 
+            </div>
         </div>
       </div>
-      <div id="dash-complete">
-        <h2>Complete Events</h2>
-        <!-- Populated by the database -->
-        <div class="dash-event complete">
-          <h3><a class="event-title js-event-info-link" href="5">Event Title</a></h3>
-          <span>YYYY-MM-DD</span>
-          <span><a class="js-event-info-link" href="URL">Feedback Info</a></span>
-          <button class="event-remove-button">Remove</button>
-        </div>
-      </div>
+
     </section>
     
     <!-- Event info -->
-    <section id="info" role="region" hidden>
+    <section id="info" role="region" >
       <div id="info-details">
         <h1 id="details-title">Event Title</h1>
         <!-- Only editable before the date -->
-        <button class="event-edit-button">Edit</button>
-        <button class="event-remove-button">Remove</button>
-        <div><span id="details-end">Event Ends/ended: YYYY-MM-DD @ HH:MM PM</span></div>
-        <div>Event host: <span id="details-host">Name</span> </div>
-        <p id="details-thanks">Thank you message, limited to something like 150 characters</p>
+        <div id="details-end">YYYY-MM-DD @ HH:MM PM</div>
+        <div><span class="preface">Hosted By:</span> <span id="details-host">Name</span> </div>
+        <div class="preface">Thank you message - </div>
+        <div id="details-thanks">Thank you message, limited to something like 150 characters</div>
+        <div id="info-button-holder">
+          <button class="event-remove-button">Remove</button>
+          <button class="event-edit-button">Edit</button>    
+        </div>
       </div>
-      <div class="feedback-graph">
-        A SICK GRAPH!!!
+      <div id="info-graphs">
+        <h2>General Feedback</h2>
+        <h3>Over time</h3>
+        <div>
+          GRAPH 1
+        </div>
+        <h3>Level of detail</h3>
+        <div>
+          GRAPH 2
+        </div>
       </div>
 
       <!-- Only visible if the event hasn't yet happend -->
       <div id="info-instructions">
         <h2>Instructions</h2>
-        <p>Here is your unique code for your event - <span class="js-instructions-code">CODE</span></p>
-        <p>This url link will be live until 2 hours after your event ends
-          <br> Feedback link: <a class="live-form-link" href="URL">www.url.com/<span class="js-instructions-code">CODE</span></a>
-        </p>
-          <!-- On hover directions? -->
-        <p>Feedback phone: <span id="instructions-phone">###-###-####</span> - Must enter code: <span class="js-instructions-code">CODE</span></p>
-        <p>Here are some best practices for how to use SpeedBack</p>
+        <div><span class="preface">Here is your unique code for your event -</span> <span class="js-instructions-code">CODE</span></div>
+        <div class="live-form-link-holder">
+          <div class="preface">Send your event attendees here - </div>
+          <div class="live-form-link-url"><a id="EVENTCODE" class="live-form-link" href="URL">www.url.com/<span class="js-instructions-code">CODE</span></a></div>
+        </div>
+        <div class="live-phone-holder">
+          <div class="preface">Or they can text - </div>
+          <div class="live-phone">${event.phone}</div>
+          <div class="phone-example">
+            <img src="./assets/Bubble.png" alt="A text bubble">
+            <div>${event.code} their feedback</div>
+          </div>
+        </div>
+        <hr>
+        <p>Your feedback period will conclued 2 hours after the event ends. If you want to have the best success here are our suggestions.</p>
+        <ul>
+          <li>Let attendees know this is for ‘Right Now!’, and give them NOTHING else to do or see.</li>
+          <li>Create a physical sign with this information, or display it on a screen or projector.</li>
+          <li>Tell Them what you'll use the feedback for.</li>
+        </ul>
+        <p>Break a leg!</p>
       </div>
 
       <!-- Only visible if feedback has arrived -->
@@ -219,18 +261,42 @@
 
         <div id="feedback-in-depth">
           <div class="feedback-single">
-            <div>
-              <span>YYYY-MM-DD</span>
-              <span>Name</span>
-              <span>email</span>
-              <span>Phone</span>
+            <div class="single-date">Date</div>
+            <div class="single-container">
+              <div class="attendee-info">
+                <div><span class="preface">Name: </span>${feedback.name}</div>
+                <div><span class="preface">Email: </span> <a href="mailto:clayton.weller@gmail.com">${feedback.email}</a></div>
+                <div><span class="preface">Phone: </span>${feedback.phone}</div>
+              </div>
+              <div class="attendee-preferences">
+                <div class="attendee-preference">Wants to know about future events</div>
+                <div class="attendee-preference">Want to talk to you directly</div>
+              </div>
+              <h3>Feedback</h3>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit eligendi natus vel alias quae perspiciatis maxime veritatis, error nesciunt perferendis quibusdam recusandae. Nulla saepe deleniti beatae? A corporis facilis ex?</p>
             </div>
-            <div>
-              <span>Info about future shows:</span>
-              <span>More feedback:</span>
-              <span>Volunteer:</span>
+          </div>
+          <div class="feedback-single">
+            <div class="single-date">DATE</div>
+            <div class="single-container">
+              <div class="attendee-info">
+                <div><span class="preface">Name: </span>${feedback.name}</div>
+                <div><span class="preface">Email: </span>${feedback.email}</div>
+                <div><span class="preface">Phone: </span>${feedback.phone}</div>
+              </div>
+              <div class="attendee-preferences">
+                <div class="attendee-preference">${preference}</div>
+              </div>
+              <h3>Feedback</h3>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus molestiae itaque magnam laborum consectetur sunt assumenda blanditiis perspiciatis! Ratione, vitae! Delectus ullam velit repellendus expedita veniam temporibus fuga id cumque.</p>
             </div>
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel porro nulla, autem maxime illo in deleniti, dicta est beatae sapiente culpa ad amet neque debitis commodi veritatis suscipit error reiciendis.</p>
+          </div>
+          <div class="feedback-single">
+            <div class="single-date">DATE DATE</div>
+            <div class="single-container">
+              <h3>Feedback</h3>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem magnam, harum facere praesentium voluptas natus in consectetur quia error esse illum doloremque labore rem, facilis accusamus quae cum, reprehenderit ad.</p>
+            </div>
           </div>
         </div>
       </div>

@@ -6,9 +6,10 @@ const {EventModel} = require('./models')
 const {Host} = require('../hosts/models')
 const { jwtStrategy } = require('../auth')
 
-// router.use(express.json())
+router.use(express.json())
 passport.use(jwtStrategy)
 const jwtAuth = passport.authenticate('jwt', {session: false})
+
 
 
 // router.get('/', 
@@ -51,12 +52,19 @@ const jwtAuth = passport.authenticate('jwt', {session: false})
 //       })
 // })
 
+router.get('/', (req, res) =>{
+  console.log(req.query)
+  EventModel.find({host:req.query.hostId})
+  .then(events => res.status(200).json(events.map(event => event.serialize())))
+  .catch(err => res.status(500).json({message:'Something went wrong on the server'}))
+})
+
 router.get('/code/:eventCode', (req, res) =>{
   EventModel.findOne({code: req.params.eventCode})
   .then(event => {
     res.status(200).json(event.serialize())
   })
-  .catch(events =>{
+  .catch(err =>{
     res.status(500).json({message:'Something went wrong on the server'})
   })
 })
@@ -76,27 +84,29 @@ const generateEventCode = (length) =>{
   return code
 }
 
-router.post('/', /*jwtAuth,*/ (req, res) =>{
+router.post('/', (req, res) =>{
+  
   let eventInfo = {
     title:req.body.title,
     thanks:req.body.thanks,
     endTimeStamp:req.body.endTimeStamp,
-    endTimeStamp:Date.now(),
+    timeStamp:Date.now(),
     phone:'1234567890',
     webFormVisits:[],
+    code:generateEventCode(3),
     displayName:req.body.displayName,
   }
   Host.findById(req.body.hostId)
     .then(host => {
       eventInfo['host'] = host._id
-      return EventModel.find({code:defaultEvent.code}).countDocuments()
+      return EventModel.find({code:eventInfo.code}).countDocuments()
     })
     .then(count => {
       if(count){
         // with 4 digits there are nearly half a million combinations
-        defaultEvent['code'] = generateEventCode(4)
+        eventInfo['code'] = generateEventCode(4)
       }
-      return defaultEvent
+      return eventInfo
     })
     .then(event => EventModel.create(event))
     .then(event => {
@@ -110,7 +120,7 @@ router.put('/:eventId', /*jwtAuth,*/ (req, res) => {
   // check if req.user.id == matches the post's host
   // if matches, let them update
   let toUpdate={}
-  const okToUpdate = ['title', 'thanks', 'endTimeStamp', 'host']
+  const okToUpdate = ['title', 'thanks', 'endTimeStamp', 'displayName']
 
   okToUpdate.forEach(field =>{
     if(field in req.body){
