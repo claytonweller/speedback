@@ -687,7 +687,6 @@ const openRemoveConfirm = id => {
   $.getJSON(`/api/events/${id}`, function(res) {
     $("#remove-title").html(res.title);
   });
-  hideAll();
   $("#remove").removeAttr("hidden");
 };
 
