@@ -9,9 +9,7 @@ router.use(express.json());
 router.get("/:eventId", (req, res) => {
   Feedback.find({ eventId: req.params.eventId })
     .then(feedbackArray => {
-      console.log('array', feedbackArray)
       let serializedFeedback = feedbackArray.map(feedback => feedback.serialize())
-      console.log('serialized', serializedFeedback)
       res.status(200).json(serializedFeedback)
     })
     .catch(err =>

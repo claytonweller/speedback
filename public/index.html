@@ -37,7 +37,7 @@
   <main role="main" aria-live="assertive">
    
     <!-- Landing Page -->
-    <section id="landing" role="region" hidden>
+    <section id="landing" role="region" >
       <div id="landing-above-the-fold">
         <img class="logo-tall" src="./assets/TallLogo.png" alt="Speedback">
         <img class="logo-wide" src="./assets/LogoLarge.png" alt="Speedback">
@@ -204,133 +204,139 @@
     </section>
     
     <!-- Event info -->
-    <section id="info" role="region" >
-      <div id="info-details">
-        <h1 id="details-title">Event Title</h1>
-        <!-- Only editable before the date -->
-        <div id="details-end">YYYY-MM-DD @ HH:MM PM</div>
-        <div><span class="preface">Hosted By:</span> <span id="details-host">Name</span> </div>
-        <div class="preface">Thank you message - </div>
-        <div id="details-thanks">Thank you message, limited to something like 150 characters</div>
-        <div id="info-button-holder">
-          <button class="event-remove-button">Remove</button>
-          <button class="event-edit-button">Edit</button>    
-        </div>
-      </div>
-      <div id="info-graphs">
-        <h2>General Feedback</h2>
-        <h3>Over time</h3>
-        <div>
-          GRAPH 1
-        </div>
-        <h3>Level of detail</h3>
-        <div>
-          GRAPH 2
-        </div>
-      </div>
-
-      <!-- Only visible if the event hasn't yet happend -->
-      <div id="info-instructions">
-        <h2>Instructions</h2>
-        <div><span class="preface">Here is your unique code for your event -</span> <span class="js-instructions-code">CODE</span></div>
-        <div class="live-form-link-holder">
-          <div class="preface">Send your event attendees here - </div>
-          <div class="live-form-link-url"><a id="EVENTCODE" class="live-form-link" href="URL">www.url.com/<span class="js-instructions-code">CODE</span></a></div>
-        </div>
-        <div class="live-phone-holder">
-          <div class="preface">Or they can text - </div>
-          <div class="live-phone">${event.phone}</div>
-          <div class="phone-example">
-            <img src="./assets/Bubble.png" alt="A text bubble">
-            <div>${event.code} their feedback</div>
-          </div>
-        </div>
-        <hr>
-        <p>Your feedback period will conclued 2 hours after the event ends. If you want to have the best success here are our suggestions.</p>
-        <ul>
-          <li>Let attendees know this is for ‘Right Now!’, and give them NOTHING else to do or see.</li>
-          <li>Create a physical sign with this information, or display it on a screen or projector.</li>
-          <li>Tell Them what you'll use the feedback for.</li>
-        </ul>
-        <p>Break a leg!</p>
-      </div>
-
-      <!-- Only visible if feedback has arrived -->
-      <div id="info-feedback">
-        <h2>Feedback</h2>
-
-        <div id="feedback-in-depth">
-          <div class="feedback-single">
-            <div class="single-date">Date</div>
-            <div class="single-container">
-              <div class="attendee-info">
-                <div><span class="preface">Name: </span>${feedback.name}</div>
-                <div><span class="preface">Email: </span> <a href="mailto:clayton.weller@gmail.com">${feedback.email}</a></div>
-                <div><span class="preface">Phone: </span>${feedback.phone}</div>
-              </div>
-              <div class="attendee-preferences">
-                <div class="attendee-preference">Wants to know about future events</div>
-                <div class="attendee-preference">Want to talk to you directly</div>
-              </div>
-              <h3>Feedback</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit eligendi natus vel alias quae perspiciatis maxime veritatis, error nesciunt perferendis quibusdam recusandae. Nulla saepe deleniti beatae? A corporis facilis ex?</p>
+    <section id="info" role="region" hidden>
+      <div id="info-container">
+        <div id="info-left">
+          <div id="info-details">
+            <h1 id="details-title">Event Title</h1>
+            <!-- Only editable before the date -->
+            <div id="details-end">YYYY-MM-DD @ HH:MM PM</div>
+            <div><span class="preface">Hosted By:</span> <span id="details-host">Name</span> </div>
+            <div class="preface">Thank you message - </div>
+            <div id="details-thanks">Thank you message, limited to something like 150 characters</div>
+            <div id="info-button-holder">
+              <button class="event-remove-button">Remove</button>
+              <button class="event-edit-button">Edit</button>    
             </div>
           </div>
-          <div class="feedback-single">
-            <div class="single-date">DATE</div>
-            <div class="single-container">
-              <div class="attendee-info">
-                <div><span class="preface">Name: </span>${feedback.name}</div>
-                <div><span class="preface">Email: </span>${feedback.email}</div>
-                <div><span class="preface">Phone: </span>${feedback.phone}</div>
-              </div>
-              <div class="attendee-preferences">
-                <div class="attendee-preference">${preference}</div>
-              </div>
-              <h3>Feedback</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus molestiae itaque magnam laborum consectetur sunt assumenda blanditiis perspiciatis! Ratione, vitae! Delectus ullam velit repellendus expedita veniam temporibus fuga id cumque.</p>
+          <div id="info-graphs">
+            <h2>General Feedback</h2>
+            <h3>Over time</h3>
+            <div>
+              GRAPH 1
             </div>
-          </div>
-          <div class="feedback-single">
-            <div class="single-date">DATE DATE</div>
-            <div class="single-container">
-              <h3>Feedback</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem magnam, harum facere praesentium voluptas natus in consectetur quia error esse illum doloremque labore rem, facilis accusamus quae cum, reprehenderit ad.</p>
+            <h3>Level of detail</h3>
+            <div>
+              GRAPH 2
             </div>
           </div>
         </div>
+        <div id="info-right">
+          <div id="info-instructions">
+            <h2>Instructions</h2>
+            <div><span class="preface">Here is your unique code for your event -</span> <span class="js-instructions-code code-text">CODE</span></div>
+            <div class="live-form-link-holder">
+              <div class="preface">Send your event attendees here - </div>
+              <div class="live-form-link-url"><a id="EVENTCODE" class="live-form-link" href="URL">www.url.com/<span class="js-instructions-code code-text">CODE</span></a></div>
+            </div>
+            <div class="live-phone-holder">
+              <div class="preface">Or they can text - </div>
+              <div class="live-phone">${event.phone}</div>
+              <div class="phone-example">
+                <img src="./assets/Bubble.png" alt="A text bubble">
+                <div><span class="js-instructions-code code-text">CODE</span> <span class="phone-example-text">their feedback...</span></div>
+              </div>
+            </div>
+            <hr>
+            <p>Your feedback period will conclued 2 hours after the event ends. If you want to have the best success here are our suggestions -</p>
+            <ul>
+              <li>Let attendees know this is for ‘Right Now!’, and give them NOTHING else to do or see.</li>
+              <li>Create a physical sign with this information, or display it on a screen or projector.</li>
+              <li>Tell Them what you'll use the feedback for.</li>
+            </ul>
+            <p>Break a leg!</p>
+          </div>
+    
+          <!-- Only visible if feedback has arrived -->
+          <div id="info-feedback">
+            <h2>Feedback</h2>
+    
+            <div id="feedback-in-depth">
+              <div class="feedback-single">
+                <div class="single-date">Date</div>
+                <div class="single-container">
+                  <div class="attendee-top">
+                    <div class="attendee-info">
+                      <div><span class="preface">Name: </span>${feedback.name}</div>
+                      <div><span class="preface">Email: </span> <a href="mailto:clayton.weller@gmail.com">${feedback.email}</a></div>
+                      <div><span class="preface">Phone: </span>${feedback.phone}</div>
+                    </div>
+                    <div class="attendee-preferences">
+                      <div class="attendee-preference">Wants to know about future events</div>
+                      <div class="attendee-preference">Want to talk to you directly</div>
+                    </div>
+                  </div>
+                  <h3>Feedback</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit eligendi natus vel alias quae perspiciatis maxime veritatis, error nesciunt perferendis quibusdam recusandae. Nulla saepe deleniti beatae? A corporis facilis ex?</p>
+                </div>
+              </div>
+              <div class="feedback-single">
+                <div class="single-date">DATE</div>
+                <div class="single-container">
+                  <div class="attendee-info">
+                    <div><span class="preface">Name: </span>${feedback.name}</div>
+                    <div><span class="preface">Email: </span>${feedback.email}</div>
+                    <div><span class="preface">Phone: </span>${feedback.phone}</div>
+                  </div>
+                  <div class="attendee-preferences">
+                    <div class="attendee-preference">${preference}</div>
+                  </div>
+                  <h3>Feedback</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus molestiae itaque magnam laborum consectetur sunt assumenda blanditiis perspiciatis! Ratione, vitae! Delectus ullam velit repellendus expedita veniam temporibus fuga id cumque.</p>
+                </div>
+              </div>
+              <div class="feedback-single">
+                <div class="single-date">DATE DATE</div>
+                <div class="single-container">
+                  <h3>Feedback</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem magnam, harum facere praesentium voluptas natus in consectetur quia error esse illum doloremque labore rem, facilis accusamus quae cum, reprehenderit ad.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+
+      
     </section>
 
     <!-- Event Editor -->
       <!-- Maybe this will be a modal window -->
     <section id="edit" role="region" hidden>
-      <h1>Edit Event</h1>
       <form id="edit-form">
+        <h1>Edit Event</h1>
         <label class="text-label">
-          Event Title
-          <br><input id="edit-title" type="text" placeholder="Event Title" maxlength="40">
+          <div>Event Title</div> 
+          <input id="edit-title" type="text" placeholder="Event Title" maxlength="40">
         </label>
-        <br>
         <label class="text-label">
           <!-- by default this will be The Name of the user -->
-          Who is putting on the event?
-          <br><input id="edit-host" type="text" value="NAME OF USER" placeholder="Event Host">
+          <div>Who is putting on the event?</div> 
+          <input id="edit-host" type="text" value="NAME OF USER" placeholder="Event Host">
         </label>
-        <br>
+        <label class="text-label edit-date">
+          <div class="event-end-text">When does the event end?</div>
+          <label class="text-label">Date <input id="edit-date" type="date"></label>
+          <label class="text-label">Time <input id="edit-time" type="time" placeholder="7"> </label>
+        </label>
         <label class="text-label">
-          Whend does the event end?
-          <br>Date <input id="edit-date" type="date">
-          Time <input id="edit-time" type="time" placeholder="7">
+          <div>Short thank you message (150 Characters max)</div>
+          <textarea id="edit-thanks" type="text" maxlength="150" placeholder="Thanks for coming to..."></textarea>
         </label>
-        <br>
-        <label class="text-label">
-          Short thank you message (150 Characters max)
-          <br><textarea id="edit-thanks" type="text" maxlength="150" placeholder="Thanks for coming to..."></textarea>
-        </label>
-        <div>
+        <div id="edit-buttons">
+          <a id="edit-cancel-button">Cancel</a>
           <button id="edit-submit-button" type="submit">Submit</button>
-          <button id="edit-cancel-button">Cancel</button>
         </div>
         
       </form>      
@@ -339,10 +345,15 @@
     <!-- Remove Confirmation -->
       <!-- This will definitely be a modal window -->
     <section id="remove" role="region" hidden>
-      <h2> Remove: <span id="remove-title">EVENT TITLE</span>?</h2>
-      <p>Are you sure you want to permanently remove this event and all associated feedback?</p>
-      <button id="confirm-delete-button">Delete</button>
-      <button id="cancel-delete-button">Cancel</button>
+      <div class="remove-container">
+        <h2>Remove:</h2>
+        <h1 id="remove-title">EVENT TITLE</h1>
+        <p>Are you sure you want to <em>permanently</em> remove this event and all associated feedback?</p>
+        <div class="remove-button-container">
+          <button id="confirm-delete-button">Remove</button>
+          <a id="cancel-delete-button">Cancel</a>
+        </div>
+      </div>
     </section>
   
   </main>

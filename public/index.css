@@ -49,6 +49,10 @@ a:hover{
   cursor: pointer;
 }
 
+input, textarea {
+  border: none;
+}
+
 button {
   background-color:#FE0D00;
   width: 100%;
@@ -537,6 +541,19 @@ footer p {
   font-size: 18px;
 }
 
+.code-text {
+  color:#FE0D00;
+  font-weight: 1000;
+}
+
+.phone-example .code-text {
+  color: white;
+}
+
+.phone-example-text {
+  font-style: italic;
+}
+
 #info-feedback h2 {
   font-size: 40px;
   margin-bottom: 15px;
@@ -578,6 +595,133 @@ footer p {
   margin-top: 5px;
   font-size: 16px;
 }
+
+/* EVENT EDITOR */
+
+#edit {
+  width: 100%;
+  z-index: 50;
+  top: 60px;
+  position: fixed;
+  min-height: 100vh;
+  background-color: rgba(0,0,0,0.7); 
+}
+
+#edit-form {
+  padding: 15px;
+  max-width: 500px;
+  left:0;
+  right:0;
+  margin: auto;
+  background-color: #202020;
+  min-height: 100vh;
+  border-radius: 5px;
+}
+
+#edit-form > label{
+  max-width: 100%;
+}
+
+#edit h1 {
+  margin: 0px;
+  font-size: 35px;
+  text-align: center;
+}
+
+#edit label {
+  margin-top: 5px;
+}
+
+.edit-date {
+  display: flex;
+  flex-flow: wrap;
+  justify-content: space-between;
+}
+
+.edit-date label {
+  width: 48%;
+}
+
+.event-end-text {
+  width: 100%;
+}
+
+#edit-thanks {
+  width:100%;
+  height: 80px;
+}
+
+#edit-buttons {
+  display: flex;
+  margin: 15px 0 15px 0;
+}
+
+#edit-buttons * {
+  display: inline-block;
+}
+
+#edit-submit-button {
+  width: 60%;
+}
+
+#edit-cancel-button{
+  width: 40%;
+  align-self: center;
+  text-align: center;
+  color: white;
+  text-decoration: underline;
+  font-family: 'PT Sans', sans-serif;
+}
+
+/* REMOVE CONFIRMATION */
+
+#remove {
+  width: 100%;
+  z-index: 50;
+  top: 60px;
+  position: fixed;
+  min-height: 100vh;
+  background-color: rgba(0,0,0,0.7); 
+}
+
+.remove-container {
+  padding: 15px;
+  max-width: 500px;
+  left:0;
+  right:0;
+  margin: auto;
+  background-color: #202020;
+  min-height: 100vh;
+  border-radius: 5px;
+}
+
+.remove-container h2 {
+  font-size: 30px;
+}
+
+.remove-button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.remove-container button, .remove-container a {
+  display:inline-block;
+}
+
+.remove-container button{
+  width: 60%
+}
+
+.remove-container a {
+  width: 40%;
+  color: white;
+  text-decoration: underline;
+  font-family: "PT Sans", sans-serif;
+  align-self: center;
+  text-align: center;
+}
+
+
 
 @media only screen and (min-width: 500px){
 
@@ -699,6 +843,52 @@ footer p {
     width: 50%;
   }
 
+  /* EVENT INFO */
+
+  .live-form-link-holder, .live-phone-holder{
+    display: flex;
+    flex-flow: wrap;
+  }
+
+  .live-phone {
+    margin-top: 0;
+  }
+
+  .live-phone, .live-form-link-url {
+    margin-left:20px;
+  }
+
+  .phone-example div {
+    top: 15px;
+  }
+  
+  .attendee-top {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .attendee-preference {
+    text-align: right;
+  }
+
+  
+  /* EVENT EDITOR */
+
+  #edit-form{
+    position: fixed;
+    min-height: fit-content;
+    width: fit-content;
+    margin-top: 15px;
+  }
+
+  /* REMOVE CONFIRM */
+
+  .remove-container {
+    position: fixed;
+    min-height: fit-content;
+    width: fit-content;
+    margin-top: 15px;
+  }
 
 }
 
@@ -784,6 +974,24 @@ footer p {
   .live-form-link-holder {
     display: flex;
   }
+
+  /* EVENT INFO */
   
+  #info-container {
+    display: flex;
+    max-width: 900px;
+    margin: auto;
+  }
+
+  #info-left{
+    width: 40%;
+  }
+
+  #info-right {
+    width: 70%;
+    margin-left: 30px;
+  }
+
+
 }
 

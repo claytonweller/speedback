@@ -427,7 +427,8 @@ const populateEventInfo = res => {
 const populateEventInstructions = res => {
   $("#info-instructions").removeAttr("hidden");
   $(".js-instructions-code").html(res.code);
-  $("#instructions-phone").html(res.phone);
+  $(".live-phone").html(res.phone);
+  $(".live-form-link-url a").attr('id', res.code)
 };
 
 // These things are always displayed
@@ -467,13 +468,15 @@ const feedbackTemplate = feedback => {
       <div class="feedback-single">
         <div class="single-date">${convertTimeStampToDate(feedback.timeStamp)}</div>
         <div class="single-container">
-          <div class="attendee-info">
-            <div><span class="preface">Name: </span>${feedback.name}</div>
-            <div><span class="preface">Email: </span><a href="mailto:${feedback.email}">${feedback.email}</a></div>
-            <div><span class="preface">Phone: </span>${feedback.phone}</div>
-          </div>
-          <div class="attendee-preferences">
-            ${prefeneceTemplate(feedback.preferences)}
+          <div class="attendee-top">
+            <div class="attendee-info">
+              <div><span class="preface">Name: </span>${feedback.name}</div>
+              <div><span class="preface">Email: </span><a href="mailto:${feedback.email}">${feedback.email}</a></div>
+              <div><span class="preface">Phone: </span>${feedback.phone}</div>
+            </div>
+            <div class="attendee-preferences">
+              ${prefeneceTemplate(feedback.preferences)}
+            </div>
           </div>
           <h3>Feedback - </h3>
           <p>${feedback.content}</p>
@@ -560,7 +563,6 @@ const openEventEditor = eventId => {
   } else {
     populateEventEditor(defaultEventInfo)
   }
-  hideAll();
   $("#edit").removeAttr("hidden");
 };
 
