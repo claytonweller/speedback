@@ -1,18 +1,16 @@
-const express = require('express')
-const router = express.Router()
-const passport = require('passport')
+const express = require("express");
+const router = express.Router();
+const passport = require("passport");
 
-const {EventModel} = require('./models')
-const {Host} = require('../hosts/models')
-const { jwtStrategy } = require('../auth')
+const { EventModel } = require("./models");
+const { Host } = require("../hosts/models");
+const { jwtStrategy } = require("../auth");
 
-router.use(express.json())
-passport.use(jwtStrategy)
-const jwtAuth = passport.authenticate('jwt', {session: false})
+router.use(express.json());
+passport.use(jwtStrategy);
+const jwtAuth = passport.authenticate("jwt", { session: false });
 
-
-
-// router.get('/', 
+// router.get('/',
 //   (req, res, next) => {
 //     console.log(req.headers)
 //     passport.authenticate('jwt', (err, info, user) =>{
@@ -39,18 +37,18 @@ const jwtAuth = passport.authenticate('jwt', {session: false})
 //   }
 // )
 
-router.get('/', jwtAuth, (req, res) => {
-  console.log(req.user)
+router.get("/", jwtAuth, (req, res) => {
+  console.log(req.user);
 
-    return EventModel.find({host: req.user.id})
-      .then(events => {
-        let serializedEvents = events.map(event => event.serialize())
-        res.status(200).json(serializedEvents)
-      })
-      .catch(err =>{
-        res.status(500).json({message:'Something went wrong on the server'})
-      })
-})
+  return EventModel.find({ host: req.user.hostId })
+    .then(events => {
+      let serializedEvents = events.map(event => event.serialize());
+      res.status(200).json(serializedEvents);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Something went wrong on the server" });
+    });
+});
 
 // router.get('/', (req, res) =>{
 //   console.log(req.query)
@@ -59,60 +57,61 @@ router.get('/', jwtAuth, (req, res) => {
 //   .catch(err => res.status(500).json({message:'Something went wrong on the server'}))
 // })
 
-router.get('/code/:eventCode', (req, res) =>{
-  EventModel.findOne({code: req.params.eventCode})
-  .then(event => {
-    res.status(200).json(event.serialize())
-  })
-  .catch(err =>{
-    res.status(500).json({message:'Something went wrong on the server'})
-  })
-})
+router.get("/code/:eventCode", (req, res) => {
+  EventModel.findOne({ code: req.params.eventCode })
+    .then(event => {
+      res.status(200).json(event.serialize());
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Something went wrong on the server" });
+    });
+});
 
-router.get('/:eventId', (req, res) =>{
+router.get("/:eventId", (req, res) => {
   EventModel.findById(req.params.eventId)
     .then(event => res.status(200).json(event.serialize()))
-    .catch(err => res.status(500).json({message: 'Something went wrong on the server'}))
-})
+    .catch(err =>
+      res.status(500).json({ message: "Something went wrong on the server" })
+    );
+});
 
-const generateEventCode = (length) =>{
-  let alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-  let code = ''
+const generateEventCode = length => {
+  let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  // TODO: Check this, might crash
+  let code = "";
   for (let index = 0; index < length; index++) {
-    code = code + alphabet[Math.floor(Math.random() * alphabet.length)]
+    code = code + alphabet[Math.floor(Math.random() * alphabet.length)];
   }
-  return code
-}
+  return code;
+};
 
-router.post('/', (req, res) =>{
-  
+router.post("/", jwtAuth, (req, res) => {
   let eventInfo = {
-    title:req.body.title,
-    thanks:req.body.thanks,
-    endTimeStamp:req.body.endTimeStamp,
+    title: req.body.title,
+    thanks: req.body.thanks,
+    endTimeStamp: req.body.endTimeStamp,
     // TODO UTC ? FIX
-    timeStamp:Date.now(),
-    phone:'1234567890',
-    webFormVisits:[],
-    code:generateEventCode(3),
-    displayName:req.body.displayName,
-    // TODO Auth token
-    // host: req.user.id
-  }
+    timeStamp: Date.now(),
+    phone: "1234567890",
+    webFormVisits: [],
+    code: generateEventCode(3),
+    displayName: req.body.displayName,
+    host: req.user.hostId
+  };
   // TODO LOOP generate eventcode promise loop
-  EventModel.find({code:eventInfo.code})
+  EventModel.find({ code: eventInfo.code })
     .countDocuments()
     .then(count => {
-      if(count){
+      if (count) {
         // with 4 digits there are nearly half a million combinations
-        eventInfo.code = generateEventCode(3)
+        eventInfo.code = generateEventCode(3);
       }
-      return eventInfo
+      return eventInfo;
     })
     .then(event => EventModel.create(event))
     .then(event => {
-      res.status(201).json(event.serialize())
-    })
+      res.status(201).json(event.serialize());
+    });
 
   // Host.findById(req.body.hostId)
   //   .then(host => {
@@ -130,34 +129,37 @@ router.post('/', (req, res) =>{
   //   .then(event => {
   //     res.status(201).json(event.serialize())
   //   })
+});
 
-})
+router.put(
+  "/:eventId",
+  /*jwtAuth,*/ (req, res) => {
+    // check if req.user.id == matches the post's host
+    // if matches, let them update
+    let toUpdate = {};
+    const okToUpdate = ["title", "thanks", "endTimeStamp", "displayName"];
 
-router.put('/:eventId', /*jwtAuth,*/ (req, res) => {
+    okToUpdate.forEach(field => {
+      if (field in req.body) {
+        toUpdate[field] = req.body[field];
+      }
+    });
+    EventModel.findByIdAndUpdate(req.params.eventId, { $set: toUpdate })
+      .then(event => EventModel.findById(event._id))
+      .then(updatedEvent => res.status(200).json(updatedEvent))
+      .catch(err =>
+        res.status(500).json({ message: "Something went wrong on the server" })
+      );
+  }
+);
 
-  // check if req.user.id == matches the post's host
-  // if matches, let them update
-  let toUpdate={}
-  const okToUpdate = ['title', 'thanks', 'endTimeStamp', 'displayName']
-
-  okToUpdate.forEach(field =>{
-    if(field in req.body){
-      toUpdate[field] = req.body[field]
-    }
-  })
-  EventModel
-    .findByIdAndUpdate(req.params.eventId, {$set: toUpdate})
-    .then(event=> EventModel.findById(event._id))
-    .then(updatedEvent => res.status(200).json(updatedEvent))
-    .catch(err => res.status(500).json({message: 'Something went wrong on the server'}))
-})
-
-router.delete('/:eventId', (req, res) =>{
-  console.log('Deleted event '+ req.params.eventId)
+router.delete("/:eventId", (req, res) => {
+  console.log("Deleted event " + req.params.eventId);
   EventModel.findByIdAndRemove(req.params.eventId)
     .then(event => res.sendStatus(204).end())
-    .catch(err => res.status(500).json({message: 'Something went wrong on the server'}))
-})
+    .catch(err =>
+      res.status(500).json({ message: "Something went wrong on the server" })
+    );
+});
 
-
-module.exports = {router}
+module.exports = { router };

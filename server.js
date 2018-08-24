@@ -3,14 +3,14 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const passport = require("passport");
-   
+
 mongoose.Promise = global.Promise;
 const { PORT, DATABASE_URL } = require("./config");
 const app = express();
 
-const {router:eventsRouter} = require("./events");
-const {router:hostsRouter} = require("./hosts");
-const {router:feedbackRouter} = require("./feedback");
+const { router: eventsRouter } = require("./events");
+const { router: hostsRouter } = require("./hosts");
+const { router: feedbackRouter } = require("./feedback");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 
 app.use(express.static("public"));
@@ -20,12 +20,11 @@ app.use("/api/hosts", hostsRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/auth", authRouter);
 
-
 //AUTH isn't working yet!
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-// This Request is for the URL feedback page. It takes a unique event code, 
+// This Request is for the URL feedback page. It takes a unique event code,
 // and populates the feedback form from a GET Event call
 
 app.get("/:eventCode", (req, res) => {
