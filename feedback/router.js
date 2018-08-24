@@ -9,8 +9,10 @@ router.use(express.json());
 router.get("/:eventId", (req, res) => {
   Feedback.find({ eventId: req.params.eventId })
     .then(feedbackArray => {
-      let serializedFeedback = feedbackArray.map(feedback => feedback.serialize())
-      res.status(200).json(serializedFeedback)
+      let serializedFeedback = feedbackArray.map(feedback =>
+        feedback.serialize()
+      );
+      res.status(200).json(serializedFeedback);
     })
     .catch(err =>
       res.status(500).json({ message: "Something went wrong on the server" })
@@ -23,10 +25,11 @@ router.get("/:feedBackId", (req, res) => {
 
 // as soon as page loads
 router.post("/visited/:eventId", (req, res) => {
-  EventModel.findByIdAndUpdate(req.params.eventId,
+  EventModel.findByIdAndUpdate(
+    req.params.eventId,
     // TODO UTC Fix
-    { $push: {webFormVisits:Date.now()}}
-  )
+    { $push: { webFormVisits: Date.now() } }
+  );
 });
 
 router.post("/:eventCode", (req, res) => {
