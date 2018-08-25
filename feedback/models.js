@@ -25,8 +25,6 @@ feedbackSchema.methods.serialize = function() {
     preferences.push("Wants to volunteer at future events");
   }
 
-  console.log(preferences);
-
   return {
     content: this.content,
     optIn: this.optIn,
@@ -34,7 +32,7 @@ feedbackSchema.methods.serialize = function() {
     email: this.email,
     phone: this.phone,
     preferences: preferences,
-    timeStamp: this.feedback,
+    timeStamp: this.timeStamp,
     eventId: this.eventId
   };
 };

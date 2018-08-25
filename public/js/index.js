@@ -5,6 +5,7 @@ const STATE = {
   hostId: ""
 };
 
+// TODO FIX THIS LOGIN STUFF
 let token = localStorage.getItem("token");
 if (token) {
   //  try to refresh token. ()
@@ -62,6 +63,8 @@ const convertTimeStampToDate = (timeStamp, mode) => {
     hour: addZero(m.getUTCHours()),
     minutes: addZero(m.getUTCMinutes())
   };
+
+  console.log(dateObject);
 
   let dateString =
     dateObject.year +
@@ -306,7 +309,6 @@ const eventInfoLinkListener = () => {
     event.preventDefault();
     // Need some what to store the data so we can make the correct API request based upon the link for now we'll leave a place holder
     let eventId = this.id.replace("info", "").replace("feedback", "");
-    console.log(eventId);
 
     openEventInfo(eventId);
   });
@@ -327,15 +329,9 @@ function openDashboard() {
   STATE.focusEventId = 0;
   // This takes the hostId (Which will also be stored in the JWT)
   // and grabs all associated events from that host
-  // $.getJSON(`/api/events/`, populateDashboard);
   $.ajax({
-    // beforeSend: function(req){
-    //   req.setRequestHeader('Authorization', `Bearer ${STATE.token}`)
-    // },
     headers: { Authorization: `Bearer ${STATE.token}` },
     url: `/api/events/`,
-    // TODO Delete
-    // url: `/api/events/?hostId=${STATE.hostId}`,
     type: "GET",
     contentType: "application/json"
   })
@@ -422,11 +418,16 @@ const openEventInfo = eventId => {
   // This takes the Event id and makes that event the focused event.
   STATE.focusEventId = eventId;
   //Make a request for the info on this particular event using the id
-  $.getJSON(
-    `/api/events/${eventId}`,
-    { hostId: STATE.hostId },
-    populateEventInfo
-  );
+
+  $.ajax({
+    headers: { Authorization: `Bearer ${STATE.token}` },
+    url: `/api/events/${eventId}`,
+    type: "GET",
+    contentType: "application/json"
+  })
+    .then(res => populateEventInfo(res))
+    .catch(err => console.log(err));
+
   $("#info").removeAttr("hidden");
 };
 
@@ -475,23 +476,29 @@ const populateFeedbackGraphs = res => {
 
 const populateFeedbackInDepth = res => {
   // GET all the feedback associated with the event.
-  console.log(res);
-  $.getJSON(`/api/feedback/${res.eventId}`).then(feedbackarray => {
-    if (feedbackarray.length > 0) {
-      // This displays all the feedback on the website
-      $("#feedback-in-depth").html(
-        feedbackarray.map(feedback => feedbackTemplate(feedback))
-      );
-    } else {
-      $("#feedback-in-depth").html("No Feedback");
-    }
-  });
+  $.ajax({
+    headers: { Authorization: `Bearer ${STATE.token}` },
+    url: `/api/feedback/${res.eventId}`,
+    type: "GET",
+    contentType: "application/json"
+  })
+    .then(feedbackarray => {
+      console.log(feedbackarray);
+      if (feedbackarray.length > 0) {
+        // This displays all the feedback on the website
+        $("#feedback-in-depth").html(
+          feedbackarray.map(feedback => feedbackTemplate(feedback))
+        );
+      } else {
+        $("#feedback-in-depth").html("No feedback yet");
+      }
+    })
+    .catch(err => console.log(err));
 };
 
 const feedbackTemplate = feedback => {
   // If the person providing feedback opts in to more communication
   // then we display a more in depth display box
-  console.log(feedback);
   if (feedback.optIn) {
     return `
       <div class="feedback-single">
@@ -532,7 +539,6 @@ const feedbackTemplate = feedback => {
 };
 
 const prefeneceTemplate = preferences => {
-  console.log(preferences);
   if (preferences) {
     return preferences.map(
       preference => `<div class="attendee-preference">${preference}</div>`
@@ -595,7 +601,14 @@ const openEventEditor = eventId => {
   };
 
   if (eventId) {
-    $.getJSON(`/api/events/${eventId}`, populateEventEditor);
+    $.ajax({
+      headers: { Authorization: `Bearer ${STATE.token}` },
+      url: `/api/events/${eventId}`,
+      type: "GET",
+      contentType: "application/json"
+    })
+      .then(res => populateEventEditor(res))
+      .catch(err => console.log(err));
   } else {
     populateEventEditor(defaultEventInfo);
   }
@@ -625,9 +638,7 @@ const eventEditorSubmitButtonListener = () => {
       title: $("#edit-title").val(),
       displayName: $("#edit-host").val(),
       endTimeStamp: new Date(endDate + "T" + endTime).getTime(),
-      thanks: $("#edit-thanks").val(),
-      // TODO - remove this once I have JWT working
-      hostId: STATE.hostId
+      thanks: $("#edit-thanks").val()
     };
 
     if (STATE.focusEventId) {
@@ -660,6 +671,7 @@ const submitEventEdits = eventInfo => {
   $.ajax({
     url: `/api/events/${STATE.focusEventId}`,
     type: "PUT",
+    headers: { Authorization: `Bearer ${STATE.token}` },
     data: JSON.stringify(eventInfo),
     contentType: "application/json"
   })
@@ -716,9 +728,14 @@ const eventRemoveButtonListener = () => {
 };
 
 const openRemoveConfirm = id => {
-  $.getJSON(`/api/events/${id}`, function(res) {
-    $("#remove-title").html(res.title);
-  });
+  $.ajax({
+    headers: { Authorization: `Bearer ${STATE.token}` },
+    url: `/api/events/${id}`,
+    type: "GET",
+    contentType: "application/json"
+  })
+    .then(res => $("#remove-title").html(res.title))
+    .catch(err => console.log(err));
   $("#remove").removeAttr("hidden");
 };
 
@@ -735,8 +752,8 @@ const deleteEvent = () => {
 
   $.ajax({
     url: `/api/events/${STATE.focusEventId}`,
+    headers: { Authorization: `Bearer ${STATE.token}` },
     type: "DELETE",
-    // data: JSON.stringify(query),
     contentType: "application/json"
   });
 };

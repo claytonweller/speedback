@@ -3,43 +3,14 @@ const router = express.Router();
 const passport = require("passport");
 
 const { EventModel } = require("./models");
-const { Host } = require("../hosts/models");
 const { jwtStrategy } = require("../auth");
 
 router.use(express.json());
 passport.use(jwtStrategy);
 const jwtAuth = passport.authenticate("jwt", { session: false });
 
-// router.get('/',
-//   (req, res, next) => {
-//     console.log(req.headers)
-//     passport.authenticate('jwt', (err, info, user) =>{
-//       console.log('err', err)
-//       console.log('info', info)
-//       console.log('user', user)
-//       if(err){
-//         console.log('err')
-//         return res.status(401).send(err)
-//       } else if(!user){
-//         console.log('!user')
-//         return res.status(401).send(info)
-//       }else {
-//         console.log('next')
-//         next()
-//       }
-//       console.log('after')
-//       return res.status(401).send(info)
-//     })(req, res);
-//   },
-//   (req, res) =>{
-//     console.log(req.user)
-
-//   }
-// )
-
+// GETS all of the events for a single host
 router.get("/", jwtAuth, (req, res) => {
-  console.log(req.user);
-
   return EventModel.find({ host: req.user.hostId })
     .then(events => {
       let serializedEvents = events.map(event => event.serialize());
@@ -50,13 +21,7 @@ router.get("/", jwtAuth, (req, res) => {
     });
 });
 
-// router.get('/', (req, res) =>{
-//   console.log(req.query)
-//   EventModel.find({host:req.query.hostId})
-//   .then(events => res.status(200).json(events.map(event => event.serialize())))
-//   .catch(err => res.status(500).json({message:'Something went wrong on the server'}))
-// })
-
+// GETS the event info to populate a feedback form
 router.get("/code/:eventCode", (req, res) => {
   EventModel.findOne({ code: req.params.eventCode })
     .then(event => {
@@ -67,9 +32,17 @@ router.get("/code/:eventCode", (req, res) => {
     });
 });
 
-router.get("/:eventId", (req, res) => {
+// Gets the event info for a single event
+router.get("/:eventId", jwtAuth, (req, res) => {
   EventModel.findById(req.params.eventId)
-    .then(event => res.status(200).json(event.serialize()))
+    .then(event => {
+      if (String(event.host) !== req.user.hostId) {
+        return res
+          .status(400)
+          .json({ message: "You do not have access to this event" });
+      }
+      res.status(200).json(event.serialize());
+    })
     .catch(err =>
       res.status(500).json({ message: "Something went wrong on the server" })
     );
@@ -112,50 +85,47 @@ router.post("/", jwtAuth, (req, res) => {
     .then(event => {
       res.status(201).json(event.serialize());
     });
-
-  // Host.findById(req.body.hostId)
-  //   .then(host => {
-  //     eventInfo.host = host._id
-  //     return EventModel.find({code:eventInfo.code}).countDocuments()
-  //   })
-  //   .then(count => {
-  //     if(count){
-  //       // with 4 digits there are nearly half a million combinations
-  //       eventInfo['code'] = generateEventCode(4)
-  //     }
-  //     return eventInfo
-  //   })
-  //   .then(event => EventModel.create(event))
-  //   .then(event => {
-  //     res.status(201).json(event.serialize())
-  //   })
 });
 
-router.put(
-  "/:eventId",
-  /*jwtAuth,*/ (req, res) => {
-    // check if req.user.id == matches the post's host
-    // if matches, let them update
-    let toUpdate = {};
-    const okToUpdate = ["title", "thanks", "endTimeStamp", "displayName"];
+router.put("/:eventId", jwtAuth, (req, res) => {
+  let toUpdate = {};
+  const okToUpdate = ["title", "thanks", "endTimeStamp", "displayName"];
 
-    okToUpdate.forEach(field => {
-      if (field in req.body) {
-        toUpdate[field] = req.body[field];
+  okToUpdate.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  EventModel.findById(req.params.eventId)
+    .then(event => {
+      if (String(event.host) !== req.user.hostId) {
+        return res
+          .status(400)
+          .json({ message: "You do not have access to this event" });
       }
-    });
-    EventModel.findByIdAndUpdate(req.params.eventId, { $set: toUpdate })
-      .then(event => EventModel.findById(event._id))
-      .then(updatedEvent => res.status(200).json(updatedEvent))
-      .catch(err =>
-        res.status(500).json({ message: "Something went wrong on the server" })
-      );
-  }
-);
+      return EventModel.findByIdAndUpdate(req.params.eventId, {
+        $set: toUpdate
+      });
+    })
+    .then(event => EventModel.findById(event._id))
+    .then(updatedEvent => res.status(200).json(updatedEvent))
+    .catch(err =>
+      res.status(500).json({ message: "Something went wrong on the server" })
+    );
+});
 
-router.delete("/:eventId", (req, res) => {
-  console.log("Deleted event " + req.params.eventId);
-  EventModel.findByIdAndRemove(req.params.eventId)
+router.delete("/:eventId", jwtAuth, (req, res) => {
+  EventModel.findById(req.params.eventId)
+    .then(event => {
+      if (String(event.host) !== req.user.hostId) {
+        return res
+          .status(400)
+          .json({ message: "You do not have access to this event" });
+      }
+      console.log("Deleted event " + req.params.eventId);
+      return EventModel.findByIdAndRemove(req.params.eventId);
+    })
     .then(event => res.sendStatus(204).end())
     .catch(err =>
       res.status(500).json({ message: "Something went wrong on the server" })

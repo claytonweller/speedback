@@ -1,54 +1,57 @@
-body * { 
-  font-family: 'PT Sans', sans-serif;
+body * {
+  font-family: "PT Sans", sans-serif;
   font-size: 20px;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Oswald', sans-serif;
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Oswald", sans-serif;
   font-weight: 100;
-  margin:0px;
+  margin: 0px;
 }
 
 nav {
   background-color: black;
   position: fixed;
-  width:100%;
+  width: 100%;
   height: 45px;
   z-index: 100;
 }
 
-nav img{
-  height:90%;
+nav img {
+  height: 90%;
 }
 
-main{
+main {
   padding: 15px;
-  padding-top:50px;
+  padding-top: 50px;
   background-color: #202020;
   color: white;
   min-height: 100vh;
 }
 
-h1{
+h1 {
   font-size: 60px;
 }
 
-a{
-  color:#FE0D00;
+a {
+  color: #fe0d00;
   text-decoration: none;
 }
 
 button {
-  background-color:#FE0D00;
+  background-color: #fe0d00;
   width: 100%;
-  color:white;
-  font-family: 'Oswald', sans-serif;
+  color: white;
+  font-family: "Oswald", sans-serif;
   font-size: 34px;
   padding: 10px;
-  border:none;
+  border: none;
   border-radius: 5px;
 }
 
@@ -58,30 +61,30 @@ button {
 
 .text-label div {
   padding-bottom: 5px;
-  padding-top:10px;
+  padding-top: 10px;
 }
 
 .text-label input {
-  width:100%;
+  width: 100%;
   height: 45px;
   padding: 10px;
 }
 
-.label-text{
+.label-text {
   margin-bottom: 5px;
 }
 
-.check-label{
+.check-label {
   display: flex;
   align-content: center;
   margin: 10px 0px;
 }
 
-.check-mark{
+.check-mark {
   height: 20px;
   min-width: 20px;
   width: 20px;
-  background-color: #908F8F;
+  background-color: #908f8f;
   border: 1px solid white;
   position: relative;
   align-self: center;
@@ -103,7 +106,7 @@ button {
   top: -5px;
   width: 10px;
   height: 20px;
-  border: solid #FE0D00;
+  border: solid #fe0d00;
   border-width: 0 6px 6px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
@@ -116,28 +119,28 @@ button {
   cursor: pointer;
 }
 
-.check-text{
+.check-text {
   align-self: center;
 }
 
 /* Feedback specific stuff */
 
-.feedback-host{
-  font-family: 'PT Sans', sans-serif;
+.feedback-host {
+  font-family: "PT Sans", sans-serif;
 }
 
-#feedback-form{
+#feedback-form {
   margin-top: 30px;
-  width:100%;
+  width: 100%;
 }
 
-#feedback-text{
+#feedback-text {
   width: 100%;
   height: 150px;
-  padding:10px;
+  padding: 10px;
 }
 
-#feedback-extra{
+#feedback-extra {
   flex-flow: wrap;
 }
 
@@ -146,46 +149,47 @@ button {
 }
 
 #feedback-text-inputs {
-  width:100%;
+  width: 100%;
   margin-bottom: 30px;
 }
 
 fieldset {
-  width:100%;
+  width: 100%;
   margin-bottom: 30px;
 }
 
 #thanks {
-  margin-top: 45px;
+  padding-top: 20px;
   font-size: 26px;
 }
 
-@media only screen and (min-width: 500px){
-
-  form, #thanks, header{
+@media only screen and (min-width: 500px) {
+  form,
+  #thanks,
+  header {
     max-width: 650px;
-    margin:auto;
+    margin: auto;
   }
 
-  
-  .extra-input-container{
+  .extra-input-container {
     display: flex;
     justify-content: space-between;
   }
 
-  #feedback-text-inputs, fieldset{
-    width:48%
+  #feedback-text-inputs,
+  fieldset {
+    width: 48%;
   }
 
-  fieldset{
-    display:flex;
+  fieldset {
+    display: flex;
     flex-flow: column;
     justify-content: space-around;
-    margin-top:25px;
+    margin-top: 25px;
   }
 
   #feedback-text-inputs {
-    margintop:30px;
+    margintop: 30px;
   }
 
   button {
@@ -193,9 +197,8 @@ fieldset {
     position: relative;
   }
 
-  #feedback-button-holder{
+  #feedback-button-holder {
     display: flex;
     justify-content: flex-end;
   }
 }
-

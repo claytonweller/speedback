@@ -5,16 +5,16 @@
   <title>SpeedBack</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
   <link rel="stylesheet" href="index.css">
 </head>
-    
+
 <body>
   <nav role="navigation" aria-live="assertive">
-    <a id="nav-logo" href="NA"><img class="nav-logo" src="./assets/LogoSmall.png" alt="Speedback Logo"></a> 
+    <a id="nav-logo" href="NA"><img class="nav-logo" src="./assets/LogoSmall.png" alt="Speedback Logo"></a>
     <div class="nav-right">
-      <a href="none" id="nav-sub-menu-toggle"><img src="./assets/menubars.png" alt="menu"></a> 
+      <a href="none" id="nav-sub-menu-toggle"><img src="./assets/menubars.png" alt="menu"></a>
       <div id="nav-sub-menu" hidden>
         <div id="nav-auth-no">
           <ul>
@@ -28,24 +28,24 @@
             <li><a id="nav-log-out" href="URL">Log Out</a></li>
           </ul>
           <button id="nav-new-event-button" class="js-new-event-button">New Event</button>
-          
+
         </div>
       </div>
     </div>
-    
+
   </nav>
   <main role="main" aria-live="assertive">
-   
+
     <!-- Landing Page -->
-    <section id="landing" role="region" >
+    <section id="landing" role="region">
       <div id="landing-above-the-fold">
         <img class="logo-tall" src="./assets/TallLogo.png" alt="Speedback">
         <img class="logo-wide" src="./assets/LogoLarge.png" alt="Speedback">
         <h1>Get feedback fast after live events</h1>
         <button id="sign-up-button">Sign Up</button>
-        <a id="log-in-button">Log In</a>  
+        <a id="log-in-button">Log In</a>
       </div>
-         
+
       <div class="landing-description">
         <div id="landing-steps">
           <h2>Speedback is easy!</h2>
@@ -99,7 +99,7 @@
     </section>
 
     <!-- Login/Signup Page -->
-      <!-- I'm thinking about making this a modal window -->
+    <!-- I'm thinking about making this a modal window -->
     <section id="auth" role="region" hidden>
 
       <!-- Log in -->
@@ -118,9 +118,9 @@
         </form>
         <div id="login-error" class="form-error"></div>
         <p>Don't have an account?</p>
-        <p><a id="sign-up-instead" href="URL">Sign Up</a></p>   
+        <p><a id="sign-up-instead" href="URL">Sign Up</a></p>
       </div>
-      
+
       <!-- Sign up -->
       <div id="auth-signup" class="auth-screen" hidden>
         <h2>Sign Up</h2>
@@ -131,7 +131,7 @@
               <input id="signup-form-first" type="text" required>
             </label>
             <label class="text-label">
-              <div>Last Name</div> 
+              <div>Last Name</div>
               <input id="signup-form-last" type="text" required>
             </label>
             <label class="text-label">
@@ -141,7 +141,7 @@
           </div>
           <div id="sign-up-right">
             <label class="text-label">
-              <div>Password</div> 
+              <div>Password</div>
               <input id="signup-form-pass1" type="password" required>
             </label>
             <label class="text-label">
@@ -156,7 +156,7 @@
         <p><a id="log-in-instead" href="URL">Log In</a></p>
       </div>
     </section>
-    
+
     <!-- Event DashBoard -->
     <section id="dash" role="region" hidden>
       <div id="dash-header">
@@ -167,42 +167,15 @@
         <div id="dash-upcoming">
           <h2>Upcoming events</h2>
           <!-- Populated byt the database -->
-          <div class="dash-event upcoming">
-            <!-- <div class="dash-event-text-holder"> -->
-              <h3><a id="info${event.eventId}" class="event-title js-event-info-link" href="15">This title is way too long and keeps going forever</a></h3>
-              <div>YYYY - MM - DD @ ##:##</div>
-              <div class="upcoming-info">
-                <div><span class="preface">Event Code: </span>${event.code}</div>
-                <div><span class="preface">EventPhone: </span>${event.phone}</div>
-                <div class="live-form-link-holder">
-                  <div class="preface">Link to live form - </div>
-                  <div class="live-form-link-url"><a id="${event.code}" class="live-form-link" href="URL">www.url.com/${event.code}</a></div>
-                </div>
-              </div>
-            <!-- </div> -->
-            <div class="dash-icon-holder">
-              <a id="remove${event.eventId}" class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${event.title}"></a>
-              <a id="edit${event.eventId}" class="event-edit-button"><img src="./assets/EditIcon.png" alt="edit ${event.title}"></a>
-            </div> 
-          </div>
         </div>
         <div id="dash-complete">
-          <h2>Complete Events</h2> 
+          <h2>Complete Events</h2>
           <!-- Populated by the database -->
-          <div class="dash-event complete">
-              <h3><a id="info${event.eventId}" class="event-title js-event-info-link" href="15">Complete event</a></h3>
-              <div>YYYY - MM - DD @ ##:##</div>
-              <div><a id="feedback${event.eventId}" class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></div>
-              <div class="dash-icon-holder">
-                <a id="remove${event.eventId}" class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${event.title}"></a>
-                <a id="feedback${event.eventId}" class="event-feedback-link js-event-info-link"><img src="./assets/LookIcon.png" alt="feedback for ${event.title}"></a>
-              </div> 
-            </div>
         </div>
       </div>
 
     </section>
-    
+
     <!-- Event info -->
     <section id="info" role="region" hidden>
       <div id="info-container">
@@ -216,7 +189,7 @@
             <div id="details-thanks">Thank you message, limited to something like 150 characters</div>
             <div id="info-button-holder">
               <button class="event-remove-button">Remove</button>
-              <button class="event-edit-button">Edit</button>    
+              <button class="event-edit-button">Edit</button>
             </div>
           </div>
           <div id="info-graphs">
@@ -248,7 +221,8 @@
               </div>
             </div>
             <hr>
-            <p>Your feedback period will conclued 2 hours after the event ends. If you want to have the best success here are our suggestions -</p>
+            <p>Your feedback period will conclued 2 hours after the event ends. If you want to have the best success here
+              are our suggestions -</p>
             <ul>
               <li>Let attendees know this is for ‘Right Now!’, and give them NOTHING else to do or see.</li>
               <li>Create a physical sign with this information, or display it on a screen or projector.</li>
@@ -256,73 +230,33 @@
             </ul>
             <p>Break a leg!</p>
           </div>
-    
+
           <!-- Only visible if feedback has arrived -->
           <div id="info-feedback">
             <h2>Feedback</h2>
-    
             <div id="feedback-in-depth">
-              <div class="feedback-single">
-                <div class="single-date">Date</div>
-                <div class="single-container">
-                  <div class="attendee-top">
-                    <div class="attendee-info">
-                      <div><span class="preface">Name: </span>${feedback.name}</div>
-                      <div><span class="preface">Email: </span> <a href="mailto:clayton.weller@gmail.com">${feedback.email}</a></div>
-                      <div><span class="preface">Phone: </span>${feedback.phone}</div>
-                    </div>
-                    <div class="attendee-preferences">
-                      <div class="attendee-preference">Wants to know about future events</div>
-                      <div class="attendee-preference">Want to talk to you directly</div>
-                    </div>
-                  </div>
-                  <h3>Feedback</h3>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit eligendi natus vel alias quae perspiciatis maxime veritatis, error nesciunt perferendis quibusdam recusandae. Nulla saepe deleniti beatae? A corporis facilis ex?</p>
-                </div>
-              </div>
-              <div class="feedback-single">
-                <div class="single-date">DATE</div>
-                <div class="single-container">
-                  <div class="attendee-info">
-                    <div><span class="preface">Name: </span>${feedback.name}</div>
-                    <div><span class="preface">Email: </span>${feedback.email}</div>
-                    <div><span class="preface">Phone: </span>${feedback.phone}</div>
-                  </div>
-                  <div class="attendee-preferences">
-                    <div class="attendee-preference">${preference}</div>
-                  </div>
-                  <h3>Feedback</h3>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus molestiae itaque magnam laborum consectetur sunt assumenda blanditiis perspiciatis! Ratione, vitae! Delectus ullam velit repellendus expedita veniam temporibus fuga id cumque.</p>
-                </div>
-              </div>
-              <div class="feedback-single">
-                <div class="single-date">DATE DATE</div>
-                <div class="single-container">
-                  <h3>Feedback</h3>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem magnam, harum facere praesentium voluptas natus in consectetur quia error esse illum doloremque labore rem, facilis accusamus quae cum, reprehenderit ad.</p>
-                </div>
-              </div>
+              <!-- All individual pieces of feedback Populated by the Database -->
             </div>
           </div>
         </div>
       </div>
 
 
-      
+
     </section>
 
     <!-- Event Editor -->
-      <!-- Maybe this will be a modal window -->
+    <!-- Maybe this will be a modal window -->
     <section id="edit" role="region" hidden>
       <form id="edit-form">
         <h1>Edit Event</h1>
         <label class="text-label">
-          <div>Event Title</div> 
+          <div>Event Title</div>
           <input id="edit-title" type="text" placeholder="Event Title" maxlength="40">
         </label>
         <label class="text-label">
           <!-- by default this will be The Name of the user -->
-          <div>Who is putting on the event?</div> 
+          <div>Who is putting on the event?</div>
           <input id="edit-host" type="text" value="NAME OF USER" placeholder="Event Host">
         </label>
         <label class="text-label edit-date">
@@ -338,12 +272,12 @@
           <a id="edit-cancel-button">Cancel</a>
           <button id="edit-submit-button" type="submit">Submit</button>
         </div>
-        
-      </form>      
+
+      </form>
     </section>
 
     <!-- Remove Confirmation -->
-      <!-- This will definitely be a modal window -->
+    <!-- This will definitely be a modal window -->
     <section id="remove" role="region" hidden>
       <div class="remove-container">
         <h2>Remove:</h2>
@@ -355,13 +289,14 @@
         </div>
       </div>
     </section>
-  
+
   </main>
   <footer>
     <p>created by - <span class="footer-sig">Clayton Weller</span></p>
   </footer>
-  
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
   <script src="./js/index.js"></script>
 
 </body>

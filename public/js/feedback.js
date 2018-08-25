@@ -1,10 +1,10 @@
 STATE = {
-  feedbackId:'',
-  didAnything:false,
-  code:''
+  feedbackId: '',
+  didAnything: false,
+  code: ''
 }
 
-const manageApp = () =>{
+const manageApp = () => {
   // This populates the page on load and GETS the event info from the database based on the event code
   populateFeedback()
   // This listends for the submit button to be activated
@@ -18,27 +18,27 @@ const populateFeedback = () => {
   let url = window.location.href
   let eventCode = url.substr(url.lastIndexOf('/') + 1).toLocaleUpperCase()
   STATE.code = eventCode
-  $.getJSON(`api/events/code/${eventCode}`, function(res){
+  $.getJSON(`api/events/code/${eventCode}`, function (res) {
     $('.js-event-title').html(res.title)
     $('.js-event-host').html(res.displayName)
     $('#thanks').html(res.thanks)
     countVisit(res.eventId)
-  }) 
-}
-
-const countVisit= (eventId) =>{
-  $.ajax({
-    url: `/api/feedback/visited/${eventId}`,
-    type: 'POST',
-    contentType:'application/json'
   })
 }
 
-const optInListener = () =>{
+const countVisit = (eventId) => {
+  $.ajax({
+    url: `/api/feedback/visited/${eventId}`,
+    type: 'POST',
+    contentType: 'application/json'
+  })
+}
+
+const optInListener = () => {
   // When they opt in to more info/communication,
   // Extra fields are displayed and the feedback is updated.
-  $('#opt-in-check').click(function(event){
-    if(document.getElementById('opt-in-check').checked){
+  $('#opt-in-check').click(function (event) {
+    if (document.getElementById('opt-in-check').checked) {
       $('#feedback-extra').removeAttr('hidden')
       $('#feedback-extra').attr('display', 'flex')
       $('#opt-in-check').attr('checked', true)
@@ -49,9 +49,9 @@ const optInListener = () =>{
   })
 }
 
-const submitListener = () =>{
+const submitListener = () => {
   // The feedback is updated and then the form switches over to a custom thank you message 
-  $('#feedback-button').click(function(event){
+  $('#feedback-button').click(function (event) {
     event.preventDefault()
     sortSubmitClicks()
     $('#feedback-form').attr('hidden', true)
@@ -59,7 +59,7 @@ const submitListener = () =>{
   })
 }
 
-const sortSubmitClicks = () =>{
+const sortSubmitClicks = () => {
   let feedbackObj = {
     content: $('#feedback-text').val(),
     optIn: document.getElementById('opt-in-check').checked,
@@ -71,7 +71,7 @@ const sortSubmitClicks = () =>{
     volunteer: document.getElementById('volunteer-check').checked,
   }
 
-  if(STATE.didAnything){
+  if (STATE.didAnything) {
     updateFeedback(feedbackObj)
   } else {
     STATE.didAnything = true
@@ -79,7 +79,7 @@ const sortSubmitClicks = () =>{
   }
 }
 
-const createFeedback = (feedbackObj) =>{
+const createFeedback = (feedbackObj) => {
   $.ajax({
     url: `/api/feedback/${STATE.code}`,
     type: "POST",
@@ -91,8 +91,8 @@ const createFeedback = (feedbackObj) =>{
     })
 }
 
-const updateFeedback = (feedbackObj) =>{
-  
+const updateFeedback = (feedbackObj) => {
+
   $.ajax({
     url: `/api/feedback/${STATE.feedbackId}`,
     type: "PUT",

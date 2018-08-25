@@ -1,13 +1,25 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 
 const { Feedback } = require("./models");
 const { EventModel } = require("../events/models");
+const { jwtStrategy } = require("../auth");
 
 router.use(express.json());
+passport.use(jwtStrategy);
+const jwtAuth = passport.authenticate("jwt", { session: false });
 
-router.get("/:eventId", (req, res) => {
-  Feedback.find({ eventId: req.params.eventId })
+router.get("/:eventId", jwtAuth, (req, res) => {
+  EventModel.findById(req.params.eventId)
+    .then(event => {
+      if (req.user.hostId !== String(event.host)) {
+        return res(400).json({
+          message: "You do not have access to this information"
+        });
+      }
+      return Feedback.find({ eventId: req.params.eventId });
+    })
     .then(feedbackArray => {
       let serializedFeedback = feedbackArray.map(feedback =>
         feedback.serialize()
@@ -17,10 +29,6 @@ router.get("/:eventId", (req, res) => {
     .catch(err =>
       res.status(500).json({ message: "Something went wrong on the server" })
     );
-});
-
-router.get("/:feedBackId", (req, res) => {
-  //May not need this
 });
 
 // as soon as page loads
@@ -86,10 +94,6 @@ router.put("/:feedbackId", (req, res) => {
     .catch(err =>
       res.status(500).json({ message: "Something went wrong on the server" })
     );
-});
-
-router.delete("/:feedbackId", (req, res) => {
-  //Might not need this
 });
 
 module.exports = { router };
