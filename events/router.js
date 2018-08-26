@@ -50,7 +50,6 @@ router.get("/:eventId", jwtAuth, (req, res) => {
 
 const generateEventCode = length => {
   let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  // TODO: Check this, might crash
   let code = "";
   for (let index = 0; index < length; index++) {
     code = code + alphabet[Math.floor(Math.random() * alphabet.length)];
@@ -58,32 +57,43 @@ const generateEventCode = length => {
   return code;
 };
 
-router.post("/", jwtAuth, (req, res) => {
-  let eventInfo = {
+const generateUniqueEventCode = async () => {
+  let codeIsUnique = false;
+  let i = 3;
+  let code;
+  let count;
+  while (!codeIsUnique) {
+    code = generateEventCode(i);
+    count = await EventModel.find({ code: code }).countDocuments();
+    if (count < 1) {
+      codeIsUnique = true;
+    } else {
+      i++;
+    }
+  }
+  return code;
+};
+
+router.post("/", jwtAuth, async (req, res) => {
+  let eventInfo = await {
     title: req.body.title,
     thanks: req.body.thanks,
     endTimeStamp: req.body.endTimeStamp,
-    // TODO UTC ? FIX
     timeStamp: Date.now(),
     phone: "1234567890",
     webFormVisits: [],
-    code: generateEventCode(3),
+    code: await generateUniqueEventCode(),
     displayName: req.body.displayName,
     host: req.user.hostId
   };
-  // TODO LOOP generate eventcode promise loop
-  EventModel.find({ code: eventInfo.code })
-    .countDocuments()
-    .then(count => {
-      if (count) {
-        // with 4 digits there are nearly half a million combinations
-        eventInfo.code = generateEventCode(3);
-      }
-      return eventInfo;
-    })
-    .then(event => EventModel.create(event))
+
+  EventModel.create(eventInfo)
     .then(event => {
       res.status(201).json(event.serialize());
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: "Something went wrong on the server" });
     });
 });
 

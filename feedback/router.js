@@ -33,11 +33,9 @@ router.get("/:eventId", jwtAuth, (req, res) => {
 
 // as soon as page loads
 router.post("/visited/:eventId", (req, res) => {
-  EventModel.findByIdAndUpdate(
-    req.params.eventId,
-    // TODO UTC Fix
-    { $push: { webFormVisits: Date.now() } }
-  );
+  EventModel.findByIdAndUpdate(req.params.eventId, {
+    $push: { webFormVisits: Date.now() }
+  });
 });
 
 router.post("/:eventCode", (req, res) => {
@@ -50,7 +48,6 @@ router.post("/:eventCode", (req, res) => {
     updates: req.body.updates,
     feedback: req.body.feedback,
     volunteer: req.body.volunteer,
-    // TODO UTC fix
     timeStamp: Date.now()
   };
 

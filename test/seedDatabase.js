@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const faker = require("faker");
 
-const {EventModel} = require("../events/models");
-const {Host} = require("../hosts/models");
-const {Feedback} = require("../feedback/models");
+const { EventModel } = require("../events/models");
+const { Host } = require("../hosts/models");
+const { Feedback } = require("../feedback/models");
 
 function returnRandomIndex(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
- 
+
 function seedDatabase() {
   return new Promise((resolve, reject) => {
     seedHostData()
@@ -67,7 +67,7 @@ function generateHostData() {
 function seedEventData(hostIdArray) {
   return new Promise((resolve, reject) => {
     const seedData = [];
-    for (let i = 1; i <= 2; i++) {
+    for (let i = 1; i <= 3; i++) {
       seedData.push(generateEventData(hostIdArray));
     }
     EventModel.insertMany(seedData)
@@ -122,7 +122,7 @@ function generateFeedbackData(eventIdArray) {
     feedback: faker.random.boolean(),
     volunteer: faker.random.boolean(),
     timeStamp: Date.now(),
-    eventId: returnRandomIndex(eventIdArray),
+    eventId: returnRandomIndex(eventIdArray)
   };
 }
 

@@ -2,7 +2,8 @@ const STATE = {
   token: "",
   //This is used whenever PUT/DELETE happens to a current event
   focusEventId: 0,
-  hostId: ""
+  hostId: "",
+  currentTimeZone: ""
 };
 
 // TODO FIX THIS LOGIN STUFF
@@ -46,8 +47,13 @@ function manageApp() {
 
 // We have to convert time stamps a bunch.
 const convertTimeStampToDate = (timeStamp, mode) => {
-  let m = new Date(timeStamp);
+  let absoluteTime = new Date(timeStamp);
+  let adjustedTime = new Date(
+    timeStamp - absoluteTime.getTimezoneOffset() * 60000
+  );
+
   // to work with jquery formatting we have to make numbers less than 10 two digits by adding a zero
+
   const addZero = number => {
     if (number < 10) {
       return `0${number}`;
@@ -57,14 +63,12 @@ const convertTimeStampToDate = (timeStamp, mode) => {
   };
 
   let dateObject = {
-    year: m.getUTCFullYear(),
-    month: addZero(m.getUTCMonth() + 1),
-    day: addZero(m.getUTCDate()),
-    hour: addZero(m.getUTCHours()),
-    minutes: addZero(m.getUTCMinutes())
+    year: adjustedTime.getUTCFullYear(),
+    month: addZero(adjustedTime.getUTCMonth() + 1),
+    day: addZero(adjustedTime.getUTCDate()),
+    hour: addZero(adjustedTime.getUTCHours()),
+    minutes: addZero(adjustedTime.getUTCMinutes())
   };
-
-  console.log(dateObject);
 
   let dateString =
     dateObject.year +
@@ -483,7 +487,6 @@ const populateFeedbackInDepth = res => {
     contentType: "application/json"
   })
     .then(feedbackarray => {
-      console.log(feedbackarray);
       if (feedbackarray.length > 0) {
         // This displays all the feedback on the website
         $("#feedback-in-depth").html(
@@ -743,7 +746,6 @@ const removeConfirmButtonListener = () => {
   $("#confirm-delete-button").click(function(event) {
     event.preventDefault();
     deleteEvent();
-    openDashboard();
   });
 };
 
@@ -755,7 +757,9 @@ const deleteEvent = () => {
     headers: { Authorization: `Bearer ${STATE.token}` },
     type: "DELETE",
     contentType: "application/json"
-  });
+  })
+    .then(() => openDashboard())
+    .catch(err => console.log(err));
 };
 
 const removeCancleButtonListener = () => {
