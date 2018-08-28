@@ -35,26 +35,27 @@ describe("Feedback", function() {
     return closeServer();
   });
 
-  // describe("Feedback Web-form Visit POST", function() {
-  //   it("should create a new timestamp in the appropriate event", function() {
-  //     let event;
-  //     EventModel.findOne()
-  //       .then(function(_event) {
-  //         event = _event;
-  //         return chai.request(app).post(`/api/feedback/visited/${event._id}`);
-  //       })
-  //       .then(function(res) {
-  //         console.log("IN VISITED TEST", res);
-  //         return EventModel.findById(event._id);
-  //       })
-  //       .then(function(_event) {
-  //         expect(event.webFormVisits.length).to.equal(
-  //           _event.webFormVisits.length + 1
-  //         );
-  //         expect(_event.webFormVisits[0]).to.be.a("number");
-  //       })
-  //   });
-  // });
+  describe("Feedback Web-form Visit POST", function() {
+    it("should create a new timestamp in the appropriate event", function() {
+      let event;
+      EventModel.findOne()
+        .then(function(_event) {
+          event = _event;
+          return chai.request(app).post(`/api/feedback/visited/${event._id}`);
+        })
+        .then(function(res) {
+          return EventModel.findById(event._id);
+        })
+        .then(function(_event) {
+          expect(event.webFormVisits.length).to.equal(
+            _event.webFormVisits.length + 1
+          );
+          expect(_event.webFormVisits[_event.webFormVisits.length - 1]).to.be.a(
+            "number"
+          );
+        });
+    });
+  });
 
   describe("GET endpoint", function() {
     it("should return all feedback associated with a specific event", function() {

@@ -62,15 +62,15 @@ const submitListener = () => {
 const sortSubmitClicks = () => {
   let feedbackObj = {
     content: $("#feedback-text").val(),
-    optIn: document.getElementById("opt-in-check").checked,
+    optIn: $("#opt-in-check").is(":checked"),
     name: $("#feedback-name").val(),
     email: $("#feedback-email").val(),
     phone: $("#feedback-phone").val(),
-    updates: document.getElementById("update-check").checked, // TODO
-    feedback: document.getElementById("feedback-check").checked,
-    volunteer: document.getElementById("volunteer-check").checked
+    wantsUpdates: $("#update-check").is(":checked"),
+    wantsContact: $("#feedback-check").is(":checked"),
+    wantsVolunteer: $("#volunteer-check").is(":checked")
   };
-
+  console.log(feedbackObj);
   if (STATE.didAnything) {
     updateFeedback(feedbackObj);
   } else {
