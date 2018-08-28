@@ -1,15 +1,20 @@
 "use strict";
-
+require("dotenv").config();
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 
 const { EventModel } = require("../events/models");
-const { Feedback } = require("../feedback/models");
 const { Host } = require("../hosts/models");
 
+const { createAuthToken } = require("../auth/router");
 const { app, runServer, closeServer } = require("../server");
 const { TEST_DATABASE_URL } = require("../config");
-const { seedDatabase, tearDownDb } = require("./seedDatabase");
+const {
+  seedDatabase,
+  tearDownDb,
+  generateEventData,
+  preAuthHost
+} = require("./seedDatabase");
 const { expect } = chai;
 
 chai.use(chaiHttp);
@@ -38,7 +43,11 @@ describe("Events", function() {
       let res;
       return Host.findOne()
         .then(function(host) {
-          return chai.request(app).get(`/api/events/?hostId=${host._id}`);
+          let authToken = createAuthToken(preAuthHost(host));
+          return chai
+            .request(app)
+            .get(`/api/events/`)
+            .set("Authorization", `Bearer ${authToken}`);
         })
         .then(function(_res) {
           res = _res;
@@ -53,7 +62,11 @@ describe("Events", function() {
       let resEvent;
       return Host.findOne()
         .then(function(host) {
-          return chai.request(app).get(`/api/events/?hostId=${host._id}`);
+          let authToken = createAuthToken(preAuthHost(host));
+          return chai
+            .request(app)
+            .get(`/api/events/`)
+            .set("Authorization", `Bearer ${authToken}`);
         })
         .then(function(res) {
           expect(res).to.have.status(200);
@@ -69,7 +82,8 @@ describe("Events", function() {
             "phone",
             "displayName",
             "timeStamp",
-            "eventId"
+            "eventId",
+            "webFormVisits"
           ];
           res.body.forEach(function(event) {
             expect(event).to.be.a("object");
@@ -80,11 +94,11 @@ describe("Events", function() {
         })
         .then(function(event) {
           expect(resEvent.eventId).to.equal(String(event._id));
+          expect(resEvent.host).to.equal(String(event.host));
           const matchKeys = [
             "title",
             "thanks",
             "endTimeStamp",
-            "host",
             "code",
             "phone",
             "displayName",
@@ -118,7 +132,8 @@ describe("Events", function() {
             "phone",
             "host",
             "timeStamp",
-            "eventId"
+            "eventId",
+            "webFormVisits"
           ];
           expect(res.body).to.include.keys(expectedKeys);
           return EventModel.findById(res.body.eventId);
@@ -145,9 +160,17 @@ describe("Events", function() {
   describe("GET one endpoint (host side)", function() {
     it("should return the correct event and associated info", function() {
       let res;
-      return EventModel.findOne()
+      let authToken;
+      return Host.findOne()
+        .then(function(host) {
+          authToken = createAuthToken(preAuthHost(host));
+          return EventModel.findOne({ hostId: host.hostId });
+        })
         .then(function(event) {
-          return chai.request(app).get(`/api/events/${event._id}`);
+          return chai
+            .request(app)
+            .get(`/api/events/${event._id}`)
+            .set("Authorization", "Bearer " + authToken);
         })
         .then(function(_res) {
           res = _res;
@@ -163,18 +186,19 @@ describe("Events", function() {
             "phone",
             "displayName",
             "timeStamp",
-            "eventId"
+            "eventId",
+            "webFormVisits"
           ];
           expect(res.body).to.include.keys(expectedKeys);
           return EventModel.findById(res.body.eventId);
         })
         .then(function(event) {
           expect(res.body.eventId).to.equal(String(event._id));
+          expect(res.body.host).to.equal(String(event.host));
           const matchKeys = [
             "title",
             "thanks",
             "endTimeStamp",
-            "host",
             "code",
             "phone",
             "displayName",
@@ -191,10 +215,12 @@ describe("Events", function() {
     it("should add a new event", function() {
       return Host.findOne()
         .then(function(host) {
+          const authToken = createAuthToken(preAuthHost(host));
           return chai
             .request(app)
             .post("/api/events/")
-            .send({ hostId: host._id });
+            .set("Authorization", `Bearer ${authToken}`)
+            .send(generateEventData([host._id]));
         })
         .then(function(res) {
           expect(res).to.have.status(201);
@@ -224,14 +250,20 @@ describe("Events", function() {
     it("should update an event", function() {
       const updateData = {
         title: "NEW TITLE",
-        host: "NEW HOST"
+        displayName: "NEW NAME!"
       };
-      return EventModel.findOne()
+      let authToken;
+      return Host.findOne()
+        .then(function(host) {
+          authToken = createAuthToken(preAuthHost(host));
+          return EventModel.findOne({ hostId: host.hostId });
+        })
         .then(function(event) {
-          updateData["_id"] = event._id;
+          updateData._id = event._id;
           return chai
             .request(app)
             .put(`/api/events/${updateData._id}`)
+            .set("Authorization", `Bearer ${authToken}`)
             .send(updateData);
         })
         .then(function(res) {
@@ -250,6 +282,9 @@ describe("Events", function() {
             "_id"
           ];
           expect(res.body).to.include.keys(expectedKeys);
+          Object.keys(updateData).forEach(key => {
+            expect(String(updateData[key])).to.equal(String(res.body[key]));
+          });
         });
     });
   });
@@ -257,10 +292,18 @@ describe("Events", function() {
   describe("DELETE endpoint", function() {
     it("should delete an event", function() {
       let event;
-      return EventModel.findOne()
+      let authToken;
+      return Host.findOne()
+        .then(function(host) {
+          authToken = createAuthToken(preAuthHost(host));
+          return EventModel.findOne({ hostId: host.hostId });
+        })
         .then(function(_event) {
           event = _event;
-          return chai.request(app).delete(`/api/events/${event._id}`);
+          return chai
+            .request(app)
+            .delete(`/api/events/${event._id}`)
+            .set(`Authorization`, `Bearer ${authToken}`);
         })
         .then(function(res) {
           expect(res).to.have.status(204);

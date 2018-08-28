@@ -43,6 +43,7 @@ describe("Hosts", function() {
         .post("/api/hosts")
         .send(newHost)
         .then(function(res) {
+          console.log(res.body);
           expect(res).to.have.status(201);
           expect(res).to.be.json;
           expect(res.body).to.be.a("object");

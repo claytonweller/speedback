@@ -33,7 +33,8 @@ feedbackSchema.methods.serialize = function() {
     phone: this.phone,
     preferences: preferences,
     timeStamp: this.timeStamp,
-    eventId: this.eventId
+    eventId: this.eventId,
+    id: this._id
   };
 };
 

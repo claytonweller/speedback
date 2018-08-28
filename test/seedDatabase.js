@@ -40,12 +40,15 @@ function tearDownDb() {
 
 function seedHostData() {
   return new Promise((resolve, reject) => {
-    const seedData = [];
-    for (let i = 1; i <= 1; i++) {
-      seedData.push(generateHostData());
-    }
-    Host.insertMany(seedData)
-      .then(res => resolve(res))
+    let testHost = generateHostData();
+    Host.hashPassword(testHost.plainPassword)
+      .then(hash => {
+        testHost.password = hash;
+        return Host.create(testHost);
+      })
+      .then(res => {
+        resolve([res]);
+      })
       .catch(err => {
         console.log(err);
         reject(err);
@@ -58,9 +61,22 @@ function generateHostData() {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
-    password: faker.internet.password()
+    password: "123Password",
+    plainPassword: "123Password"
   };
 }
+
+const preAuthHost = function(host) {
+  // The plain password for all tests is '123Password'
+  const plainPassword = "123Password";
+  return {
+    email: host.email,
+    firstName: host.firstName,
+    lastName: host.lastName,
+    plainPassword: plainPassword,
+    hostId: String(host._id)
+  };
+};
 
 // EVENT seed
 
@@ -131,5 +147,6 @@ module.exports = {
   tearDownDb,
   generateEventData,
   generateFeedbackData,
-  generateHostData
+  generateHostData,
+  preAuthHost
 };

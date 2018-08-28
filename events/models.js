@@ -24,7 +24,8 @@ eventSchema.methods.serialize = function() {
     phone: this.phone,
     host: this.host._id,
     timeStamp: this.timeStamp,
-    eventId: this._id
+    eventId: this._id,
+    webFormVisits: this.webFormVisits
   };
 };
 

@@ -1,14 +1,17 @@
 "use strict";
 
+require("dotenv").config();
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 
 const { EventModel } = require("../events/models");
+const { Host } = require("../hosts/models");
 const { Feedback } = require("../feedback/models");
 
+const { createAuthToken } = require("../auth/router");
 const { app, runServer, closeServer } = require("../server");
 const { TEST_DATABASE_URL } = require("../config");
-const { seedDatabase, tearDownDb } = require("./seedDatabase");
+const { seedDatabase, tearDownDb, preAuthHost } = require("./seedDatabase");
 const { expect } = chai;
 
 chai.use(chaiHttp);
@@ -32,12 +35,40 @@ describe("Feedback", function() {
     return closeServer();
   });
 
+  describe("Feedback Web-form Visit POST", function() {
+    it("should create a new timestamp in the appropriate event", function() {
+      let event;
+      EventModel.findOne()
+        .then(function(_event) {
+          event = _event;
+          return chai.request(app).post(`/api/feedback/visited/${event._id}`);
+        })
+        .then(function() {
+          return EventModel.findById(event._id);
+        })
+        .then(function(_event) {
+          expect(event.webFormVisits.length).to.equal(
+            _event.webFormVisits.length + 1
+          );
+          expect(_event.webFormVisits[0]).to.be.a("number");
+        });
+    });
+  });
+
   describe("GET endpoint", function() {
     it("should return all feedback associated with a specific event", function() {
       let res;
-      return EventModel.findOne()
+      let authToken;
+      return Host.findOne()
+        .then(function(host) {
+          authToken = createAuthToken(preAuthHost(host));
+          return EventModel.findOne({ host: host._id });
+        })
         .then(function(event) {
-          return chai.request(app).get(`/feedback/${event._id}`);
+          return chai
+            .request(app)
+            .get(`/api/feedback/${event._id}`)
+            .set(`Authorization`, `Bearer ${authToken}`);
         })
         .then(function(_res) {
           res = _res;
@@ -50,10 +81,17 @@ describe("Feedback", function() {
 
     it("should return feedback with the right fields", function() {
       let resFeedback;
-
-      return EventModel.findOne()
+      let authToken;
+      return Host.findOne()
+        .then(function(host) {
+          authToken = createAuthToken(preAuthHost(host));
+          return EventModel.findOne({ hostId: host.hostId });
+        })
         .then(function(event) {
-          return chai.request(app).get(`/feedback/${event._id}`);
+          return chai
+            .request(app)
+            .get(`/api/feedback/${event._id}`)
+            .set(`Authorization`, `Bearer ${authToken}`);
         })
         .then(function(res) {
           expect(res).to.have.status(200);
@@ -66,12 +104,8 @@ describe("Feedback", function() {
             "name",
             "email",
             "phone",
-            "updates",
-            "feedback",
-            "volunteer",
-            "didAnything",
-            "_id",
             "timeStamp",
+            "preferences",
             "eventId"
           ];
           res.body.forEach(function(feedback) {
@@ -79,7 +113,7 @@ describe("Feedback", function() {
             expect(feedback).to.include.keys(expectedKeys);
           });
           resFeedback = res.body[0];
-          return Feedback.findById(resFeedback._id);
+          return Feedback.findById(resFeedback.id);
         })
         .then(function(feedback) {
           const matchKeys = [
@@ -88,14 +122,9 @@ describe("Feedback", function() {
             "name",
             "email",
             "phone",
-            "updates",
-            "feedback",
-            "volunteer",
-            "didAnything",
             "timeStamp",
             "eventId"
           ];
-          expect(resFeedback._id).to.equal(String(feedback._id));
           matchKeys.forEach(function(key) {
             expect(resFeedback[key]).to.equal(feedback[key]);
           });
