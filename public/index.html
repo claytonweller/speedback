@@ -37,7 +37,7 @@
   <main role="main" aria-live="assertive">
 
     <!-- Landing Page -->
-    <section id="landing" role="region">
+    <section id="landing" role="region" hidden>
       <div id="landing-above-the-fold">
         <img class="logo-tall" src="./assets/TallLogo.png" alt="Speedback">
         <img class="logo-wide" src="./assets/LogoLarge.png" alt="Speedback">
@@ -197,13 +197,32 @@
           </div>
           <div id="info-graphs">
             <h2>General Feedback</h2>
-            <h3>Over time</h3>
-            <div>
+            <!-- <h3>Source</h3>
+            <div id="graph-over-time">
               GRAPH 1
             </div>
-            <h3>Level of detail</h3>
-            <div>
-              GRAPH 2
+            <h3>Level of detail</h3> -->
+            <div id="graph-detail">
+              <div class="graph-bar-holder">
+                <div id="total-number" class="graph-number">###</div>
+                <div id="total-bar" class="graph-bar">&nbsp</div>
+                <div class="graph-label">Total</div>
+              </div>
+              <div class="graph-bar-holder">
+                <div id="email-number" class="graph-number">###</div>
+                <div id="email-bar" class="graph-bar">&nbsp</div>
+                <div class="graph-label">Email</div>
+              </div>
+              <div class="graph-bar-holder">
+                <div id="phone-number" class="graph-number">###</div>
+                <div id="phone-bar" class="graph-bar">&nbsp</div>
+                <div class="graph-label">Phone</div>
+              </div>
+              <div class="graph-bar-holder">
+                <div id="more-number" class="graph-number">###</div>
+                <div id="more-bar" class="graph-bar">&nbsp</div>
+                <div class="graph-label">More</div>
+              </div>
             </div>
           </div>
         </div>

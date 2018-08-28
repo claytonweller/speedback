@@ -50,7 +50,7 @@ textarea {
 }
 
 button {
-  background-color: #fe0d00;
+  background-color: #cc170e;
   width: 100%;
   color: white;
   font-family: "Oswald", sans-serif;
@@ -58,13 +58,33 @@ button {
   padding: 10px;
   border: 1px solid rgb(95, 25, 25);
   border-radius: 5px;
+  transition-duration: 100ms;
 }
 
-button:hover {
+button:hover,
+button:focus {
   cursor: pointer;
+  background-color: #fe0d00;
+  transform: scale(1.03);
 }
 
-hr {
+button:active {
+  transform: scale(0.97);
+}
+
+button:hover,
+button:focus,
+a:hover,
+a:focus {
+  outline: 2px white solid;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+button: hr {
   background: white;
   width: 80%;
   height: 1px;
@@ -176,7 +196,7 @@ nav img {
 }
 
 #nav-sub-menu {
-  background-color: #000000;
+  background-color: #111;
   border-bottom: #202020 solid 2px;
   border-left: #202020 solid 2px;
 }
@@ -488,6 +508,33 @@ footer p {
   color: #305c64;
   font-size: 40px;
   padding-bottom: 10px;
+}
+
+#graph-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  height: 200px;
+}
+
+.graph-bar-holder {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-end;
+}
+
+.graph-number {
+  color: #908f8f;
+}
+
+.graph-bar {
+  background-color: #305c64;
+  min-width: 60px;
+}
+
+.graph-label {
+  font-family: "Oswald", sans-serif;
 }
 
 #info-instructions {

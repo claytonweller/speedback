@@ -22,7 +22,10 @@ if (token) {
     })
     .catch(err => {
       localStorage.setItem("token", "");
+      $("#landing").removeAttr("hidden");
     });
+} else {
+  $("#landing").removeAttr("hidden");
 }
 
 function manageApp() {
@@ -316,7 +319,7 @@ function loginRequest(email, password) {
     })
     .catch(err => {
       console.log(err);
-      $("#login-error").html(err.responseJSON.message);
+      $("#login-error").html("Incorrect Email or Password");
     });
 }
 
@@ -410,9 +413,8 @@ const eventTemplate = (event, type) => {
           <div class="preface">Link to live form - </div>
           <div class="live-form-link-url"><a id="${
             event.code
-          }" class="live-form-link" href="URL">www.url.com/${
-    event.code
-  }</a></div>
+          }" class="live-form-link" href="URL">${window.location.href +
+    event.code}</a></div>
         </div>
       </div>
       <div><a id="feedback${
@@ -490,6 +492,7 @@ const populateEventInstructions = res => {
   $(".js-instructions-code").html(res.code);
   $(".live-phone").html(res.phone);
   $(".live-form-link-url a").attr("id", res.code);
+  $(".live-form-link-url a").html(`${window.location.href + res.code}`);
 };
 
 // These things are always displayed
@@ -497,12 +500,7 @@ const populateEventDetails = res => {
   $("#details-title").html(res.title);
   $("#details-host").html(res.displayName);
   $("#details-thanks").html(res.thanks);
-  populateFeedbackGraphs(res);
   populateFeedbackInDepth(res);
-};
-
-const populateFeedbackGraphs = res => {
-  console.log("THE GRAPHS HAPPEN");
 };
 
 const populateFeedbackInDepth = res => {
@@ -516,14 +514,39 @@ const populateFeedbackInDepth = res => {
     .then(feedbackarray => {
       if (feedbackarray.length > 0) {
         // This displays all the feedback on the website
+        $("#info-graphs").removeAttr("hidden");
+        populateDetailGraph(feedbackarray);
+        // This will be useful once I have twillio
+        // populateSourceGraph(feedbackArray)
         $("#feedback-in-depth").html(
           feedbackarray.map(feedback => feedbackTemplate(feedback))
         );
       } else {
+        $("#info-graphs").attr("hidden", true);
         $("#feedback-in-depth").html("No feedback yet");
       }
     })
     .catch(err => console.log(err));
+};
+
+const populateDetailGraph = feedbackArray => {
+  let total = feedbackArray.length;
+  let email = feedbackArray.filter(feedback => feedback.email !== "").length;
+  let phone = feedbackArray.filter(feedback => feedback.phone !== "").length;
+  let more = feedbackArray.filter(feedback => feedback.preferences.length > 0)
+    .length;
+
+  $("#total-number").html(total);
+  $("#total-bar").css("height", "100%");
+
+  $("#email-number").html(email);
+  $("#email-bar").css("height", `${(email / total) * 100}%`);
+  $("#phone-number").html(phone);
+  $("#phone-bar").css("height", `${(phone / total) * 100}%`);
+  $("#more-number").html(more);
+  $("#more-bar").css("height", `${(more / total) * 100}%`);
+
+  console.log(total, email, phone, more);
 };
 
 const feedbackTemplate = feedback => {

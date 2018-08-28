@@ -53,9 +53,6 @@ describe("Feedback", function() {
   //         );
   //         expect(_event.webFormVisits[0]).to.be.a("number");
   //       })
-  //       .catch(function(err) {
-  //         console.log(err);
-  //       });
   //   });
   // });
 
