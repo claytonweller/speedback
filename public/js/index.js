@@ -1,9 +1,6 @@
 const STATE = {
   token: "",
-  //This is used whenever PUT/DELETE happens to a current event
-  focusEventId: 0,
-  hostId: "",
-  currentTimeZone: ""
+  focusEventId: 0 //This is used whenever PUT/DELETE happens to a current event
 };
 
 let token = localStorage.getItem("token");
@@ -59,7 +56,6 @@ const convertTimeStampToDate = (timeStamp, mode) => {
   );
 
   // to work with jquery formatting we have to make numbers less than 10 two digits by adding a zero
-
   const addZero = number => {
     if (number < 10) {
       return `0${number}`;
@@ -126,30 +122,6 @@ const logoClickListener = () => {
     }
   });
 };
-
-const subMenuToggleListener = () => {
-  $("#nav-sub-menu-toggle").click(function(event) {
-    event.preventDefault();
-    if ($("#nav-sub-menu").attr("hidden")) {
-      $("#nav-sub-menu").removeAttr("hidden");
-    } else {
-      $("#nav-sub-menu").attr("hidden", true);
-    }
-  });
-};
-
-// After they're authorized they get a different nav bar
-function switchToAuthNav() {
-  $("#nav-auth-no").attr("hidden", true);
-  $("#nav-auth-yes").removeAttr("hidden");
-}
-
-//On logout we switch back to the default nav bar
-const removeAuthNav = () => {
-  $("#nav-auth-yes").attr("hidden", true);
-  $("#nav-auth-no").removeAttr("hidden");
-};
-
 const logOutListener = () => {
   $(`#nav-log-out`).click(function(event) {
     event.preventDefault();
@@ -170,40 +142,50 @@ const navEventLinkListener = () => {
   });
 };
 
-//end NAV BAR
-//
-
-//LANDING (signup-Login)
-
-const manageLandingPage = () => {
-  // Cycles through images of who uses the app
-  landingPageImageCycler();
-  // Submits the Sign Up Form
-  signUpSubmitListener();
-  // Navigates to singup interface
-  signUpButtonListener();
-  // Submits the login form
-  logInSubmitLIstener();
-  // Navigates to login interface
-  logInButtonListener();
+const subMenuToggleListener = () => {
+  $("#nav-sub-menu-toggle").click(function(event) {
+    event.preventDefault();
+    if ($("#nav-sub-menu").attr("hidden")) {
+      $("#nav-sub-menu").removeAttr("hidden");
+    } else {
+      $("#nav-sub-menu").attr("hidden", true);
+    }
+  });
 };
 
-const landingPageImageCycler = lastIndex => {
-  if (!lastIndex) {
-    lastIndex = 0;
-  }
-  // TODO will have to restart this on logout
-  let cycle = () => {
+// After they're authorized they get a different nav bar
+function switchToAuthNav() {
+  $("#nav-auth-no").attr("hidden", true);
+  $("#nav-auth-yes").removeAttr("hidden");
+}
+
+// On logout we switch back to the default nav bar
+const removeAuthNav = () => {
+  $("#nav-auth-yes").attr("hidden", true);
+  $("#nav-auth-no").removeAttr("hidden");
+};
+
+// end NAV BAR
+
+// LANDING (signup-Login)
+const manageLandingPage = () => {
+  landingPageImageCycler(); // Cycles through images of who uses the app
+  signUpSubmitListener(); // Submits the Sign Up Form
+  signUpButtonListener(); // Navigates to singup interface
+  logInSubmitListener(); // Submits the login form
+  logInButtonListener(); // Navigates to login interface
+};
+
+const landingPageImageCycler = (lastIndex = 0) => {
+  setTimeout(() => {
     if (!$("#landing").attr("hidden")) {
       let imageArray = $("#landing-users-images").children();
       let nextIndex = (lastIndex + 1) % imageArray.length;
       $(imageArray[lastIndex]).attr("hidden", true);
       $(imageArray[nextIndex]).removeAttr("hidden");
-
       landingPageImageCycler(nextIndex);
     }
-  };
-  setTimeout(cycle, 3000);
+  }, 3000);
 };
 
 // Once a form is submitted we clear all the values
@@ -262,9 +244,9 @@ const signUpSubmit = () => {
       .catch(err => $("#sign-up-error").html(err.responseJSON.message));
   }
 };
-// Sign up End
+///////////////  Sign Up end ///////////////
 
-//Log In Start
+///////////////  Log In Start ///////////////
 // These functions are used by other parts of the app to navigate to the login interface
 const logInButtonListener = () => {
   $("#log-in-button, #nav-log-in, #log-in-instead").click(function(event) {
@@ -280,7 +262,7 @@ const openLogInInterface = () => {
 };
 
 // Login specific functions
-const logInSubmitLIstener = () => {
+const logInSubmitListener = () => {
   $("#login-form-button").click(function(event) {
     event.preventDefault();
     logInSubmit();
@@ -308,8 +290,6 @@ function loginRequest(email, password) {
     .then(res => {
       STATE.token = res.authToken;
       localStorage.setItem(`token`, STATE.token);
-      // TODO - remove this wend JWT is working again
-      STATE.hostId = res.hostId;
       clearLandingInputs();
       openDashboard();
       switchToAuthNav();
@@ -324,10 +304,8 @@ function loginRequest(email, password) {
 }
 
 //end LANDING PAGE
-//
 
 // DASHBOARD
-
 const manageDashboard = () => {
   // This will open Event info for a specific event
   eventInfoLinkListener();
@@ -382,10 +360,12 @@ const populateDashboard = res => {
   populateEvents(res.filter(event => event.endTimeStamp < now), "Complete");
 };
 
-populateEvents = (events, type) => {
+const populateEvents = (events, type) => {
   let allEvents = events.map(event => eventTemplate(event, type.toLowerCase()));
-  allEvents.unshift(`<h2>${type} Events</h2>`);
-  $(`#dash-${type.toLowerCase()}`).html(allEvents); // todo capitalize type
+
+  $(`#dash-${type.toLowerCase()}`).html(
+    `<h2>${type} Events</h2>` + allEvents.join("")
+  );
 
   let elementsToHide =
     type.toLowerCase() === "upcoming"
@@ -399,12 +379,10 @@ populateEvents = (events, type) => {
 
 const eventTemplate = (event, type) => {
   return `
-    <div class="dash-event ${type}">
-      <h3><a id="info${
-        event.eventId
-      }" class="event-title js-event-info-link" href="15">${
-    event.title
-  }</a></h3>
+    <div class="dash-event ${type}" data-id="${event.id}">
+      <h3><a class="event-title js-event-info-link" href="15">${
+        event.title
+      }</a></h3>
       <div>${convertTimeStampToDate(event.endTimeStamp)}</div>
       <div class="upcoming-info">
         <div><span class="preface">Event Code: </span>${event.code}</div>
@@ -417,25 +395,17 @@ const eventTemplate = (event, type) => {
     event.code}</a></div>
         </div>
       </div>
-      <div><a id="feedback${
-        event.eventId
-      }" class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></div>
+      <div><a class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></div>
       <div class="dash-icon-holder">
-        <a id="remove${
-          event.eventId
-        }" class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${
-    event.title
-  }"></a>
-        <a id="edit${
-          event.eventId
-        }" class="event-edit-button"><img src="./assets/EditIcon.png" alt="edit ${
-    event.title
-  }"></a>
-        <a id="feedback${
-          event.eventId
-        }" class="event-feedback-link js-event-info-link"><img src="./assets/LookIcon.png" alt="feedback for ${
-    event.title
-  }"></a>
+        <a class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${
+          event.title
+        }"></a>
+        <a class="event-edit-button"><img src="./assets/EditIcon.png" alt="edit ${
+          event.title
+        }"></a>
+        <a class="event-feedback-link js-event-info-link"><img src="./assets/LookIcon.png" alt="feedback for ${
+          event.title
+        }"></a>
       </div>
     </div>
   `;
@@ -479,7 +449,7 @@ const populateEventInfo = res => {
     $("#info-instructions").attr("hidden", true);
     $("#info-details")
       .find(".event-edit-button")
-      .attr("hidden", true);
+      .hide(); // TODO Check if this still works
     $("#details-end").html(
       "Event ended: " + convertTimeStampToDate(res.endTimeStamp)
     );
@@ -538,15 +508,12 @@ const populateDetailGraph = feedbackArray => {
 
   $("#total-number").html(total);
   $("#total-bar").css("height", "100%");
-
   $("#email-number").html(email);
   $("#email-bar").css("height", `${(email / total) * 100}%`);
   $("#phone-number").html(phone);
   $("#phone-bar").css("height", `${(phone / total) * 100}%`);
   $("#more-number").html(more);
   $("#more-bar").css("height", `${(more / total) * 100}%`);
-
-  console.log(total, email, phone, more);
 };
 
 const feedbackTemplate = feedback => {
@@ -596,8 +563,6 @@ const prefeneceTemplate = preferences => {
     return preferences.map(
       preference => `<div class="attendee-preference">${preference}</div>`
     );
-  } else {
-    return "NOTHING";
   }
 };
 
@@ -623,7 +588,9 @@ const manageEventEditor = () => {
 const eventEditButtonListener = () => {
   $("main").on("click", ".event-edit-button", function(event) {
     event.preventDefault();
-    let eventId = this.id.replace("edit", "");
+
+    // TODO USE THIS ONE TO FIX DELETE...
+    let eventId = this.parents(".dash-event").attr("data-id");
 
     if (eventId) {
       openEventEditor(eventId);

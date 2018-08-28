@@ -20,13 +20,11 @@ app.use("/api/hosts", hostsRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/auth", authRouter);
 
-//AUTH isn't working yet!
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 // This Request is for the URL feedback page. It takes a unique event code,
 // and populates the feedback form from a GET Event call
-
 app.get("/:eventCode", (req, res) => {
   res.sendFile("public/feedback.html", { root: __dirname });
 });

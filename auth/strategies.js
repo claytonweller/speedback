@@ -1,8 +1,6 @@
 "use strict";
 const { Strategy: LocalStrategy } = require("passport-local");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
-
-//GOING TO NEED TO MAKE MY MODELS BEFORE I CAN ACUTALLY TEST THIS
 const { Host } = require("../hosts/models");
 const { JWT_SECRET } = require("../config");
 
