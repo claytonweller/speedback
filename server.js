@@ -12,6 +12,7 @@ const { router: eventsRouter } = require("./events");
 const { router: hostsRouter } = require("./hosts");
 const { router: feedbackRouter } = require("./feedback");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
+const { router: twilioRouter } = require("./twilio/router");
 
 app.use(express.static("public"));
 app.use(morgan("common"));
@@ -19,6 +20,7 @@ app.use("/api/events", eventsRouter);
 app.use("/api/hosts", hostsRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/twilio", twilioRouter);
 
 //AUTH isn't working yet!
 passport.use(localStrategy);

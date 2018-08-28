@@ -84,7 +84,7 @@ a:focus {
   text-decoration: underline;
 }
 
-button: hr {
+hr {
   background: white;
   width: 80%;
   height: 1px;
