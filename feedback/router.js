@@ -45,7 +45,6 @@ router.post("/visited/:eventId", (req, res) => {
 });
 
 router.post("/:eventCode", (req, res) => {
-  console.log(req.body);
   let feedbackInfo = {
     content: req.body.content,
     optIn: req.body.optIn,

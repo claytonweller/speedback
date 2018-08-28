@@ -1,1 +1,1 @@
-Heroku instance https://protected-lake-49425.herokuapp.com/
+Heroku instance http://spdbck.herokuapp.com/

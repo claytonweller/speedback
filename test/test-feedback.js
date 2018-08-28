@@ -38,7 +38,7 @@ describe("Feedback", function() {
   describe("Feedback Web-form Visit POST", function() {
     it("should create a new timestamp in the appropriate event", function() {
       let event;
-      EventModel.findOne()
+      return EventModel.findOne()
         .then(function(_event) {
           event = _event;
           return chai.request(app).post(`/api/feedback/visited/${event._id}`);
@@ -48,7 +48,7 @@ describe("Feedback", function() {
         })
         .then(function(_event) {
           expect(event.webFormVisits.length).to.equal(
-            _event.webFormVisits.length + 1
+            _event.webFormVisits.length - 1
           );
           expect(_event.webFormVisits[_event.webFormVisits.length - 1]).to.be.a(
             "number"
@@ -150,9 +150,9 @@ describe("Feedback", function() {
             "name",
             "email",
             "phone",
-            "updates",
-            "feedback",
-            "volunteer",
+            "wantsUpdates",
+            "wantsContact",
+            "wantsVolunteer",
             "_id",
             "timeStamp",
             "eventId"
@@ -190,9 +190,9 @@ describe("Feedback", function() {
             "name",
             "email",
             "phone",
-            "updates",
-            "feedback",
-            "volunteer",
+            "wantsUpdates",
+            "wantsContact",
+            "wantsVolunteer",
             "_id",
             "timeStamp",
             "eventId"
