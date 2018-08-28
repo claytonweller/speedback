@@ -6,20 +6,23 @@ const STATE = {
   currentTimeZone: ""
 };
 
-// TODO FIX THIS LOGIN STUFF
 let token = localStorage.getItem("token");
 if (token) {
-  //  try to refresh token. ()
-  //  success(){
-  STATE.token = token;
-  localStorage.setItem("token", token);
-  // clearLandingInputs();
-  openDashboard();
-  switchToAuthNav();
-  //  },
-  //  fails(){
-  //    localStorage.setItem("token", ""); // clear expired token
-  //  }
+  $.ajax({
+    url: "/api/auth/refresh",
+    type: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    contentType: "application/json"
+  })
+    .then(res => {
+      STATE.token = res.authToken;
+      localStorage.setItem("token", res.authToken);
+      openDashboard();
+      switchToAuthNav();
+    })
+    .catch(err => {
+      localStorage.setItem("token", "");
+    });
 }
 
 function manageApp() {
@@ -152,6 +155,7 @@ const logOutListener = () => {
     hideAll();
     $("#landing").removeAttr("hidden");
     removeAuthNav();
+    landingPageImageCycler();
   });
 };
 
@@ -169,6 +173,8 @@ const navEventLinkListener = () => {
 //LANDING (signup-Login)
 
 const manageLandingPage = () => {
+  // Cycles through images of who uses the app
+  landingPageImageCycler();
   // Submits the Sign Up Form
   signUpSubmitListener();
   // Navigates to singup interface
@@ -177,6 +183,24 @@ const manageLandingPage = () => {
   logInSubmitLIstener();
   // Navigates to login interface
   logInButtonListener();
+};
+
+const landingPageImageCycler = lastIndex => {
+  if (!lastIndex) {
+    lastIndex = 0;
+  }
+  // TODO will have to restart this on logout
+  let cycle = () => {
+    if (!$("#landing").attr("hidden")) {
+      let imageArray = $("#landing-users-images").children();
+      let nextIndex = (lastIndex + 1) % imageArray.length;
+      $(imageArray[lastIndex]).attr("hidden", true);
+      $(imageArray[nextIndex]).removeAttr("hidden");
+
+      landingPageImageCycler(nextIndex);
+    }
+  };
+  setTimeout(cycle, 3000);
 };
 
 // Once a form is submitted we clear all the values
@@ -286,6 +310,9 @@ function loginRequest(email, password) {
       clearLandingInputs();
       openDashboard();
       switchToAuthNav();
+      $("#landing-users-images")
+        .children()
+        .attr("hidden", true);
     })
     .catch(err => {
       console.log(err);
@@ -585,7 +612,6 @@ const eventEditButtonListener = () => {
 
 const newEventButtonListener = () => {
   $(".js-new-event-button").click(function(event) {
-    console.log("listener");
     event.preventDefault();
     openEventEditor();
   });
@@ -595,12 +621,13 @@ const openEventEditor = eventId => {
   // The focus event has to updated inorder for Updates to edit the correct file.
   // This will also be doubled up with the JWT
   STATE.focusEventId = eventId;
+  let host = jwt_decode(STATE.token).host;
 
   const defaultEventInfo = {
     title: "My New Event",
     thanks: "Thanks so much for coming to my event!",
     endTimeStamp: Date.now(),
-    displayName: "Name"
+    displayName: host.firstName + " " + host.lastName
   };
 
   if (eventId) {
@@ -623,7 +650,6 @@ const openEventEditor = eventId => {
 const populateEventEditor = eventInfo => {
   $("#edit-title").val(eventInfo.title);
   $("#edit-host").val(eventInfo.displayName);
-  //DATE
   let date = convertTimeStampToDate(eventInfo.endTimeStamp, "object");
   $("#edit-date").val(`${date.year}-${date.month}-${date.day}`);
   $("#edit-time").val(`${date.hour}:${date.minutes}`);

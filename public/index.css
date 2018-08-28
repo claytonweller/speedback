@@ -14,14 +14,6 @@ body * {
   -moz-box-sizing: border-box;
 }
 
-/* div, main, section {
-  border: black solid 1px;
-} */
-
-/* h1 { 
-  font-family: Hemi, sans-serif;
-} */
-
 h1,
 h2,
 h3,
@@ -156,7 +148,7 @@ hr {
 /* NAV BAR */
 
 nav {
-  background-color: black;
+  background-color: #111;
   position: fixed;
   width: 100%;
   height: 60px;
@@ -350,9 +342,13 @@ footer p {
 }
 
 #landing-users-images {
-  background-color: #908f8f;
+  background-color: none;
   color: black;
-  height: 200px;
+  height: fit-content;
+}
+
+#landing-users-images img {
+  width: 100%;
 }
 
 /* LOGIN/SIGNUP */
