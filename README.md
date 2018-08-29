@@ -22,11 +22,11 @@ The event hosts can log on and see all of their event feedback in a single place
 
 ### Landing page
 
-![Screenshot of the landing page](https://raw.githubusercontent.com/claytonweller/speedback/master/public/assets/images/readme/landing.jpg)
+![Screenshot of the landing page](https://raw.githubusercontent.com/claytonweller/speedback/public/assets/readme/landing.jpg)
 
 ### dashboard
 
-![Screenshot of the dashboard](https://raw.githubusercontent.com/claytonweller/speedback/master/public/assets/images/readme/Dash.jpg)
+![Screenshot of the dashboard](https://raw.githubusercontent.com/claytonweller/speedback/public/assets/readme/dash.jpg)
 
 ## Technology used
 
