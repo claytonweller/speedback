@@ -14,12 +14,11 @@ const client = new twilio(accountSid, authToken);
 router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/", (req, res) => {
-  console.log("req - ", req.body);
-  res.json("GOOD");
   client.messages
     .create({
-      body: "Sorry I called you a fart Knocker!",
-      to: "+13038034589", // Text this number
+      body:
+        "Thanks for your feedback! If you'd like to help out at or attend future events respond with your email.",
+      to: req.body.From, // Text this number
       from: "+17206969370" // From a valid Twilio number
     })
     .then(message => console.log("SID - ", message.sid));
