@@ -18,7 +18,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/", (req, res) => {
   let wordArray = req.body.Body.split(" ");
-  let eventCode = wordArray[0].toUpperCase();
+  let eventCode = wordArray[0];
   let email = wordArray
     .filter(word => word.includes("@"))
     .filter(word => word.includes("."))[0];
@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
     timeStamp: Date.now()
   };
 
-  EventModel.findOne({ code: eventCode })
+  EventModel.findOne({ code: eventCode.toUpperCase() })
     .then(event => {
       if (!event) {
         return Feedback.findOne({ phone: req.body.From }).sort({
