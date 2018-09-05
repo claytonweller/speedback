@@ -137,6 +137,7 @@ function generateFeedbackData(eventIdArray) {
     updates: faker.random.boolean(),
     feedback: faker.random.boolean(),
     volunteer: faker.random.boolean(),
+    source: "Web",
     timeStamp: Date.now(),
     eventId: returnRandomIndex(eventIdArray)
   };

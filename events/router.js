@@ -80,7 +80,7 @@ router.post("/", jwtAuth, async (req, res) => {
     thanks: req.body.thanks,
     endTimeStamp: req.body.endTimeStamp,
     timeStamp: Date.now(),
-    phone: "1234567890",
+    phone: "+1(720)696-9370",
     webFormVisits: [],
     code: await generateUniqueEventCode(),
     displayName: req.body.displayName,

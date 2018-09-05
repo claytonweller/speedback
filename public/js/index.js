@@ -393,9 +393,6 @@ const populateEvents = (events, type) => {
 };
 
 const eventTemplate = (event, type) => {
-  // TODO when twilio is integrated put this code back in
-  // <div><span class="preface">Event Phone: </span>${event.phone}</div>
-
   return `
     <div class="dash-event ${type}" data-id="${event.eventId}">
       <h3><a class="event-title js-event-info-link" href="15">${
@@ -404,6 +401,9 @@ const eventTemplate = (event, type) => {
       <div>${convertTimeStampToDate(event.endTimeStamp)}</div>
       <div class="upcoming-info">
         <div><span class="preface">Event Code: </span>${event.code}</div>
+        <div>
+          <span class="preface">Event Phone: </span>${event.phone}
+        </div>;
         <div class="live-form-link-holder">
           <div class="preface">Link to live form - </div>
           <div class="live-form-link-url"><a id="${
