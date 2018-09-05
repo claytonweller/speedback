@@ -14,13 +14,11 @@ const router = express.Router();
 const client = new twilio(accountSid, authToken);
 
 router.use(express.json());
-router.use(bodyParser({ extended: false }));
+router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/", (req, res) => {
-  console.log("req.body", req.body);
   let wordArray = req.body.Body.split(" ");
-  console.log("wordArray", wordArray);
-  let eventCode = wordArray[0];
+  let eventCode = wordArray[0].toUpperCase();
   let email = wordArray
     .filter(word => word.includes("@"))
     .filter(word => word.includes("."))[0];
