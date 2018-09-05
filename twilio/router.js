@@ -24,7 +24,7 @@ router.post("/", (req, res) => {
   res.json("GOOD");
   client.messages
     .create({
-      body: "The Post worked!",
+      body: "You're a fart Knocker!",
       to: "+13038034589", // Text this number
       from: "+17206969370" // From a valid Twilio number
     })

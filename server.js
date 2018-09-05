@@ -3,16 +3,11 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const passport = require("passport");
-const cors = require("cors");
+// const cors = require("cors");
 
 mongoose.Promise = global.Promise;
 const { PORT, DATABASE_URL } = require("./config");
 const app = express();
-
-// const corsOptions = {
-//   origin: 'http://twilio.com',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// }
 
 const { router: eventsRouter } = require("./events");
 const { router: hostsRouter } = require("./hosts");
@@ -20,7 +15,12 @@ const { router: feedbackRouter } = require("./feedback");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 const { router: twilioRouter } = require("./twilio/router");
 
-app.use(cors());
+// const corsOptions = {
+//   origin: 'http://twilio.com',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
+// app.use(cors());
+
 app.use(express.static("public"));
 app.use(morgan("common"));
 app.use("/api/events", eventsRouter);
