@@ -14,6 +14,7 @@ const router = express.Router();
 const client = new twilio(accountSid, authToken);
 
 router.use(express.json());
+router.use(bodyParser({ extended: false }));
 
 router.post("/", (req, res) => {
   let wordArray = req.body.Body.split(" ");
@@ -89,15 +90,6 @@ router.post("/", (req, res) => {
       console.log(err);
       res.status(500).json({ message: "something Went wrong on the server" });
     });
-
-  // client.messages
-  //   .create({
-  //     body:
-  //       "Thanks for your feedback! If you'd like to help out at or attend future events respond with your email.",
-  //     to: req.body.From, // Text this number
-  //     from: "+17206969370" // From a valid Twilio number
-  //   })
-  //   .then(message => console.log("SID - ", message.sid));
 });
 
 module.exports = { router };
