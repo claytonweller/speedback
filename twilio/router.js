@@ -17,7 +17,9 @@ router.use(express.json());
 router.use(bodyParser({ extended: false }));
 
 router.post("/", (req, res) => {
+  console.log("req.body", req.body);
   let wordArray = req.body.Body.split(" ");
+  console.log("wordArray", wordArray);
   let eventCode = wordArray[0];
   let email = wordArray
     .filter(word => word.includes("@"))
