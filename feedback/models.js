@@ -10,7 +10,8 @@ const feedbackSchema = mongoose.Schema({
   wantsContact: { type: Boolean, default: false },
   wantsVolunteer: { type: Boolean, default: false },
   timeStamp: { type: Number, required: true },
-  eventId: { type: String, required: true }
+  eventId: { type: String, required: true },
+  source: { type: String, required: true }
 });
 
 feedbackSchema.methods.serialize = function() {
@@ -33,6 +34,7 @@ feedbackSchema.methods.serialize = function() {
     phone: this.phone,
     preferences: preferences,
     timeStamp: this.timeStamp,
+    source: this.source,
     eventId: this.eventId,
     id: this._id
   };

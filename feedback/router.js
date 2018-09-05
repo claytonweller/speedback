@@ -54,6 +54,7 @@ router.post("/:eventCode", (req, res) => {
     wantsUpdates: req.body.wantsUpdates,
     wantsContact: req.body.wantsContact,
     wantsVolunteer: req.body.wantsVolunteer,
+    source: "Web",
     timeStamp: Date.now()
   };
 
