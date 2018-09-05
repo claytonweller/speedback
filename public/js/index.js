@@ -1,9 +1,6 @@
 const STATE = {
   token: "",
-  //This is used whenever PUT/DELETE happens to a current event
-  focusEventId: 0,
-  hostId: "",
-  currentTimeZone: ""
+  focusEventId: 0 // This is used whenever PUT/DELETE happens to a current event
 };
 
 let token = localStorage.getItem("token");
@@ -29,27 +26,40 @@ if (token) {
 }
 
 function manageApp() {
-  //It's a nav bar ya'll.
+  // It's a nav bar ya'll.
   manageNav();
 
-  //This includeds the SingUp/LogIn Functions
+  // This includeds the SingUp/LogIn Functions
   manageLandingPage();
 
-  //Dashoboard is the default screen which lists all the events created by the user
+  // Dashoboard is the default screen which lists all the events created by the user
   manageDashboard();
 
-  //This will probably be modal window that pops up over the current display
+  manageEventInfo();
+
+  // This will probably be modal window that pops up over the current display
   // Much of the CRUD operations/listeners are in here
   manageEventEditor();
 
-  //There is a section devoted to specific EVENT info.
-  //Currently it has not specific listeners
+  // There is a section devoted to specific EVENT info.
+  // Currently it has not specific listeners
 
-  //This is a modal window that pops up to confirm before a DELETE happens
+  // This is a modal window that pops up to confirm before a DELETE happens
   manageRemoveConfirm();
+
+  // This allows clicking outside of the sub-menu to close it
+  mainClickListener();
 }
 
-//Useful Functions
+//////////// Useful Functions /////////////
+
+const mainClickListener = () => {
+  $("main")
+    .find("section")
+    .click(function(event) {
+      closeSubMenu();
+    });
+};
 
 // We have to convert time stamps a bunch.
 const convertTimeStampToDate = (timeStamp, mode) => {
@@ -59,7 +69,6 @@ const convertTimeStampToDate = (timeStamp, mode) => {
   );
 
   // to work with jquery formatting we have to make numbers less than 10 two digits by adding a zero
-
   const addZero = number => {
     if (number < 10) {
       return `0${number}`;
@@ -99,7 +108,7 @@ function hideAll() {
   $("section").attr("hidden", true);
 }
 
-//NAV BAR
+/////////////////// NAV BAR ///////////////////////
 
 const manageNav = () => {
   // If you're on the Landing page, this will remove the Login/Signup Interface
@@ -126,30 +135,6 @@ const logoClickListener = () => {
     }
   });
 };
-
-const subMenuToggleListener = () => {
-  $("#nav-sub-menu-toggle").click(function(event) {
-    event.preventDefault();
-    if ($("#nav-sub-menu").attr("hidden")) {
-      $("#nav-sub-menu").removeAttr("hidden");
-    } else {
-      $("#nav-sub-menu").attr("hidden", true);
-    }
-  });
-};
-
-// After they're authorized they get a different nav bar
-function switchToAuthNav() {
-  $("#nav-auth-no").attr("hidden", true);
-  $("#nav-auth-yes").removeAttr("hidden");
-}
-
-//On logout we switch back to the default nav bar
-const removeAuthNav = () => {
-  $("#nav-auth-yes").attr("hidden", true);
-  $("#nav-auth-no").removeAttr("hidden");
-};
-
 const logOutListener = () => {
   $(`#nav-log-out`).click(function(event) {
     event.preventDefault();
@@ -158,6 +143,7 @@ const logOutListener = () => {
     hideAll();
     $("#landing").removeAttr("hidden");
     removeAuthNav();
+    closeSubMenu();
     landingPageImageCycler();
   });
 };
@@ -166,44 +152,59 @@ const logOutListener = () => {
 const navEventLinkListener = () => {
   $("#nav-events").click(function(event) {
     event.preventDefault();
+    closeSubMenu();
     openDashboard();
   });
 };
 
-//end NAV BAR
-//
-
-//LANDING (signup-Login)
-
-const manageLandingPage = () => {
-  // Cycles through images of who uses the app
-  landingPageImageCycler();
-  // Submits the Sign Up Form
-  signUpSubmitListener();
-  // Navigates to singup interface
-  signUpButtonListener();
-  // Submits the login form
-  logInSubmitLIstener();
-  // Navigates to login interface
-  logInButtonListener();
+const subMenuToggleListener = () => {
+  $("#nav-sub-menu-toggle").click(function(event) {
+    event.preventDefault();
+    if ($("#nav-sub-menu").attr("hidden")) {
+      $("#nav-sub-menu").removeAttr("hidden");
+    } else {
+      closeSubMenu();
+    }
+  });
 };
 
-const landingPageImageCycler = lastIndex => {
-  if (!lastIndex) {
-    lastIndex = 0;
-  }
-  // TODO will have to restart this on logout
-  let cycle = () => {
+const closeSubMenu = () => {
+  $("#nav-sub-menu").attr("hidden", true);
+};
+
+// After they're authorized they get a different nav bar
+function switchToAuthNav() {
+  $("#nav-auth-no").attr("hidden", true);
+  $("#nav-auth-yes").removeAttr("hidden");
+}
+
+// On logout we switch back to the default nav bar
+const removeAuthNav = () => {
+  $("#nav-auth-yes").attr("hidden", true);
+  $("#nav-auth-no").removeAttr("hidden");
+};
+
+//// end NAV BAR ////
+
+//////////////// LANDING (signup-Login) //////////////////////
+const manageLandingPage = () => {
+  landingPageImageCycler(); // Cycles through images of who uses the app
+  signUpSubmitListener(); // Submits the Sign Up Form
+  openSignUpInterfaceListener(); // Navigates to singup interface
+  logInSubmitListener(); // Submits the login form
+  openLogInInterfaceListener(); // Navigates to login interface
+};
+
+const landingPageImageCycler = (lastIndex = 0) => {
+  setTimeout(() => {
     if (!$("#landing").attr("hidden")) {
       let imageArray = $("#landing-users-images").children();
       let nextIndex = (lastIndex + 1) % imageArray.length;
       $(imageArray[lastIndex]).attr("hidden", true);
       $(imageArray[nextIndex]).removeAttr("hidden");
-
       landingPageImageCycler(nextIndex);
     }
-  };
-  setTimeout(cycle, 3000);
+  }, 3000);
 };
 
 // Once a form is submitted we clear all the values
@@ -212,19 +213,16 @@ const clearLandingInputs = () =>
     .find("input")
     .val("");
 
-//Sign Up Start
+/// Sign Up Start ///
 // These two functions are used by other sections of the app to navigate to SignUp
-const signUpButtonListener = () => {
+const openSignUpInterfaceListener = () => {
   $("#nav-sign-up, #sign-up-button, #sign-up-instead").click(function(event) {
     event.preventDefault();
-    openSignUpInterface();
+    closeSubMenu();
+    $("#auth, #auth-signup").removeAttr("hidden");
+    // If the auth interface becomes a modal window I won't need to hide the landing
+    $("#auth-login").attr("hidden", true);
   });
-};
-
-const openSignUpInterface = () => {
-  $("#auth, #auth-signup").removeAttr("hidden");
-  // If the auth interface becomes a modal window I won't need to hide the landing
-  $("#auth-login").attr("hidden", true);
 };
 
 // Startup Specific Functions
@@ -262,25 +260,22 @@ const signUpSubmit = () => {
       .catch(err => $("#sign-up-error").html(err.responseJSON.message));
   }
 };
-// Sign up End
+///  Sign Up end ///
 
-//Log In Start
+///  Log In Start ///
 // These functions are used by other parts of the app to navigate to the login interface
-const logInButtonListener = () => {
+const openLogInInterfaceListener = () => {
   $("#log-in-button, #nav-log-in, #log-in-instead").click(function(event) {
     event.preventDefault();
-    openLogInInterface();
+    closeSubMenu();
+    $("#auth, #auth-login").removeAttr("hidden");
+    // If the auth interface becomes a modal window I won't need to hide the landing
+    $("#auth-signup").attr("hidden", true);
   });
 };
 
-const openLogInInterface = () => {
-  $("#auth, #auth-login").removeAttr("hidden");
-  // If the auth interface becomes a modal window I won't need to hide the landing
-  $("#auth-signup").attr("hidden", true);
-};
-
 // Login specific functions
-const logInSubmitLIstener = () => {
+const logInSubmitListener = () => {
   $("#login-form-button").click(function(event) {
     event.preventDefault();
     logInSubmit();
@@ -308,8 +303,6 @@ function loginRequest(email, password) {
     .then(res => {
       STATE.token = res.authToken;
       localStorage.setItem(`token`, STATE.token);
-      // TODO - remove this wend JWT is working again
-      STATE.hostId = res.hostId;
       clearLandingInputs();
       openDashboard();
       switchToAuthNav();
@@ -323,11 +316,9 @@ function loginRequest(email, password) {
     });
 }
 
-//end LANDING PAGE
-//
+//// end LANDING PAGE ////
 
-// DASHBOARD
-
+////////////////////// DASHBOARD //////////////////////
 const manageDashboard = () => {
   // This will open Event info for a specific event
   eventInfoLinkListener();
@@ -335,14 +326,16 @@ const manageDashboard = () => {
   eventLiveFormLinkListener();
 };
 
-//Listeners
+// Listeners
 // These are used on the dashboard as well as on specific event info pages.
 
 const eventInfoLinkListener = () => {
   $("#dash").on("click", ".js-event-info-link", function(event) {
     event.preventDefault();
     // Need some what to store the data so we can make the correct API request based upon the link for now we'll leave a place holder
-    let eventId = this.id.replace("info", "").replace("feedback", "");
+    let eventId = $(this)
+      .parents(".dash-event")
+      .attr("data-id");
 
     openEventInfo(eventId);
   });
@@ -361,7 +354,7 @@ function openDashboard() {
   // This makes sure to remove any specific event that was being looked at
   // so that if a new event is created you don't edit your old event instead.
   STATE.focusEventId = 0;
-  // This takes the hostId (Which will also be stored in the JWT)
+  // This takes the hostId (Which will so be stored in the JWT)
   // and grabs all associated events from that host
   $.ajax({
     headers: { Authorization: `Bearer ${STATE.token}` },
@@ -382,10 +375,12 @@ const populateDashboard = res => {
   populateEvents(res.filter(event => event.endTimeStamp < now), "Complete");
 };
 
-populateEvents = (events, type) => {
+const populateEvents = (events, type) => {
   let allEvents = events.map(event => eventTemplate(event, type.toLowerCase()));
-  allEvents.unshift(`<h2>${type} Events</h2>`);
-  $(`#dash-${type.toLowerCase()}`).html(allEvents); // todo capitalize type
+
+  $(`#dash-${type.toLowerCase()}`).html(
+    `<h2>${type} Events</h2>` + allEvents.join("")
+  );
 
   let elementsToHide =
     type.toLowerCase() === "upcoming"
@@ -398,17 +393,17 @@ populateEvents = (events, type) => {
 };
 
 const eventTemplate = (event, type) => {
+  // TODO when twilio is integrated put this code back in
+  // <div><span class="preface">Event Phone: </span>${event.phone}</div>
+
   return `
-    <div class="dash-event ${type}">
-      <h3><a id="info${
-        event.eventId
-      }" class="event-title js-event-info-link" href="15">${
-    event.title
-  }</a></h3>
+    <div class="dash-event ${type}" data-id="${event.eventId}">
+      <h3><a class="event-title js-event-info-link" href="15">${
+        event.title
+      }</a></h3>
       <div>${convertTimeStampToDate(event.endTimeStamp)}</div>
       <div class="upcoming-info">
         <div><span class="preface">Event Code: </span>${event.code}</div>
-        <div><span class="preface">Event Phone: </span>${event.phone}</div>
         <div class="live-form-link-holder">
           <div class="preface">Link to live form - </div>
           <div class="live-form-link-url"><a id="${
@@ -417,40 +412,42 @@ const eventTemplate = (event, type) => {
     event.code}</a></div>
         </div>
       </div>
-      <div><a id="feedback${
-        event.eventId
-      }" class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></div>
+      <div><a class="event-feedback-link js-event-info-link" href="URL">Feedback Info</a></div>
       <div class="dash-icon-holder">
-        <a id="remove${
-          event.eventId
-        }" class="event-remove-button"><img src="./assets/TrashIcon.png" alt="remove ${
-    event.title
-  }"></a>
-        <a id="edit${
-          event.eventId
-        }" class="event-edit-button"><img src="./assets/EditIcon.png" alt="edit ${
-    event.title
-  }"></a>
-        <a id="feedback${
-          event.eventId
-        }" class="event-feedback-link js-event-info-link"><img src="./assets/LookIcon.png" alt="feedback for ${
-    event.title
-  }"></a>
+        <a class="event-remove-button" href="None"><img src="./assets/TrashIcon.png" alt="remove ${
+          event.title
+        }"></a>
+        <a class="event-edit-button" href="None"><img src="./assets/EditIcon.png" alt="edit ${
+          event.title
+        }"></a>
+        <a class="event-feedback-link js-event-info-link" href="None"><img src="./assets/LookIcon.png" alt="feedback for ${
+          event.title
+        }"></a>
       </div>
     </div>
   `;
 };
 
-//end DASHBOARD
-//
+/// end DASHBOARD ///
 
-//EVENT INFO STUFF
+/////////////////// EVENT INFO STUFF ///////////////////
+
+const manageEventInfo = () => {
+  backButtonListener();
+};
+
+const backButtonListener = () => {
+  $("#info-back-button").click(function(event) {
+    event.preventDefault();
+    openDashboard();
+  });
+};
 
 const openEventInfo = eventId => {
   hideAll();
   // This takes the Event id and makes that event the focused event.
   STATE.focusEventId = eventId;
-  //Make a request for the info on this particular event using the id
+  // Make a request for the info on this particular event using the id
 
   $.ajax({
     headers: { Authorization: `Bearer ${STATE.token}` },
@@ -473,15 +470,17 @@ const populateEventInfo = res => {
       .find(".event-edit-button")
       .removeAttr("hidden");
     $("#details-end").html(
-      "Event ends: " + convertTimeStampToDate(res.endTimeStamp)
+      "<span class='preface'>Event ends:<span> " +
+        convertTimeStampToDate(res.endTimeStamp)
     );
   } else {
     $("#info-instructions").attr("hidden", true);
     $("#info-details")
       .find(".event-edit-button")
-      .attr("hidden", true);
+      .attr("hidden", true); // TODO Check if this still works
     $("#details-end").html(
-      "Event ended: " + convertTimeStampToDate(res.endTimeStamp)
+      "<span class='preface'>Event ended:<span> " +
+        convertTimeStampToDate(res.endTimeStamp)
     );
   }
 };
@@ -537,16 +536,13 @@ const populateDetailGraph = feedbackArray => {
     .length;
 
   $("#total-number").html(total);
-  $("#total-bar").css("height", "100%");
-
+  $("#total-bar").css("height", "80%");
   $("#email-number").html(email);
-  $("#email-bar").css("height", `${(email / total) * 100}%`);
+  $("#email-bar").css("height", `${(email / total) * 80}%`);
   $("#phone-number").html(phone);
-  $("#phone-bar").css("height", `${(phone / total) * 100}%`);
+  $("#phone-bar").css("height", `${(phone / total) * 80}%`);
   $("#more-number").html(more);
-  $("#more-bar").css("height", `${(more / total) * 100}%`);
-
-  console.log(total, email, phone, more);
+  $("#more-bar").css("height", `${(more / total) * 80}%`);
 };
 
 const feedbackTemplate = feedback => {
@@ -568,7 +564,7 @@ const feedbackTemplate = feedback => {
               <div><span class="preface">Phone: </span>${feedback.phone}</div>
             </div>
             <div class="attendee-preferences">
-              ${prefeneceTemplate(feedback.preferences)}
+              ${prefeneceTemplate(feedback.preferences).join("")}
             </div>
           </div>
           <h3>Feedback - </h3>
@@ -596,15 +592,12 @@ const prefeneceTemplate = preferences => {
     return preferences.map(
       preference => `<div class="attendee-preference">${preference}</div>`
     );
-  } else {
-    return "NOTHING";
   }
 };
 
-//end EVENT INFO
-//
+/// end EVENT INFO ///
 
-/// EVENT EDITOR
+/////////////////// EVENT EDITOR /////////////////////
 
 const manageEventEditor = () => {
   // This is used in other screens and opens the event editor with a brand new event.
@@ -619,11 +612,15 @@ const manageEventEditor = () => {
   eventEditorCancelButtonListener();
 };
 
-//eventEditButtonListener & new EventButtonListenter both open the editor
+// eventEditButtonListener & new EventButtonListenter both open the editor
 const eventEditButtonListener = () => {
   $("main").on("click", ".event-edit-button", function(event) {
     event.preventDefault();
-    let eventId = this.id.replace("edit", "");
+
+    // TODO USE THIS ONE TO FIX DELETE...
+    let eventId = $(this)
+      .parents(".dash-event")
+      .attr("data-id");
 
     if (eventId) {
       openEventEditor(eventId);
@@ -637,6 +634,7 @@ const newEventButtonListener = () => {
   $(".js-new-event-button").click(function(event) {
     event.preventDefault();
     openEventEditor();
+    closeSubMenu();
   });
 };
 
@@ -698,8 +696,6 @@ const eventEditorSubmitButtonListener = () => {
     } else {
       createEvent(eventInfo);
     }
-
-    //Maybe put in a thing that opens the live form in another tab?
   });
 };
 
@@ -737,7 +733,6 @@ const submitEventEdits = eventInfo => {
 const eventEditorCancelButtonListener = () => {
   $("#edit-cancel-button").click(function(event) {
     event.preventDefault();
-    // If it's a brand new event it should delete the event as well
     if ("new") {
       openDashboard();
     } else {
@@ -751,10 +746,9 @@ const clearEventEditorFields = () =>
     .find("input, textarea")
     .val("");
 
-//End EVENT EDITOR
-//
+/// End EVENT EDITOR ///
 
-//REMOVE CONFIRM
+//////////////// REMOVE CONFIRM /////////////////////
 
 const manageRemoveConfirm = () => {
   // This exists on other screens and opens up the remove confirm interface
@@ -768,8 +762,10 @@ const manageRemoveConfirm = () => {
 const eventRemoveButtonListener = () => {
   $("main").on("click", ".event-remove-button", function(event) {
     event.preventDefault();
-    //Place Holder for actual id in state
-    let removeId = this.id.replace("remove", "");
+    let removeId = $(this)
+      .parents(".dash-event")
+      .attr("data-id");
+    console.log(removeId);
     if (removeId) {
       STATE.focusEventId = removeId;
       openRemoveConfirm(removeId);
@@ -799,8 +795,6 @@ const removeConfirmButtonListener = () => {
 };
 
 const deleteEvent = () => {
-  // Make a DELETE request to the server
-
   $.ajax({
     url: `/api/events/${STATE.focusEventId}`,
     headers: { Authorization: `Bearer ${STATE.token}` },
@@ -818,7 +812,6 @@ const removeCancleButtonListener = () => {
   });
 };
 
-//end REMOVE CONFIRM
-//
+/// end REMOVE CONFIRM ///
 
 $(manageApp());

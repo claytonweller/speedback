@@ -83,7 +83,7 @@ const preAuthHost = function(host) {
 function seedEventData(hostIdArray) {
   return new Promise((resolve, reject) => {
     const seedData = [];
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 2; i++) {
       seedData.push(generateEventData(hostIdArray));
     }
     EventModel.insertMany(seedData)

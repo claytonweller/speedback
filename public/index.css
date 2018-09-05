@@ -74,13 +74,14 @@ button:active {
 
 button:hover,
 button:focus,
-a:hover,
-a:focus {
+nav a:hover,
+nav a:focus {
   outline: 2px white solid;
 }
 
 a:hover,
 a:focus {
+  outline: 2px rgba(0, 0, 0, 0.5) solid;
   text-decoration: underline;
 }
 
@@ -469,6 +470,11 @@ footer p {
   padding: 15px;
 }
 
+#info-back-button {
+  font-size: 16px;
+  width: fit-content;
+}
+
 #info-details div {
   margin-bottom: 5px;
 }
@@ -519,6 +525,7 @@ footer p {
 
 .graph-bar-holder {
   height: 100%;
+  width: 20%;
   display: flex;
   flex-flow: column;
   justify-content: flex-end;
@@ -530,7 +537,6 @@ footer p {
 
 .graph-bar {
   background-color: #305c64;
-  min-width: 60px;
 }
 
 .graph-label {
@@ -634,11 +640,13 @@ footer p {
 .attendee-preferences {
   padding-left: 10px;
   margin-bottom: 10px;
+  min-width: 220px;
 }
 
 .attendee-preference {
   font-family: "Oswald", sans-serif;
   margin-bottom: 3px;
+  font-size: 0.85em;
 }
 
 .single-container p {
@@ -915,15 +923,15 @@ footer p {
   .phone-example div {
     top: 15px;
   }
-
+  /* 
   .attendee-top {
     display: flex;
     justify-content: space-between;
-  }
+  } */
 
-  .attendee-preference {
+  /* .attendee-preference {
     text-align: right;
-  }
+  } */
 
   /* EVENT EDITOR */
 

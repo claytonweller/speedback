@@ -33,13 +33,11 @@ router.get("/:eventId", jwtAuth, (req, res) => {
 
 // as soon as page loads
 router.post("/visited/:eventId", (req, res) => {
-  console.log(req.params.eventId);
   EventModel.findByIdAndUpdate(req.params.eventId, {
     $push: { webFormVisits: Date.now() }
   })
     .then(event => {
-      console.log(event);
-      res.status(201);
+      res.status(201).end();
     })
     .catch(err =>
       res.status(500).json({ message: "something went wrong on the server" })
@@ -53,9 +51,9 @@ router.post("/:eventCode", (req, res) => {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
-    updates: req.body.updates,
-    feedback: req.body.feedback,
-    volunteer: req.body.volunteer,
+    wantsUpdates: req.body.wantsUpdates,
+    wantsContact: req.body.wantsContact,
+    wantsVolunteer: req.body.wantsVolunteer,
     timeStamp: Date.now()
   };
 
@@ -84,9 +82,9 @@ router.put("/:feedbackId", (req, res) => {
     "name",
     "email",
     "phone",
-    "updates",
-    "feedback",
-    "volunteer"
+    "wantsUpdates",
+    "wantsContact",
+    "wantsVolunteer"
   ];
   okToUpdate.forEach(field => {
     if (field in req.body) {

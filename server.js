@@ -3,10 +3,16 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const passport = require("passport");
+const cors = require("cors");
 
 mongoose.Promise = global.Promise;
 const { PORT, DATABASE_URL } = require("./config");
 const app = express();
+
+// const corsOptions = {
+//   origin: 'http://twilio.com',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
 
 const { router: eventsRouter } = require("./events");
 const { router: hostsRouter } = require("./hosts");
@@ -14,6 +20,7 @@ const { router: feedbackRouter } = require("./feedback");
 const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 const { router: twilioRouter } = require("./twilio/router");
 
+app.use(cors());
 app.use(express.static("public"));
 app.use(morgan("common"));
 app.use("/api/events", eventsRouter);
@@ -22,13 +29,11 @@ app.use("/api/feedback", feedbackRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/twilio", twilioRouter);
 
-//AUTH isn't working yet!
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 // This Request is for the URL feedback page. It takes a unique event code,
 // and populates the feedback form from a GET Event call
-
 app.get("/:eventCode", (req, res) => {
   res.sendFile("public/feedback.html", { root: __dirname });
 });
