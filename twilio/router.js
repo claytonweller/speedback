@@ -11,8 +11,10 @@ const config = require("../config");
 const router = express.Router();
 const client = new twilio(accountSid, authToken);
 
+router.use(bodyParser.urlencoded({ extended: false }));
+
 router.post("/", (req, res) => {
-  console.log(req);
+  console.log("req - ", req);
   res.json("GOOD");
   client.messages
     .create({
@@ -20,7 +22,7 @@ router.post("/", (req, res) => {
       to: "+13038034589", // Text this number
       from: "+17206969370" // From a valid Twilio number
     })
-    .then(message => console.log(message.sid));
+    .then(message => console.log("message - ", message));
 });
 
 module.exports = { router };
