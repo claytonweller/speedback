@@ -12,7 +12,7 @@ While the power of data and evidence is on the rise in the digital world. Live e
 
 ## How?
 
-A event host can easily log in and create an event and get tools to get relavent feedback for their event in just moments. Every show gets a short/simple event code and url (in the next update they'll get phone number for texting). During or after events they give out the url to their attendees, and then the feedback is immediately available to the event host.
+A event host can easily log in and create an event and get tools to get relavent feedback for their event in just moments. Every show gets a short/simple event code and url and a phone number for text feedback. During or after events they give out the url/phone# to their attendees, and then the feedback is immediately available to the event host.
 
 The feedback is tiered to keep people from bouncing off the forms, and if they fill out more information the event host can potentially get phone numbers and emails of their audience members, as well as their preferences on being contacted in the future.
 
@@ -30,7 +30,8 @@ The event hosts can log on and see all of their event feedback in a single place
 
 ## Technology used
 
-- Node.js
+- Node.js / Express
+- Twilio
 - jQuery
 - Json Web Tokens
 - Travis CI
