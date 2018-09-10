@@ -9,6 +9,7 @@ const { TWILIO_AUTH_TOKEN, TWILIO_SID } = require("../config");
 
 const router = express.Router();
 const client = new twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
+const twilioNumber = "+17207352944";
 
 router.use(express.json());
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -49,7 +50,7 @@ router.post("/", (req, res) => {
           body:
             "Make sure to enter the CODE followed by a space at the beginning of your feedback.",
           to: req.body.From, // Text this number
-          from: "+17207352944" // From a valid Twilio number
+          from: twilioNumber // From a valid Twilio number
         });
         return Promise.reject({
           reason: "MissingInfo",
@@ -73,13 +74,13 @@ router.post("/", (req, res) => {
             event.displayName
           } respond with your email.`,
           to: req.body.From, // Text this number
-          from: "+17206969370" // From a valid Twilio number
+          from: twilioNumber // From a valid Twilio number
         });
       } else {
         return client.messages.create({
           body: event.thanks,
           to: req.body.From, // Text this number
-          from: "+17206969370" // From a valid Twilio number
+          from: twilioNumber // From a valid Twilio number
         });
       }
     })
